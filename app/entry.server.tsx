@@ -14,6 +14,13 @@ import { renderToPipeableStream } from "react-dom/server";
 
 const ABORT_DELAY = 5_000;
 
+console.log("loading needed server initializations...")
+
+import { server_config } from "app/.server/config"
+let _ = server_config
+
+console.log("loaded needed server initializations!")
+
 export default function handleRequest(
 	request: Request,
 	responseStatusCode: number,

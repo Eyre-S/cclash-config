@@ -8,7 +8,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const name = searchParams.get("name")
 	
 	const hello_text: string = it(() => {
-		if (name === undefined) {
+		if (name == undefined) {
 			return "Hello, World!"
 		} else {
 			return `Hello, ${name}!`
