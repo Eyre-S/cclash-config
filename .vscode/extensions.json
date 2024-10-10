@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"clinyong.vscode-css-modules"
+	],
+	"unwantedRecommendations": [
+		"vue.vscode-typescript-vue-plugin"
+	]
+}

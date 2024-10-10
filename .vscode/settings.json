@@ -1,0 +1,20 @@
+{
+	"explorer.fileNesting.patterns": {
+		"*.ts": "${capture}.js, ${capture}.d.ts",
+		"*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+		"*.jsx": "${capture}.js",
+		"tsconfig.json": "tsconfig.*.json",
+		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+		"*.tsx": "${capture}.js, ${capture}.ts, ${capture}.css, ${capture}.styl, ${capture}.stylus, ${capture}.module.css, ${capture}.module.styl, ${capture}.module.stylus",
+	},
+	"cssModules.camelCase": true,
+	"cssModules.pathAlias": {
+		"~": "./app"
+	},
+	"cSpell.words": [
+		"isbot",
+		"typecheck",
+		"styl",
+		"urara"
+	]
+}

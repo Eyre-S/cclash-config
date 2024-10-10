@@ -1,0 +1,9 @@
+body
+	font-family 'Helvetica Neue', sans-serif
+	font-size 16px
+
+a
+	color #becce0
+	text-decoration none
+	&:hover
+		text-decoration underline
