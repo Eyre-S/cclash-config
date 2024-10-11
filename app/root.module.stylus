@@ -1,0 +1,71 @@
+.app
+	
+	box-sizing border-box
+	width 100vw
+	height 100vh
+	overflow hidden
+	
+	display grid
+	grid-template-rows 55px 1fr
+	
+	padding 15px
+	gap 15px
+	
+	
+	.page-header
+		
+		background-color #f6f8fa
+		
+		border-radius 10px
+		
+		display grid
+		grid-template-columns auto 1fr auto
+		
+		.title
+			
+			grid-column 2
+			text-align center
+			display flex
+			align-items center
+			justify-content center
+			
+			color #a7aeb6
+			font-size 20px
+			font-weight 700
+			
+		
+		.left
+			
+			display flex
+			flex-direction row
+			gap 10px
+			padding-inline 20px
+			align-items center
+			
+			> *
+				height 30px
+			
+			img
+				height 100%
+			
+		
+		.right
+			
+			display flex
+			flex-direction row
+			gap 10px
+			padding-inline 20px
+			align-items center
+			
+			a
+				color #707173
+				text-decoration none
+				font-size 14px
+				font-weight 700
+				cursor pointer
+			
+		
+	
+	.page-body
+		// ...
+	

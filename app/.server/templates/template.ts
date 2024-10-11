@@ -1,16 +1,112 @@
 import fs from "fs";
 import { server_root } from "../config";
-import { FSWatcher } from "vite";
+import { z } from "zod";
+import { randomUUID } from "crypto";
 
-fs.mkdirSync(server_root + "/templates", { recursive: true })
-fs.mkdirSync(server_root + "/comments", { recursive: true })
+const templates_root = server_root + "/templates"
+
+fs.mkdirSync(templates_root, { recursive: true })
+
+const TemplateIndexDef = z.object({
+	uuid: z.string().uuid(),
+	name: z.string(),
+	alias: z.string().array().default([]),
+})
+export type TemplateIndexDef = z.infer<typeof TemplateIndexDef>
+const IndexDef = TemplateIndexDef.array()
+export type IndexDef = z.infer<typeof IndexDef>
+
+export class TemplateIndex {
+	
+	public readonly uuid: string
+	public readonly name: string
+	
+	constructor (def: TemplateIndexDef) {
+		this.uuid = def.uuid
+		this.name = def.name
+	}
+	
+	public getPath (): string {
+		const path = templates_root + "/" + this.uuid
+		if (!fs.existsSync(path))
+			fs.mkdirSync(path, { recursive: true })
+		return path
+	}
+	
+	public getTemplate (): string {
+		const path = this.getPath() + "/template"
+		if (!fs.existsSync(path))
+			fs.writeFileSync(path, "")
+		return fs.readFileSync(path, "utf-8")
+	}
+	
+	public getComments (): string {
+		const path = this.getPath() + "/comments"
+		if (!fs.existsSync)
+			fs.writeFileSync(path, "")
+		return fs.readFileSync(path, "utf-8")
+	}
+	
+	public getConfigs (): string {
+		const path = this.getPath() + "/config.json"
+		if (!fs.existsSync)
+			fs.writeFileSync(path, JSON.stringify({}))
+		return fs.readFileSync(path, "utf-8")
+	}
+	
+	public static readIndex (): IndexDef {
+		const index_file = fs.readFileSync(templates_root + "/index.json", "utf-8")
+		const index = IndexDef.parse(JSON.parse(index_file))
+		return index
+	}
+	public static writeIndex (write: IndexDef) {
+		const index = JSON.stringify(write, null, '\t')
+		fs.writeFileSync(templates_root + "/index.json", index, { encoding: "utf-8" })
+	}
+	
+	public static findByUUID (uuid: string): TemplateIndex|null {
+		const index = TemplateIndex.readIndex()
+		const found = index.find((item) => item.uuid === uuid)
+		if (!found) {
+			return null
+		}
+		return new TemplateIndex(found)
+	}
+	
+	public static findByName (name: string): TemplateIndex|null {
+		const index = TemplateIndex.readIndex()
+		const found = index.find((item) => {
+			if (item.name === name) {
+				return true
+			}
+			return item.alias.includes(name)
+		})
+		if (!found) {
+			return null
+		}
+		return new TemplateIndex(found)
+	}
+	
+	public static create (name: string): TemplateIndex {
+		const indexDef: TemplateIndexDef = {
+			uuid: randomUUID(),
+			name: name,
+			alias: []
+		}
+		TemplateIndex.writeIndex([...TemplateIndex.readIndex(), indexDef])
+		return new TemplateIndex(indexDef)
+	}
+	
+}
 
 export function readTemplate (name: string): string|null {
 	
 	try {
-		const template_path = server_root + `/templates/${name}`
-		const file_data = fs.readFileSync(template_path, "utf-8")
-		return file_data
+		const template = TemplateIndex.findByName(name)
+		if (template === null) {
+			return null
+		}
+		return template.getTemplate()
 	} catch (e) {
 		return null
 	}
@@ -20,15 +116,25 @@ export function readTemplate (name: string): string|null {
 export function readTemplateComment (name: string): string|null {
 	
 	try {
-		const template_path = server_root + `/templates/${name}`
-		const comment_path = server_root + `/comments/${name}`
-		if (!fs.existsSync(template_path)) {
+		const template = TemplateIndex.findByName(name)
+		if (template === null) {
 			return null
-		} else if (!fs.existsSync(comment_path)) {
-			fs.writeFileSync(comment_path, "")
 		}
-		const file_data = fs.readFileSync(comment_path, "utf-8")
-		return file_data
+		return template.getComments()
+	} catch (e) {
+		return null
+	}
+	
+}
+
+export function readTemplateConfigs (name: string): string|null {
+	
+	try {
+		const template = TemplateIndex.findByName(name)
+		if (template === null) {
+			return null
+		}
+		return template.getConfigs()
 	} catch (e) {
 		return null
 	}

@@ -1,0 +1,10 @@
+html, body
+	margin 0
+	padding 0
+	min-width 100%
+	min-height 100%
+	overflow hidden
+
+body
+	font-family 'Alibaba Puhuiti', 'Helvetica Neue', sans-serif
+	font-size 16px

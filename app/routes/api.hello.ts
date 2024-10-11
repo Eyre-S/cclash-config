@@ -1,4 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
+import { getClientIPAddress } from "remix-utils/get-client-ip-address";
 import { defineApiResponse, exportResponse } from "~/apis/api";
 import { it } from "~/utils/fp";
 
@@ -16,7 +17,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	})
 	
 	return exportResponse(defineApiResponse({
-		response: hello_text
+		hi: hello_text,
+		requestor: {
+			ip: getClientIPAddress(request.headers),
+			'user-agent': request.headers.get('user-agent')
+		}
 	}))
 	
 }
