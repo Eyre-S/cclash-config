@@ -2,7 +2,6 @@ import { ActionFunctionArgs, json, redirect, type LoaderFunctionArgs, type MetaF
 
 import css from "./login.module.stylus";
 import { classes } from "~/utils/jsx-helper";
-import { validateLogin } from "~/apis/auth";
 import { Form } from "@remix-run/react";
 import { checkToken } from "~/.server/auth";
 import cookies from "~/apis/cookies";
@@ -12,16 +11,6 @@ export const meta: MetaFunction = () => {
 		{ title: "Login - CClash Config Deliver" },
 	];
 };
-
-export async function loader ({ request }: LoaderFunctionArgs) {
-	
-	if (await validateLogin(request)) {
-		return redirect("/");
-	}
-	
-	return {};
-	
-}
 
 export default function Index() {
 	return (

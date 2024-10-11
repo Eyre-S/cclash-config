@@ -2,7 +2,7 @@ import { redirect, type LoaderFunctionArgs, type MetaFunction } from "@remix-run
 
 import css from "./_index.module.stylus";
 import { classes } from "~/utils/jsx-helper";
-import { validateLogin } from "~/apis/auth";
+import { validateLogin } from "~/.server/auth";
 
 export const meta: MetaFunction = () => {
 	return [

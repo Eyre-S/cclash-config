@@ -1,8 +1,8 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { ZodError } from "zod";
 import config from "~/.server/config";
-import { API_RESPONSE_UNAUTHORIZED, defineApiResponse, exportResponse } from "~/apis/api";
-import { guardAuthPages } from "~/apis/auth";
+import { guardAuthPages } from "~/.server/auth";
+import { API_RESPONSE_UNAUTHORIZED, defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse } from "~/apis/api";
 
 export async function loader (args: LoaderFunctionArgs) {
 	
@@ -21,34 +21,21 @@ export async function loader (args: LoaderFunctionArgs) {
 	} catch (e) {
 		
 		if (e instanceof ZodError) {
-			return exportResponse(defineApiResponse({
-				ok: false,
-				message: "Config schema validation failed",
-				error: e
-			}))
+			return exportResponse(defineApiErrorResponse(500, "api_config_reload_zod", "Config schema validation failed", e ))
 		} else if (e instanceof Error) {
 			if (e.name === "SyntaxError") {
-				return exportResponse(defineApiResponse({
-					ok: false,
-					message: "Config JSON parsing failed",
-					error: e.message
-				}))
+				return exportResponse(defineApiErrorResponse(
+					500, "api_config_reload_json", "Config JSON parsing failed",
+					{
+						name: e.name,
+						message: e.message,
+						cause: e.cause
+					}
+				))
 			}
-			return exportResponse(defineApiResponse({
-				ok: false,
-				message: "Internal Error",
-				error: {
-					name: e.name,
-					message: e.message
-				}
-			}))
-		} else {
-			return exportResponse(defineApiResponse({
-				ok: false,
-				message: "Unknown internal error occurred",
-				error: e
-			}))
 		}
+		
+		return exportResponse(defineApiUniversalErrorResponse(e, "api_config_reload_universal"))
 		
 	}
 	
