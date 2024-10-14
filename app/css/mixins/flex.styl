@@ -1,0 +1,12 @@
+use-flex(direction = null)
+	display flex
+	if direction is not null
+		flex-direction direction
+
+flex-center()
+	align-items center
+	justify-content center
+
+use-flex-center(direction = null)
+	use-flex(direction)
+	flex-center()

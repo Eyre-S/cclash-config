@@ -1,8 +1,7 @@
 .app
 	
 	box-sizing border-box
-	width 100vw
-	height 100vh
+	size 100vw 100vh
 	overflow hidden
 	
 	display grid
@@ -25,9 +24,7 @@
 			
 			grid-column 2
 			text-align center
-			display flex
-			align-items center
-			justify-content center
+			use-flex-center()
 			
 			color #a7aeb6
 			font-size 20px
@@ -36,8 +33,7 @@
 		
 		.left
 			
-			display flex
-			flex-direction row
+			use-flex row
 			gap 10px
 			padding-inline 20px
 			align-items center
@@ -51,8 +47,7 @@
 		
 		.right
 			
-			display flex
-			flex-direction row
+			use-flex row
 			gap 10px
 			padding-inline 20px
 			align-items center

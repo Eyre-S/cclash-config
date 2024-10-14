@@ -5,6 +5,10 @@ import stylusAlias from "vite-plugin-stylus-alias-next";
 import path from "node:path";
 import routes from "./routes";
 
+const stylusConfig = {
+	additionalData: `@import "${path.resolve(__dirname,'./app/css/mixins')}"`
+}
+
 export default defineConfig({
 	
 	plugins: [
@@ -31,6 +35,10 @@ export default defineConfig({
 	css: {
 		modules: {
 			localsConvention: "camelCase",
+		},
+		preprocessorOptions: {
+			stylus: stylusConfig,
+			styl: stylusConfig,
 		}
 	},
 	

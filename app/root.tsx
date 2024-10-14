@@ -7,7 +7,7 @@ import {
 	ScrollRestoration,
 } from "@remix-run/react";
 
-import './root.index.stylus';
+import './root.stylus';
 import css from './root.module.stylus'
 import { classes } from "./utils/jsx-helper";
 

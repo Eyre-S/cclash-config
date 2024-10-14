@@ -4724,10 +4724,10 @@ vite-node@^1.2.0:
     picocolors "^1.0.0"
     vite "^5.0.0"
 
-vite-plugin-stylus-alias-next@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/vite-plugin-stylus-alias-next/-/vite-plugin-stylus-alias-next-1.2.1.tgz#b04d67a2a7b81e73c11dc0175d3e7b35ef56b38d"
-  integrity sha512-sFUwsIoJQ+Sa13YYVUavRXcAA+D41UkxGTZnSD3KWoJKow6cJ0JbJGdFax7n7BZQYTG+G9lp4FJkCa7xpwcEHw==
+vite-plugin-stylus-alias-next@1.2.2-beta.1:
+  version "1.2.2-beta.1"
+  resolved "https://registry.yarnpkg.com/vite-plugin-stylus-alias-next/-/vite-plugin-stylus-alias-next-1.2.2-beta.1.tgz#a246ced732d1c02a371f00b84e2a117aa1292631"
+  integrity sha512-NmTocvTgsUFVMcNRh7I6pcSJSYGPpdYtcOnbxrtS+me1l9/X1Bz8EZ8+K6WOCIjGI4Nq80wgNMOvX7fMYgTf7A==
   dependencies:
     fast-querystring "^1.1.2"
 

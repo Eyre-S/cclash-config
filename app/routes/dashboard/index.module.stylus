@@ -1,8 +1,6 @@
 .page
 	
-	width 100%
-	height 100%
-	
+	size 100%
 	display grid
 	grid-template-columns 250px 1fr
 	gap 15px
@@ -12,8 +10,7 @@
 		background-color #f6f8fa
 		border-radius 10px
 		
-		display flex
-		flex-direction column
+		use-flex column
 		padding 8px
 		gap 8px
 		
@@ -37,19 +34,17 @@
 	font-size 14px
 	font-weight 500
 	
+	> .indicator
+		position absolute
+		display none
+		pos 7px
+		right unset
+		width 4px
+		border-radius 4px
+		background-color #7ba5db
+	
 	&.enabled
 		color #7ba5db
 		> .indicator
 			display block
-	
-	> .indicator
-		position absolute
-		display none
-		indicator-padding = 7px
-		top indicator-padding
-		bottom indicator-padding
-		left indicator-padding
-		width 4px
-		border-radius 4px
-		background-color #7ba5db
 	

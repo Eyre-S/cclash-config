@@ -1,0 +1,33 @@
+size(wi, hi = wi)
+	width wi
+	height hi
+
+min-size(wi, hi = wi)
+	min-width wi
+	min-height hi
+
+max-size(wi, hi = wi)
+	max-width wi
+	max-height hi
+
+pos(args...)
+	if length(args) == 1
+		top args[0]
+		right args[0]
+		bottom args[0]
+		left args[0]
+	else if length(args) == 2
+		top args[0]
+		right args[1]
+		bottom args[0]
+		left args[1]
+	else if length(args) == 3
+		top args[0]
+		right args[1]
+		bottom args[2]
+		left args[1]
+	else
+		top args[0]
+		right args[1]
+		bottom args[2]
+		left args[3]
