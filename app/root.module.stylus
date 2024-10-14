@@ -6,15 +6,11 @@
 	
 	display grid
 	grid-template-rows 55px 1fr
-	
-	padding 15px
-	gap 15px
-	
+	padgap 15px
 	
 	.page-header
 		
 		background-color #f6f8fa
-		
 		border-radius 10px
 		
 		display grid
@@ -27,8 +23,7 @@
 			use-flex-center()
 			
 			color #a7aeb6
-			font-size 20px
-			font-weight 700
+			font-sw 20px 700
 			
 		
 		.left
@@ -47,20 +42,19 @@
 		
 		.right
 			
-			use-flex row
 			gap 10px
 			padding-inline 20px
-			align-items center
+			use-flex-center row axis
 			
-			a
+			> a {
+				a-normalize()
 				color #707173
-				text-decoration none
-				font-size 14px
-				font-weight 700
-				cursor pointer
+				font-sw 14px 700
+			}
 			
 		
 	
 	.page-body
-		// ...
+		size 100%
+		box-sizing border-box
 	

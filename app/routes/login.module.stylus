@@ -2,6 +2,8 @@
 	
 	size 100%
 	use-flex-center()
+	max-width 100%
+	box-sizing border-box
 	
 	background-color #f6f8fa
 	border-radius 10px
@@ -12,6 +14,8 @@
 		use-flex column
 		gap 30px
 		align-items center
+		max-width 100%
+		box-sizing border-box
 		
 		.title
 			font-size 24px
@@ -19,8 +23,9 @@
 			margin-bottom 20px
 		
 		> .form
-			use-flex column
+			use-flex-center column axis
 			gap 20px
+			max-width 100%
 		
 		.input
 			
@@ -44,8 +49,7 @@
 			
 			clear-outer()
 			border-radius 5px
-			width 440px
-			max-width 90%
+			width 360px
 			
 		
 	

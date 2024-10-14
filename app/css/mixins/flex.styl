@@ -3,10 +3,12 @@ use-flex(direction = null)
 	if direction is not null
 		flex-direction direction
 
-flex-center()
-	align-items center
-	justify-content center
+flex-center(centers = null)
+	if centers is not 'element'
+		align-items center
+	if centers is not 'axis'
+		justify-content center
 
-use-flex-center(direction = null)
+use-flex-center(direction = null, certers = null)
 	use-flex(direction)
-	flex-center()
+	flex-center(certers)
