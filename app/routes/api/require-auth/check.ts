@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { guardAuthPages } from "~/.server/auth";
-import { API_RESPONSE_UNAUTHORIZED, defineApiResponse, exportResponse } from "~/apis/api";
+import { requireApiToken } from "~/.server/auth";
+import { defineApiResponse, exportResponse } from "~/apis/api";
 
 export interface AuthCheckResponse {
 	ok: boolean
@@ -8,8 +8,7 @@ export interface AuthCheckResponse {
 
 export async function loader (args: LoaderFunctionArgs) {
 	
-	if (!guardAuthPages(args))
-		return exportResponse(API_RESPONSE_UNAUTHORIZED)
+	await requireApiToken(args)
 	
 	return exportResponse(defineApiResponse({
 		ok: true

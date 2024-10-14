@@ -23,7 +23,7 @@
 			font-weight 600
 			margin-bottom 20px
 		
-		> form
+		> .form
 			display flex
 			flex-direction column
 			gap 20px
@@ -44,6 +44,9 @@
 				padding 10px 16px
 				&:hover
 					background-color #0077cc
+				&:disabled
+					background-color #cccccc !important
+					color #ffffff
 			
 			border-radius 5px
 			width 440px

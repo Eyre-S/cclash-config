@@ -63,13 +63,14 @@ export function defineApiUniversalErrorResponse <T> (error: T, e_id?: string): A
 
 export const API_RESPONSE_UNAUTHORIZED = defineApiErrorResponse(401, "api_unauthorized_universal", "Unauthorized")
 
-export function exportResponse (response: ApiResponse): Response {
+export function exportResponse (response: ApiResponse, additionalHeaders: HeadersInit = []): Response {
 	return new Response(
 		JSON.stringify(response),
 		{
 			status: response.status,
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
+				...additionalHeaders
 			}
 		}
 	)

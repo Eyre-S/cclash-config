@@ -3,15 +3,22 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import stylusAlias from "vite-plugin-stylus-alias-next";
 import path from "node:path";
+import routes from "./routes";
 
 export default defineConfig({
 	
 	plugins: [
 		remix({
+			
 			ignoredRouteFiles: [
 				"**/*.styl",
 				"**/*.stylus"
 			],
+			
+			routes: async (defineRoutes) => {
+				return defineRoutes(routes)
+			}
+			
 		}),
 		tsconfigPaths(),
 		stylusAlias(),

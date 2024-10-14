@@ -1,8 +1,8 @@
-import { redirect, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import { type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
 
-import css from "./dashboard.module.stylus";
+import css from "./index.module.stylus";
 import { classes } from "~/utils/jsx-helper";
-import { validateLogin } from "~/.server/auth";
+import { requireUILogin } from "~/.server/auth";
 import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template";
 import { Link, Outlet, useLoaderData, useParams } from "@remix-run/react";
 
@@ -14,9 +14,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader ({ request }: LoaderFunctionArgs) {
 	
-	if (!await validateLogin(request)) {
-		return redirect("/login");
-	}
+	await requireUILogin(request)
 	
 	return {
 		indexes: TemplateIndex.readIndex()

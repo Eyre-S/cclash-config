@@ -10,9 +10,9 @@
 		"typecheck": "tsc"
 	},
 	"dependencies": {
-		"@remix-run/express": "2.12.1",
-		"@remix-run/node": "2.12.1",
-		"@remix-run/react": "2.12.1",
+		"@remix-run/express": "2.13.1",
+		"@remix-run/node": "2.13.1",
+		"@remix-run/react": "2.13.1",
 		"compression": "^1.7.4",
 		"is-ip": "^5.0.1",
 		"isbot": "4.4.0",
@@ -35,7 +35,7 @@
 		"typescript": "^5.1.6",
 		"vite": "^5.1.0",
 		"vite-plugin-stylus-alias-next": "^1.2.1",
-		"vite-tsconfig-paths": "^4.2.1"
+		"vite-tsconfig-paths": "5.0.1"
 	},
 	"engines": {
 		"node": ">=18.0.0"

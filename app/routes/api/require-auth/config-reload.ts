@@ -1,13 +1,12 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { ZodError } from "zod";
 import config from "~/.server/config";
-import { guardAuthPages } from "~/.server/auth";
-import { API_RESPONSE_UNAUTHORIZED, defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse } from "~/apis/api";
+import { requireApiToken } from "~/.server/auth";
+import { defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse } from "~/apis/api";
 
 export async function loader (args: LoaderFunctionArgs) {
 	
-	if (!guardAuthPages(args))
-		return exportResponse(API_RESPONSE_UNAUTHORIZED)
+	await requireApiToken(args)
 	
 	try {
 		

@@ -1,13 +1,12 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { readTemplate } from "~/.server/templates/template";
-import { API_RESPONSE_UNAUTHORIZED, defineApiErrorResponse, defineApiResponse, exportResponse } from "~/apis/api";
-import { guardAuthPages } from "~/.server/auth";
+import { defineApiErrorResponse, exportResponse } from "~/apis/api";
+import { requireApiToken } from "~/.server/auth";
 import upp from "uni-preprocessor"
 
 export async function loader (args: LoaderFunctionArgs) {
 	
-	if (!guardAuthPages(args))
-		return exportResponse(API_RESPONSE_UNAUTHORIZED)
+	await requireApiToken(args)
 	
 	const template_name = args.params.template_name as string
 	const template = readTemplate(template_name)

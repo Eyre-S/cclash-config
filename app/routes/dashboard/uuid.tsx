@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { readTemplate, TemplateIndex } from "~/.server/templates/template";
+import { TemplateIndex } from "~/.server/templates/template";
 
-import css from "./dashboard.uuid.module.stylus"
+import css from "./uuid.module.stylus"
 import { useLoaderData } from "@remix-run/react";
 import { classes } from "~/utils/jsx-helper";
 
