@@ -8,24 +8,53 @@
 	background-color #f6f8fa
 	border-radius 10px
 	
-	.login-box
+	> .login-box
 		
 		padding 50px
 		use-flex column
-		gap 30px
+		gap 10px
 		align-items center
+		width 420px
 		max-width 100%
 		box-sizing border-box
 		
-		.title
+		> .title {
 			font-size 24px
 			font-weight 600
 			margin-bottom 20px
+		}
 		
-		> .form
+		> .notice-box
+			
+			width 100%
+			use-flex column
+			gap 10px
+			min-height 100px
+			
+			> .notice
+				
+				box-sizing border-box
+				width 100%
+				padding 16px 20px
+				background-color #c5dbf08e
+				border-radius 8px
+				color #00000088
+				font-sw 13px 600
+				
+				// &.currentStatus {
+				// 	//
+				// }
+				
+				// &.newStatus {
+				// 	//
+				// }
+			
+		
+		> .form {
 			use-flex-center column axis
 			gap 20px
-			max-width 100%
+			width 100%
+		}
 		
 		.input
 			
@@ -49,7 +78,7 @@
 			
 			clear-outer()
 			border-radius 5px
-			width 360px
+			width 100%
 			
 		
 	

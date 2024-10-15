@@ -6,11 +6,13 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import { AuthSessionData } from "~/apis/sessions";
 import { getCookieHeader } from "~/utils/http-helper";
 import { checkToken } from "~/.server/auth";
-import { it } from "~/utils/fp";
+import { inCase, inCaseSafe, is, it } from "~/utils/fp";
 import { useRef, useState } from "react";
 import { LoginResults } from "./api/login";
 import { ApiResponseOk } from "~/apis/api";
 import { wait } from "remix-utils/timers";
+import { $ } from "~/utils/reactive";
+import { Gap } from "~/utils/components";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -39,36 +41,33 @@ export default function Index() {
 	
 	const navigate = useNavigate()
 	
-	const loginStatus = useLoaderData<typeof loader>()
-	const [status_message, status_message_set] = useState(it(() => { switch (loginStatus) {
-		case "success":
-			return "logged in"
-		case "fail":
-			return "failed to login"
-		case "none":
-			return "not logged in"
-	}}))
-	const [login_message, login_message_set] = useState<string|null>(null)
-	const [login_button_message, login_button_message_set] = useState("Login")
+	const initialLoginStatus = useLoaderData<typeof loader>()
+	const loggingActionStatus = $<"idle"|"logging-in"|"success-waiting"|"success-redir">("idle")
+	const loggingResultStatus = $<"idle"|"success"|"fail"|'fail-err'>("idle")
+	
 	const inputToken = useRef<HTMLInputElement>(null)
+	
 	async function doLogin () {
 		try {
+			loggingResultStatus.value = "idle"
+			loggingActionStatus.value = "logging-in"
 			const result = await fetch(`/api/login?token=${encodeURIComponent(inputToken.current?.value||"")}`, {
 				method: "GET"
 			})
 			const result_json = await result.json() as ApiResponseOk<LoginResults>
 			if (result_json.data.ok) {
-				login_message_set("login success, will redirect in 3 seconds")
-				login_button_message_set("Redirecting...")
+				loggingResultStatus.value = "success"
+				loggingActionStatus.value = "success-waiting"
 				await wait(3000)
+				loggingActionStatus.value = "success-redir"
 				navigate("/")
 			} else {
-				login_message_set("login failed")
-				login_button_message_set("Login")
+				loggingResultStatus.value = 'fail'
+				loggingActionStatus.value = "idle"
 			}
 		} catch {
-			login_message_set("login failed due to unknown error")
-			login_button_message_set("Login")
+			loggingResultStatus.value = 'fail-err'
+			loggingActionStatus.value = 'idle'
 		}
 	}
 	
@@ -78,19 +77,65 @@ export default function Index() {
 				<div className={classes(css.loginBox)}>
 					
 					<h1 className={classes(css.title)}>Login</h1>
-					<span><small>You are currently { status_message }</small></span>
-					{ login_message && <span><small>{ login_message }</small></span> }
+					<div className={classes(css.noticeBox)}>
+						{inCase(initialLoginStatus, [
+							['none', <></>],
+							[
+								'success',
+								<div className={classes(css.notice, css.currentStatus)}>
+									<span>You are already logged in.</span>
+								</div>
+							],
+							[
+								'fail',
+								<div className={classes(css.notice, css.currentStatus)}>
+									<span>Your token seems already being invalid. Please re-login.</span>
+								</div>
+							],
+						])}
+						{inCase(loggingResultStatus.value, [
+							['idle', <></>],
+							[
+								'success',
+								<div className={classes(css.notice, css.newStatus)}>
+									<span>Login succeed, redirecting...</span>
+								</div>
+							],
+							[
+								'fail',
+								<div className={classes(css.notice, css.newStatus)}>
+									<span>Login failed, please check your token and try again.</span>
+								</div>
+							],
+							[
+								'fail-err',
+								<div className={classes(css.notice, css.newStatus)}>
+									<span>Unknown error occurred.</span>
+								</div>
+							],
+						])}
+					</div>
+					
+					<Gap size="10px" />
+					
 					<div className={classes(css.form)}>
 						<input type="password"
 							name="token"
 							placeholder="token..."
 							ref={inputToken}
+							onKeyDownCapture={e => {e.key == "Enter" && doLogin()}}
 							className={classes(css.input, css.field)} />
+						{/* <Gap size="10px" /> */}
 						<button type="submit"
 							className={classes(css.input, css.button)}
 							onClick={() => doLogin()}
-							disabled={login_button_message != "Login"}>
-							{ login_button_message }
+							disabled={loggingActionStatus.value != 'idle'}>
+							{inCase (loggingActionStatus.value, [
+								['idle',            'Login'],
+								['logging-in',      'Logging in...'],
+								['success-waiting', 'Success! waiting...'],
+								['success-redir',   'Success! waiting...']
+							])}
 						</button>
 					</div>
 					

@@ -21,7 +21,7 @@ export default defineConfig({
 			
 			routes: async (defineRoutes) => {
 				return defineRoutes(routes)
-			}
+			},
 			
 		}),
 		tsconfigPaths(),

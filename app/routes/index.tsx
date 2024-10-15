@@ -1,4 +1,4 @@
-import { redirect, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import { type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
 
 import css from "./index.module.stylus";
 import { classes } from "~/utils/jsx-helper";
