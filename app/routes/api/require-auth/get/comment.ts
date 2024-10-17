@@ -2,6 +2,7 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { readTemplateComment } from "~/.server/templates/template";
 import { defineApiErrorResponse, exportResponse } from "~/apis/api";
 import { requireApiToken } from "~/.server/auth";
+import { defineTemplateNotFoundResponse } from "./_public";
 
 export async function loader (args: LoaderFunctionArgs) {
 	
@@ -11,12 +12,7 @@ export async function loader (args: LoaderFunctionArgs) {
 	const template = readTemplateComment(template_name)
 	
 	if (template == null) {
-		return exportResponse(defineApiErrorResponse(
-			404, "api_template_notfound_comments", "Template with such name is not found.",
-			{
-				requesting_template_name: template_name
-			}
-		))
+		return exportResponse(defineTemplateNotFoundResponse(template_name, "comments"))
 	} else {
 		
 		return new Response(

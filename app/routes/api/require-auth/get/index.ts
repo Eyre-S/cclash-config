@@ -3,6 +3,7 @@ import { readTemplate } from "~/.server/templates/template";
 import { defineApiErrorResponse, exportResponse } from "~/apis/api";
 import { requireApiToken } from "~/.server/auth";
 import upp from "uni-preprocessor"
+import { defineTemplateNotFoundResponse } from "./_public";
 
 export async function loader (args: LoaderFunctionArgs) {
 	
@@ -12,12 +13,7 @@ export async function loader (args: LoaderFunctionArgs) {
 	const template = readTemplate(template_name)
 	
 	if (template == null) {
-		return exportResponse(defineApiErrorResponse(
-			404, "api_template_notfound", "Template with such name is not found.",
-			{
-				requesting_template_name: template_name
-			}
-		))
+		return exportResponse(defineTemplateNotFoundResponse(template_name, "get"))
 	} else {
 		
 		const targets_params = new URL(args.request.url).searchParams.get("target")

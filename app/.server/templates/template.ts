@@ -1,7 +1,9 @@
 import fs from "fs";
 import { server_root } from "../config";
 import { z } from "zod";
-import { randomUUID } from "crypto";
+import { hash, randomUUID } from "crypto";
+import { iss } from "~/utils/fp";
+import { HashAlgorithms } from "~/utils/types";
 
 const templates_root = server_root + "/templates"
 
@@ -20,24 +22,35 @@ export class TemplateIndex {
 	
 	public readonly uuid: string
 	public readonly name: string
+	public readonly alias: string[]
 	
 	constructor (def: TemplateIndexDef) {
 		this.uuid = def.uuid
 		this.name = def.name
+		this.alias = def.alias
 	}
 	
-	public getPath (): string {
+	public getPath (file?: string): string {
 		const path = templates_root + "/" + this.uuid
 		if (!fs.existsSync(path))
 			fs.mkdirSync(path, { recursive: true })
-		return path
+		return iss(file, path + "/" + file, path)
 	}
 	
 	public getTemplate (): string {
-		const path = this.getPath() + "/template"
+		const path = this.getPath('template')
 		if (!fs.existsSync(path))
 			fs.writeFileSync(path, "")
 		return fs.readFileSync(path, "utf-8")
+	}
+	
+	public getTemplateHash (algorithm: HashAlgorithms = 'sha1'): string {
+		return hash(algorithm, this.getTemplate())
+	}
+	
+	public writeTemplate (write: string) {
+		const path = this.getPath() + "/template"
+		fs.writeFileSync(path, write, { encoding: "utf-8" })
 	}
 	
 	public getComments (): string {
