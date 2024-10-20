@@ -1,0 +1,85 @@
+input-text-bg-color = #ffffff
+input-text-fg-color = #5d5d5d
+input-input-background = #00000000
+input-marker-color = #d8e0e9
+input-marker-inside-color = alpha(#ffffff, 0.8)
+input-marker-focus-color = #3683db
+
+input-button-bg = #c8dcf7
+input-button-text = #558cd3
+input-button-onfocus-bg = darken(input-button-bg, 2%)
+input-button-disabled-bg = #a1a8ba
+input-button-disabled-text = #d8e0e9
+
+button.input.button
+	
+	clear-pad()
+	padding 0 1.1em
+	height 2.2em
+	border-radius 0.6em
+	
+	font-size 14px
+	font-weight 500
+	color input-button-text
+	background-color input-button-bg
+	font-family 'Alibaba Puhuiti'
+	
+	transition background-color 200ms, transform 200ms
+	
+	&:hover:not(.disabled)
+		transform scale(1.05, 1)
+		background-color input-button-onfocus-bg
+	
+	&.disabled
+		cursor not-allowed
+		color input-button-disabled-text
+		background-color input-button-disabled-bg
+
+.input.text
+	
+	font-size 12px
+	padding 0.5em 0.75em
+	padding-right 0.35em
+	
+	background-color input-text-bg-color
+	border-radius 0.4em
+	font-family monospace
+	color input-text-fg-color
+	
+	use-flex row
+	flex-wrap nowrap
+	column-gap 0.3em
+	
+	> input
+		flex 1 1 0
+		clear-pad()
+		width 100%
+		&:focus-visible
+			outline none
+		background input-input-background
+		font-family inherit
+		font-size inherit
+		color inherit
+	
+	> .marker
+	
+		flex 0 0 0.35em
+		background-color input-marker-color
+		border-radius 0.35em
+		transition background-color 150ms
+		
+		&.password
+			use-flex-center()
+			flex-basis 0.85em
+			border-radius 0.25em
+			> .show-password
+				size 0.25em 0.55em
+				border-radius 0.55em
+				background-color input-marker-inside-color
+				transition width 100ms
+				&.on
+					width 0.55em
+	
+	> input:focus-visible + .marker
+		background-color input-marker-focus-color
+	

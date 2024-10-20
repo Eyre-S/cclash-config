@@ -2,7 +2,7 @@ import { LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { server_config } from "./config";
 import { API_RESPONSE_UNAUTHORIZED, exportResponse } from "~/apis/api";
 import { AuthSessionData } from "~/apis/sessions";
-import { getCookieHeader } from "~/utils/http-helper";
+import { getCookieHeader, getPathOf } from "~/utils/http-helper";
 
 export function checkToken (token: string): boolean {
 	return token === server_config.token
@@ -26,6 +26,6 @@ export async function requireUILogin (request: Request): Promise<void> {
 	if (token !== undefined && checkToken(token))
 		return
 	
-	throw redirect("/login")
+	throw redirect("/login?redirect=" + encodeURIComponent(getPathOf(request)))
 	
 }

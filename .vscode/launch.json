@@ -1,0 +1,18 @@
+{
+	"configurations": [
+		{
+			"name": "[yarn] dev",
+			"type": "node",
+			"request": "launch",
+			"runtimeExecutable": "yarn",
+			"runtimeArgs": [
+				"dev",
+			],
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			// "outputCapture": "std",
+			"console": "integratedTerminal",
+		}
+	]
+}

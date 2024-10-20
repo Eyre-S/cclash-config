@@ -2,6 +2,10 @@ export function it <T> (func: () => T): T {
 	return func()
 }
 
+export function aIt <T> (func: () => Promise<T>): Promise<T> {
+	return func()
+}
+
 export function is <T> (statement: boolean|any, value: T): T | undefined {
 	if (typeof statement == 'boolean') {
 		return statement ? value : undefined

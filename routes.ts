@@ -21,6 +21,7 @@ export default function defineRoutes (route: DefineRouteFunction) {
 		
 		// login api for frontend login, will generate cookies
 		route("login", "routes/api/login.ts")
+		route("logout", "routes/api/logout.ts")
 		
 		// backend operator api, will not require cookies, but a token in path
 		route("auth/:auth", "routes/api/require-auth/index.ts", () => {

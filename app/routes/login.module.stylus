@@ -30,6 +30,8 @@
 			use-flex column
 			gap 10px
 			min-height 100px
+			transition height 200ms
+			overflow hidden
 			
 			> .notice
 				
@@ -56,29 +58,22 @@
 			width 100%
 		}
 		
-		.input
-			
-			&.field
-				box-sizing border-box
-				background #ffffff
-				color #000000aa
-				font-family monospace
-				font-size 16px
-				padding 10px 16px
-			
-			&.button
-				background-color #1e90ff
-				color #ffffff
-				padding 10px 16px
-				&:hover
-					background-color #0077cc
-				&:disabled
-					background-color #cccccc !important
-					color #ffffff
-			
-			clear-outer()
-			border-radius 5px
+		.input-elem
+			font-size 18px
 			width 100%
-			
+		
+		.input-button
+			font-size 18px
+			width 80%
+			.waiting
+				display inline-block
+				animation rotate-always 1s linear infinite
+		
 		
 	
+
+@keyframes rotate-always
+	from
+		transform rotate(0deg)
+	to
+		transform rotate(360deg)
