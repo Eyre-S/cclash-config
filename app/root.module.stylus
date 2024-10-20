@@ -1,3 +1,5 @@
+app-cover-bar-size = 1.414rem
+
 .app
 	
 	box-sizing border-box
@@ -58,4 +60,49 @@
 		size 100%
 		box-sizing border-box
 		position relative
+		
 	
+	.app-cover
+		
+		position absolute
+		pos 5px
+		background-color alpha(black, 0.1)
+		border-radius 10px
+		z-index 1000
+		use-flex-center()
+		overflow hidden
+		
+		display-anima-speed = 240ms
+		display none
+		transition 0.3s opacity
+		&.not-show
+			animation progress-disappear display-anima-speed linear
+		&.show
+			display block
+			animation progress-appear display-anima-speed linear
+		
+		.progress
+			position absolute
+			pos -10rem
+			z-index 1001
+			background #fafafa30 repeating-linear-gradient(-45deg, #ffffff30, #ffffff30 app-cover-bar-size, transparent app-cover-bar-size, transparent app-cover-bar-size*2)
+			animation progress-transient 580ms infinite linear
+
+@keyframes progress-appear
+	0%
+		opacity 0
+	100%
+		opacity 1
+@keyframes progress-disappear
+	0%
+		opacity 1
+		display block
+	100%
+		opacity 0
+		display none
+
+@keyframes progress-transient
+	0%
+		transform translate(0rem, 0rem)
+	100%
+		transform translate(app-cover-bar-size*2*1.41421356, 0rem)
