@@ -14,12 +14,33 @@
 			font-size 18px
 			use-flex row
 			align-items baseline
+			flex-wrap wrap
 			gap 0.6em
 			
 			> h2 {
+				
 				font-size 1.3em
 				color alpha(black, 0.8)
 				clear-pad()
+				position relative
+				z-index 30
+				
+				> .edited-indicator {
+					position absolute
+					z-index 10
+					top 50%
+					left -0.6em
+					size 0
+					transform translate(-50%, -50%)
+					border-radius 3px
+					background-color #b2caea
+					opacity 0.8
+					transition width 100ms, height 100ms
+					&.show {
+						size 0.6em
+					}
+				}
+				
 			}
 			> p {
 				font-size 12px
@@ -27,7 +48,23 @@
 				clear-pad()
 			}
 			
+			> .gap {
+				flex auto
+			}
+			
+			> .controller {
+				
+				box-sizing border-box
+				
+				use-flex row
+				gap 10px
+				align-items center
+				justify-content flex-end
+				
+			}
+			
 		}
+		
 	}
 	
 	> .editor-box {

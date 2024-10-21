@@ -6,10 +6,11 @@ import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useRev
 import { classes } from "~/utils/jsx-helper";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
-import { it } from "~/utils/fp";
+import { is, it } from "~/utils/fp";
 import CryptoJS from "crypto-js";
-import { Editor } from "@monaco-editor/react";
+import { Editor, useMonaco } from "@monaco-editor/react";
 import { guessCodeLanguage } from "~/utils/code-lang";
+import { useRef } from "react";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -33,6 +34,8 @@ export default function () {
 	const editingContent = $('')
 	const editingInitialStatus = $('')
 	const editingContentLanguage = $('')
+	
+	const editor = useMonaco()
 	
 	async function tryInit (enforce = false) {
 		if (editingTemplate.value != data.item.uuid || editingInitialStatus.value != data.contentSha1 || enforce) {
@@ -90,29 +93,36 @@ export default function () {
 		<div className={classes(css.itemEdit)}>
 			<div className={classes(css.header)}>
 				<div className={classes(css.title)}>
-					<h2>{data.item.name}</h2>
+					<h2>
+						{data.item.name}
+						<div className={classes(css.editedIndicator, is(!isClearState, css.show))} />
+					</h2>
 					<p>{data.item.uuid}</p>
+					<div className={classes(css.gap)} />
+					<div className={classes(css.controller)}>
+						<InputButton
+							disabled={isClearState}
+							onClick={resetToInitial}
+							>Reset</InputButton>
+						<InputButton
+							disabled={isClearState}
+							onClick={updateContent}
+							>Save</InputButton>
+					</div>
 				</div>
 			</div>
 			<div className={css.editorBox}>
 				<Editor
 					className={classes(css.editor)}
 					value={editingContent.value} onChange={e => editingContent.value = e as string}
-					language={editingContentLanguage.value} />
+					path={editingTemplate.value}
+					language={editingContentLanguage.value}
+					options={{ renderWhitespace: 'boundary' }} />
 			</div>
 			<div className={classes(css.controller)}>
 				<span>Language:</span>
 				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e} />
 				<InputButton onClick={reDetectCurrentLanguage} >Re-Detect</InputButton>
-				<span>{isClearState ? "" : "changes in query..."}</span>
-				<InputButton
-					disabled={isClearState}
-					onClick={resetToInitial}
-					>Reset</InputButton>
-				<InputButton
-					disabled={isClearState}
-					onClick={updateContent}
-					>Update</InputButton>
 			</div>
 		</div>
 	</>
