@@ -19,6 +19,25 @@ export class Reactive<T> {
 		this.setter(newValue)
 	}
 	
+	public set (x: SetStateAction<T>): void {
+		this.setter(x)
+	}
+	
+	public runs (x: (newState: T) => void): void {
+		this.setter((state) => {
+			x(state)
+			return state
+		})
+	}
+	
+	public state (): Promise<T> {
+		return new Promise((resolve) => {
+			this.runs((state) => {
+				resolve(state)
+			})
+		})
+	}
+	
 }
 
 export function $<T> (initValue: T): Reactive<T> {

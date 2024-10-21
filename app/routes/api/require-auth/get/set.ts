@@ -13,7 +13,7 @@ export async function action (args: ActionFunctionArgs) {
 	await requireApiToken(args)
 	
 	const templateName = args.params.template_name as string
-	const template = TemplateIndex.findByName(templateName)
+	const template = TemplateIndex.find(templateName)
 	if (template === null) {
 		return exportResponse(defineTemplateNotFoundResponse(templateName, "set"))
 	}

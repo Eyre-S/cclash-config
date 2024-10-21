@@ -26,8 +26,9 @@
 	padding 8px 14px
 	padding-left 18px
 	border-radius 6px
-	&:hover
+	&:hover, &.in-use
 		background-color #e9edf0
+	transition background-color 0.2s
 	
 	color #000000a0
 	text-decoration none
@@ -36,8 +37,10 @@
 	
 	> .indicator
 		position absolute
-		display none
 		pos 7px
+		top 50%
+		bottom 50%
+		transition top 200ms, bottom 200ms
 		right unset
 		width 4px
 		border-radius 4px
@@ -46,5 +49,18 @@
 	&.enabled
 		color #7ba5db
 		> .indicator
-			display block
+			pos 7px
+	
+	&.adder
+		use-flex-center(column)
+		gap 5px
+		
+		> .input-name
+			width 100%
+		
+		> .controller
+			width 100%
+			use-flex row
+			gap 5px
+			justify-content flex-end
 	

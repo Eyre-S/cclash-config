@@ -1,9 +1,9 @@
 import fs from "fs";
 import { server_root } from "../config";
 import { z } from "zod";
-import { hash, randomUUID } from "crypto";
+import { randomUUID } from "crypto";
 import { iss } from "~/utils/fp";
-import { HashAlgorithms } from "~/utils/types";
+import CryptoJS from "crypto-js";
 
 const templates_root = server_root + "/templates"
 
@@ -44,8 +44,8 @@ export class TemplateIndex {
 		return fs.readFileSync(path, "utf-8")
 	}
 	
-	public getTemplateHash (algorithm: HashAlgorithms = 'sha1'): string {
-		return hash(algorithm, this.getTemplate())
+	public getTemplateHash (): string {
+		return CryptoJS.SHA1(this.getTemplate()).toString()
 	}
 	
 	public writeTemplate (write: string) {
@@ -100,6 +100,20 @@ export class TemplateIndex {
 		return new TemplateIndex(found)
 	}
 	
+	public static find (nameOrUUID: string): TemplateIndex|null {
+		const index = TemplateIndex.readIndex()
+		const found = index.find((item) => {
+			if (item.name === nameOrUUID || item.uuid === nameOrUUID) {
+				return true
+			}
+			return item.alias.includes(nameOrUUID)
+		})
+		if (!found) {
+			return null
+		}
+		return new TemplateIndex(found)
+	}
+	
 	public static create (name: string): TemplateIndex {
 		const indexDef: TemplateIndexDef = {
 			uuid: randomUUID(),
@@ -115,7 +129,7 @@ export class TemplateIndex {
 export function readTemplate (name: string): string|null {
 	
 	try {
-		const template = TemplateIndex.findByName(name)
+		const template = TemplateIndex.find(name)
 		if (template === null) {
 			return null
 		}
@@ -129,7 +143,7 @@ export function readTemplate (name: string): string|null {
 export function readTemplateComment (name: string): string|null {
 	
 	try {
-		const template = TemplateIndex.findByName(name)
+		const template = TemplateIndex.find(name)
 		if (template === null) {
 			return null
 		}
@@ -143,7 +157,7 @@ export function readTemplateComment (name: string): string|null {
 export function readTemplateConfigs (name: string): string|null {
 	
 	try {
-		const template = TemplateIndex.findByName(name)
+		const template = TemplateIndex.find(name)
 		if (template === null) {
 			return null
 		}

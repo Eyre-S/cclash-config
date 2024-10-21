@@ -11,6 +11,12 @@ const stylusConfig = {
 
 export default defineConfig({
 	
+	optimizeDeps: {
+		esbuildOptions: {
+			target: "es2022"
+		}
+	},
+	
 	plugins: [
 		remix({
 			
