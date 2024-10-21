@@ -10,11 +10,13 @@
 		"typecheck": "tsc"
 	},
 	"dependencies": {
+		"@monaco-editor/react": "^4.6.0",
 		"@remix-run/node": "2.13.1",
 		"@remix-run/react": "2.13.1",
 		"@types/crypto-js": "^4.2.2",
 		"compression": "^1.7.4",
 		"crypto-js": "^4.2.0",
+		"highlight.js": "^11.10.0",
 		"is-ip": "^5.0.1",
 		"isbot": "4.4.0",
 		"morgan": "^1.10.0",

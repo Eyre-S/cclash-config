@@ -30,22 +30,24 @@
 		}
 	}
 	
-	> .editor {
+	> .editor-box {
 		
-		box-sizing border-box
-		width 100%
-		height 100%
-		resize none
-		padding 10px
-		
-		font-family monospace
-		background-color rgb(255, 255, 255)
+		size 100%
+		position relative
 		border-radius 10px
-		overflow scroll
+		overflow hidden
 		
-		border none
-		outline none
+		background-color #ffffff
 		
+		.editor {
+			
+			box-sizing border-box
+			position absolute
+			pos 0
+			size 100%
+			
+		}
+	
 	}
 	
 	> .controller {
@@ -54,6 +56,7 @@
 		
 		use-flex row
 		gap 10px
+		align-items center
 		justify-content flex-end
 		
 	}

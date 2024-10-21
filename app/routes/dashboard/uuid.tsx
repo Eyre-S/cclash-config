@@ -4,10 +4,12 @@ import { TemplateIndex } from "~/.server/templates/template";
 import css from "./uuid.module.stylus"
 import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useRevalidator } from "@remix-run/react";
 import { classes } from "~/utils/jsx-helper";
-import { InputButton } from "~/utils/components/Inputs";
+import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
 import { it } from "~/utils/fp";
 import CryptoJS from "crypto-js";
+import { Editor } from "@monaco-editor/react";
+import { guessCodeLanguage } from "~/utils/code-lang";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -30,6 +32,7 @@ export default function () {
 	const editingTemplate = $('')
 	const editingContent = $('')
 	const editingInitialStatus = $('')
+	const editingContentLanguage = $('')
 	
 	async function tryInit (enforce = false) {
 		if (editingTemplate.value != data.item.uuid || editingInitialStatus.value != data.contentSha1 || enforce) {
@@ -37,6 +40,7 @@ export default function () {
 			editingTemplate.value = data.item.uuid
 			editingContent.value = data.content
 			editingInitialStatus.value = data.contentSha1
+			editingContentLanguage.value = guessCodeLanguage(data.content)
 			console.log("reloaded data of", await editingTemplate.state())
 		}
 	} tryInit()
@@ -78,6 +82,10 @@ export default function () {
 		
 	}
 	
+	async function reDetectCurrentLanguage () {
+		editingContentLanguage.value = guessCodeLanguage(editingContent.value)
+	}
+	
 	return <>
 		<div className={classes(css.itemEdit)}>
 			<div className={classes(css.header)}>
@@ -86,11 +94,16 @@ export default function () {
 					<p>{data.item.uuid}</p>
 				</div>
 			</div>
-			<textarea
-				className={classes(css.editor)}
-				value={editingContent.value}
-				onChange={e => editingContent.value = e.target.value}/>
+			<div className={css.editorBox}>
+				<Editor
+					className={classes(css.editor)}
+					value={editingContent.value} onChange={e => editingContent.value = e as string}
+					language={editingContentLanguage.value} />
+			</div>
 			<div className={classes(css.controller)}>
+				<span>Language:</span>
+				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e} />
+				<InputButton onClick={reDetectCurrentLanguage} >Re-Detect</InputButton>
 				<span>{isClearState ? "" : "changes in query..."}</span>
 				<InputButton
 					disabled={isClearState}

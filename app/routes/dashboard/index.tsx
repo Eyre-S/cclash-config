@@ -58,14 +58,12 @@ export default function Index() {
 		if (event) event.stopPropagation()
 		isAdding.value = false
 		addingName.value = ''
-		console.log('canceled add')
 	}
 	function startAdd (event?: MouseEvent) {
 		if (event) event.stopPropagation()
 		if (isAdding.value) return
 		isAdding.value = true
 		addingName.value = ''
-		console.log('start add')
 	}
 	
 	function handleOverAddAreaClick () {
