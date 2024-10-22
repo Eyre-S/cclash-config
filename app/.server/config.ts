@@ -7,6 +7,8 @@ export const ServerConfigDef = z.object({
 	
 	token: z.string().default("fill-this"),
 	
+	site_name: z.string().default("CClash Config Deliver"),
+	
 })
 export type ServerConfig = z.infer<typeof ServerConfigDef>
 export const ServerConfigDefault: ServerConfig = ServerConfigDef.parse({})

@@ -6,9 +6,9 @@ export default function defineRoutes (route: DefineRouteFunction) {
 	
 	route("/login", "routes/login.tsx")
 	
-	route("/dashboard", "routes/dashboard/index.tsx", () => {
+	route("/templates", "routes/templates/index.tsx", () => {
 		
-		route(":uuid", "routes/dashboard/uuid.tsx")
+		route(":uuid", "routes/templates/editor.tsx")
 		
 	})
 	
@@ -28,7 +28,7 @@ export default function defineRoutes (route: DefineRouteFunction) {
 			// check if the token is valid
 			route("check", "routes/api/require-auth/check.ts")
 			// for admin, reload the server config
-			route("check", "routes/api/require-auth/config-reload.ts")
+			route("config-reload", "routes/api/require-auth/config-reload.ts")
 			// do the template operators
 			// defaults is the endpoint that returns only the template with upp, will NOT follow API response format
 			route("get/:template_name", "routes/api/require-auth/get/index.ts", () => {

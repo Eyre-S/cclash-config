@@ -5,17 +5,37 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useLoaderData,
+	useMatch,
 	useNavigation,
 } from "@remix-run/react";
 
 import './root.stylus';
 import css from './root.module.stylus'
 import { classes } from "./utils/jsx-helper";
-import { iss } from "./utils/fp";
+import { is, iss } from "./utils/fp";
+import { server_config } from "./.server/config";
 
-export const siteName = "CClash Config Deliver";
+export function AppNavigatorLink (_: { to: string, children: React.ReactNode, className?: string }) {
+	const isOnCurrent = useMatch(_.to)
+	return <>
+		<Link to={_.to} className={classes(is(isOnCurrent, css.on), _.className)}>
+			{_.children}
+		</Link>
+	</>
+}
+
+export async function loader () {
+	
+	return {
+		siteName: server_config.site_name
+	}
+	
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
+	
+	const data = useLoaderData<typeof loader>()
 	
 	const navigation = useNavigation()
 	
@@ -36,18 +56,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 					<div className={classes(css.pageHeader)}>
 						
 						<div className={classes(css.left)}>
-							<Link to="/" className={classes(css.logo)}>
+							<AppNavigatorLink to="/" className={classes(css.logo)}>
 								<img src="/cclash.png" alt="logo" />
-							</Link>
+							</AppNavigatorLink>
 						</div>
 						
 						<div className={classes(css.title)}>
-							<span>{ siteName }</span>
+							<span>{ data.siteName }</span>
 						</div>
 						
 						<div className={classes(css.right)}>
-							<Link to="/login">Login</Link>
-							<Link to="/dashboard">Dashboard</Link>
+							<AppNavigatorLink to="templates">Templates</AppNavigatorLink>
+							<AppNavigatorLink to="settings">Settings</AppNavigatorLink>
+							<AppNavigatorLink to="login">Login</AppNavigatorLink>
 						</div>
 						
 					</div>

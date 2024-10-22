@@ -1,8 +1,8 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { TemplateIndex } from "~/.server/templates/template";
 
-import css from "./uuid.module.stylus"
-import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useRevalidator } from "@remix-run/react";
+import css from "./editor.module.stylus"
+import { unstable_usePrompt, useBeforeUnload, useLoaderData, useRevalidator } from "@remix-run/react";
 import { classes } from "~/utils/jsx-helper";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
@@ -10,7 +10,6 @@ import { is, it } from "~/utils/fp";
 import CryptoJS from "crypto-js";
 import { Editor, useMonaco } from "@monaco-editor/react";
 import { guessCodeLanguage } from "~/utils/code-lang";
-import { useRef } from "react";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	

@@ -2,14 +2,35 @@
 	
 	position absolute
 	pos 0
-	use-flex-center()
+	use-flex-center column
 	
 	opacity 0.25
 	
 	> img {
 		
-		height 80%
+		width 24rem
 		max-width 80%
+		
+	}
+	
+	> table {
+		
+		clear-pad()
+		border-spacing 0
+		font-size 14px
+		border-spacing 0.56em 1em
+		
+		td:first-child {
+			clear-pad()
+			text-align right
+		}
+		
+		a {
+			
+			color #0553b9
+			text-decoration none
+			
+		}
 		
 	}
 	

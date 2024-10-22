@@ -52,6 +52,9 @@ app-cover-bar-size = 1.414rem
 				a-normalize()
 				color #707173
 				font-sw 14px 700
+				&.on {
+					color #7ba5db
+				}
 			}
 			
 		

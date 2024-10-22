@@ -30,7 +30,7 @@ function TemplateIndexItem (_: { index: TemplateIndexDef, enabled: boolean }) {
 	
 	return (
 		<Link
-			to={`/dashboard/${_.index.uuid}`}
+			to={`${_.index.uuid}`}
 			className={classes("template-index-item", css.templateIndexItem, _.enabled ? css.enabled : undefined)}>
 			<div>
 				<span>{_.index.name}</span>
