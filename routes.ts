@@ -34,11 +34,14 @@ export default function defineRoutes (route: DefineRouteFunction) {
 		
 		// backend operator api, will not require cookies, but a token in path
 		route("auth/:auth", "routes/api/require-auth/index.ts", routeKeys('api/_auth'), () => {
+			
 			// check if the token is valid
 			route("check", "routes/api/require-auth/check.ts", routeKeys('api/_auth/check'))
 			// for admin, reload the server config
 			route("config-reload", "routes/api/require-auth/config-reload.ts", routeKeys('api/_auth/config-reload'))
+			
 			// do the template operators
+			route("get_create", "routes/api/require-auth/get_create.ts", routeKeys('api/_auth/get_create'))
 			// defaults is the endpoint that returns only the template with upp, will NOT follow API response format
 			route("get/:template_name", "routes/api/require-auth/get/index.ts", routeKeys('api/_auth/get/_template'), () => {
 				// following are getting data endpoints, will NOT follow API response format
@@ -49,6 +52,7 @@ export default function defineRoutes (route: DefineRouteFunction) {
 				route("about", "routes/api/require-auth/get/about.ts", routeKeys('api/_auth/get/_template/about'))
 				route("set", "routes/api/require-auth/get/set.ts", routeKeys('api/_auth/get/_template/set'))
 			})
+			
 		})
 		
 	})

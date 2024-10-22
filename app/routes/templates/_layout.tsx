@@ -4,11 +4,13 @@ import css from "./_layout.module.stylus";
 import { classes } from "~/utils/jsx-helper";
 import { requireUILogin } from "~/.server/auth";
 import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template";
-import { Link, Outlet, useBeforeUnload, useLoaderData, useParams } from "@remix-run/react";
+import { Link, Outlet, useBeforeUnload, useLoaderData, useParams, useRevalidator } from "@remix-run/react";
 import { $ } from "~/utils/reactive";
 import { is, iss } from "~/utils/fp";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { MouseEvent, useEffect } from "react";
+import { ApiGetCreate_Request, ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate } from "../api/require-auth/get_create";
+import { ApiResponse, ApiResponseError } from "~/apis/api";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -43,6 +45,7 @@ function TemplateIndexItem (_: { index: TemplateIndexDef, enabled: boolean }) {
 
 export default function Index() {
 	
+	const revalidator = useRevalidator()
 	const data = useLoaderData<typeof loader>()
 	const params = useParams()
 	const current_index = params.uuid
@@ -51,8 +54,30 @@ export default function Index() {
 	const addingName = $('')
 	
 	async function createNewTemplate () {
-		alert(`Failed add new template with name ${addingName.value}: Not implemented yet`)
+		
+		const createResponse = await fetch("/api/auth/_cookie_/get_create", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				name: addingName.value
+			} satisfies ApiGetCreate_RequestDef)
+		})
+		const json = await createResponse.json() as ApiResponse
+		if (json.status === 200) {
+			revalidator.revalidate()
+		} else {
+			const jsonErr = json as ApiResponseError<any>
+			if (jsonErr.e_id == 'api_getCreate_create') {
+				const jsonErrCreate = jsonErr as ApiResponseError<ApiGetCreate_Response_ECreate>
+				alert("Failed to create new template: " + jsonErrCreate.error.caused)
+			} else {
+				alert("500 Internal Server Error: " + JSON.stringify(json))
+			}
+		}
 		cancelAdd()
+		
 	}
 	function cancelAdd (event?: MouseEvent) {
 		if (event) event.stopPropagation()

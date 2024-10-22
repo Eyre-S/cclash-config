@@ -101,29 +101,54 @@ export class TemplateIndex {
 	}
 	
 	public static find (nameOrUUID: string): TemplateIndex|null {
-		const index = TemplateIndex.readIndex()
-		const found = index.find((item) => {
-			if (item.name === nameOrUUID || item.uuid === nameOrUUID) {
-				return true
-			}
-			return item.alias.includes(nameOrUUID)
-		})
-		if (!found) {
-			return null
+		if (nameOrUUID.startsWith('uuid:')) {
+			return TemplateIndex.findByUUID(nameOrUUID.substring('uuid:'.length))
+		} else {
+			return TemplateIndex.findByName(nameOrUUID)
 		}
-		return new TemplateIndex(found)
 	}
 	
-	public static create (name: string): TemplateIndex {
+	/**
+	 * @throws TemplateCreateError
+	 */
+	public static create (name: string, alias: string[] = []): TemplateIndex {
+		
+		// create new template index object
 		const indexDef: TemplateIndexDef = {
 			uuid: randomUUID(),
 			name: name,
-			alias: []
+			alias: alias
 		}
-		TemplateIndex.writeIndex([...TemplateIndex.readIndex(), indexDef])
+		
+		const currentIndexes = TemplateIndex.readIndex()
+		
+		// check duplicate or illegal name
+		if (indexDef.name.startsWith('uuid:')) {
+			throw new TemplateCreateError("Template name cannot start with 'uuid:'.")
+		}
+		for (const alias of indexDef.alias) {
+			if (alias.startsWith('uuid:')) {
+				throw new TemplateCreateError("Template alias name cannot start with 'uuid:'.")
+			}
+		}
+		for (const item of currentIndexes) {
+			if (item.name === indexDef.name) {
+				throw new TemplateCreateError("Template with this name already exists.")
+			}
+		}
+		
+		// execute writes
+		TemplateIndex.writeIndex([...currentIndexes, indexDef])
 		return new TemplateIndex(indexDef)
+		
 	}
 	
+}
+
+export class TemplateCreateError extends Error {
+	public constructor (message: string) {
+		super(message)
+	}
 }
 
 export function readTemplate (name: string): string|null {

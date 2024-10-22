@@ -8,7 +8,7 @@ import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
 import { is, it } from "~/utils/fp";
 import CryptoJS from "crypto-js";
-import { Editor, useMonaco } from "@monaco-editor/react";
+import { Editor } from "@monaco-editor/react";
 import { guessCodeLanguage } from "~/utils/code-lang";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
@@ -33,8 +33,6 @@ export default function () {
 	const editingContent = $('')
 	const editingInitialStatus = $('')
 	const editingContentLanguage = $('')
-	
-	const editor = useMonaco()
 	
 	async function tryInit (enforce = false) {
 		if (editingTemplate.value != data.item.uuid || editingInitialStatus.value != data.contentSha1 || enforce) {
@@ -71,7 +69,7 @@ export default function () {
 	
 	async function updateContent () {
 		
-		const submitResult = await fetch(`/api/auth/_cookie_/get/${data.item.uuid}/set`, {
+		const submitResult = await fetch(`/api/auth/_cookie_/get/uuid:${data.item.uuid}/set`, {
 			method: 'POST',
 			body: editingContent.value,
 			headers: {
