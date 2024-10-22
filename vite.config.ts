@@ -22,7 +22,9 @@ export default defineConfig({
 			
 			ignoredRouteFiles: [
 				"**/*.styl",
-				"**/*.stylus"
+				"**/*.stylus",
+				"**/*.ts",
+				"**/*.tsx",
 			],
 			
 			routes: async (defineRoutes) => {

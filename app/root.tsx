@@ -5,9 +5,9 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	useLoaderData,
-	useMatch,
+	useMatches,
 	useNavigation,
+	useRouteLoaderData,
 } from "@remix-run/react";
 
 import './root.stylus';
@@ -17,7 +17,9 @@ import { is, iss } from "./utils/fp";
 import { server_config } from "./.server/config";
 
 export function AppNavigatorLink (_: { to: string, children: React.ReactNode, className?: string }) {
-	const isOnCurrent = useMatch(_.to)
+	const toNormalized = _.to.startsWith('/') ? _.to : '/' + _.to
+	const currentRoute = useMatches()
+	const isOnCurrent = currentRoute[1]?.pathname == toNormalized
 	return <>
 		<Link to={_.to} className={classes(is(isOnCurrent, css.on), _.className)}>
 			{_.children}
@@ -35,7 +37,10 @@ export async function loader () {
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	
-	const data = useLoaderData<typeof loader>()
+	const data = useRouteLoaderData<typeof loader>('root')
+	if (data === undefined) {
+		throw new Error('Website root information cannot be loaded.')
+	}
 	
 	const navigation = useNavigation()
 	

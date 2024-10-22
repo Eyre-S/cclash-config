@@ -1,44 +1,53 @@
-import { DefineRouteFunction } from "@remix-run/dev/dist/config/routes";
+import { DefineRouteFunction, DefineRouteOptions } from "@remix-run/dev/dist/config/routes";
+
+export function routeKeys (id: string, index?: 'index'): DefineRouteOptions {
+	return {
+		id: id,
+		index: index ? true : undefined
+	}
+}
 
 export default function defineRoutes (route: DefineRouteFunction) {
 	
-	route("/", "routes/index.tsx")
+	route("/", "routes/index.tsx", routeKeys('index', 'index'))
 	
-	route("/login", "routes/login.tsx")
+	route("/login", "routes/login.tsx", routeKeys('login'))
+	route("/settings", "routes/settings/index.tsx", routeKeys('settings'))
 	
-	route("/templates", "routes/templates/index.tsx", () => {
+	route("/templates", "routes/templates/_layout.tsx", routeKeys('templates'), () => {
 		
-		route(":uuid", "routes/templates/editor.tsx")
+		route("", "routes/templates/index.tsx", routeKeys('templates/index', 'index'))
+		route(":uuid", "routes/templates/editor.tsx", routeKeys('templates/_uuid'))
 		
 	})
 	
 	// after is API Endpoints
-	route("/api", "routes/api/index.ts", () => {
+	route("/api", "routes/api/index.ts", routeKeys('api'), () => {
 		
 		// universal api
-		route("hello", "routes/api/hello.ts")
-		route("ping", "routes/api/ping.ts")
+		route("hello", "routes/api/hello.ts", routeKeys('api/hello'))
+		route("ping", "routes/api/hello.ts", routeKeys('api/ping'))
 		
 		// login api for frontend login, will generate cookies
-		route("login", "routes/api/login.ts")
-		route("logout", "routes/api/logout.ts")
+		route("login", "routes/api/login.ts", routeKeys('api/login'))
+		route("logout", "routes/api/logout.ts", routeKeys('api/logout'))
 		
 		// backend operator api, will not require cookies, but a token in path
-		route("auth/:auth", "routes/api/require-auth/index.ts", () => {
+		route("auth/:auth", "routes/api/require-auth/index.ts", routeKeys('api/_auth'), () => {
 			// check if the token is valid
-			route("check", "routes/api/require-auth/check.ts")
+			route("check", "routes/api/require-auth/check.ts", routeKeys('api/_auth/check'))
 			// for admin, reload the server config
-			route("config-reload", "routes/api/require-auth/config-reload.ts")
+			route("config-reload", "routes/api/require-auth/config-reload.ts", routeKeys('api/_auth/config-reload'))
 			// do the template operators
 			// defaults is the endpoint that returns only the template with upp, will NOT follow API response format
-			route("get/:template_name", "routes/api/require-auth/get/index.ts", () => {
+			route("get/:template_name", "routes/api/require-auth/get/index.ts", routeKeys('api/_auth/get/_template'), () => {
 				// following are getting data endpoints, will NOT follow API response format
-				route("raw", "routes/api/require-auth/get/raw.ts")
-				route("comment", "routes/api/require-auth/get/comment.ts")
-				route("config", "routes/api/require-auth/get/config.ts")
+				route("raw", "routes/api/require-auth/get/raw.ts", routeKeys('api/_auth/get/_template/raw'))
+				route("comment", "routes/api/require-auth/get/comment.ts", routeKeys('api/_auth/get/_template/comment'))
+				route("config", "routes/api/require-auth/get/config.ts", routeKeys('api/_auth/get/_template/config'))
 				// following are data operation endpoints, will follow API response format
-				route("about", "routes/api/require-auth/get/about.ts")
-				route("set", "routes/api/require-auth/get/set.ts")
+				route("about", "routes/api/require-auth/get/about.ts", routeKeys('api/_auth/get/_template/about'))
+				route("set", "routes/api/require-auth/get/set.ts", routeKeys('api/_auth/get/_template/set'))
 			})
 		})
 		

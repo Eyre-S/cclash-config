@@ -1,0 +1,66 @@
+.page
+	
+	size 100%
+	display grid
+	grid-template-columns 250px 1fr
+	gap 15px
+	
+	.page-sidebar
+		
+		background-color #f6f8fa
+		border-radius 10px
+		
+		use-flex column
+		padding 8px
+		gap 8px
+		
+	
+	.page-content
+		
+		background-color #f6f8fa
+		border-radius 10px
+
+.template-index-item
+	
+	position relative
+	padding 8px 14px
+	padding-left 18px
+	border-radius 6px
+	&:hover, &.in-use
+		background-color #e9edf0
+	transition background-color 0.2s
+	
+	color #000000a0
+	text-decoration none
+	font-size 14px
+	font-weight 500
+	
+	> .indicator
+		position absolute
+		pos 7px
+		top 50%
+		bottom 50%
+		transition top 200ms, bottom 200ms
+		right unset
+		width 4px
+		border-radius 4px
+		background-color #7ba5db
+	
+	&.enabled
+		color #7ba5db
+		> .indicator
+			pos 7px
+	
+	&.adder
+		use-flex-center(column)
+		gap 5px
+		
+		> .input-name
+			width 100%
+		
+		> .controller
+			width 100%
+			use-flex row
+			gap 5px
+			justify-content flex-end
+	
