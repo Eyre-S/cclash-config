@@ -1,4 +1,7 @@
+app-header-height = 55px
+
 app-cover-bar-size = 1.414rem
+
 
 .app
 	
@@ -7,7 +10,7 @@ app-cover-bar-size = 1.414rem
 	overflow hidden
 	
 	display grid
-	grid-template-rows 55px 1fr
+	grid-template-rows app-header-height auto
 	padgap 15px
 	
 	.page-header
@@ -47,15 +50,6 @@ app-cover-bar-size = 1.414rem
 			gap 10px
 			padding-inline 20px
 			use-flex-center row axis
-			
-			> a {
-				a-normalize()
-				color #707173
-				font-sw 14px 700
-				&.on {
-					color #7ba5db
-				}
-			}
 			
 		
 	
@@ -109,3 +103,55 @@ app-cover-bar-size = 1.414rem
 		transform translate(0rem, 0rem)
 	100%
 		transform translate(app-cover-bar-size*2*1.41421356, 0rem)
+
+.navigator-box
+	
+	nav-border-radius = 10px
+	nav-item-width = 7em
+	nav-transition = 200ms
+	
+	use-flex row
+	align-items stretch
+	
+	background-color #ffffff
+	font-sw 14px 700
+	height app-header-height - 20px
+	border-radius nav-border-radius
+	overflow hidden
+	position relative
+	
+	.navigator-indicator {
+		
+		position absolute
+		z-index 8
+		width nav-item-width
+		height 100%
+		border-radius nav-border-radius
+		background-color #d5e1f0
+		
+		left "calc(var(--nav-current-index) * %s)" % nav-item-width
+		transition left nav-transition
+		
+	}
+	
+	.navigator-item {
+		
+		z-index 10
+		a-normalize()
+		use-flex-center()
+		box-sizing border-box
+		width nav-item-width
+		// padding-inline 1em
+		border-radius nav-border-radius
+		
+		color #707173
+		transition color nav-transition
+		
+		&.on {
+			color #f6f8fa
+			// background-color #d5e1f0
+		}
+		
+	}
+	
+	

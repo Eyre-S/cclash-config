@@ -21,7 +21,7 @@ export default function Index() {
 		<>
 			<div className={classes(css.page)}>
 				<img src="/cclash.png" />
-				<table>
+				<table><tbody>
 					<tr>
 						<td>Login to unlock full access</td>
 						<td><Link to="/login">/login</Link></td>
@@ -38,7 +38,7 @@ export default function Index() {
 						<td>API Endpoints</td>
 						<td><Link to="/api" reloadDocument>/api</Link></td>
 					</tr>
-				</table>
+				</tbody></table>
 			</div>
 		</>
 	);

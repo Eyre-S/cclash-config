@@ -15,16 +15,81 @@ import css from './root.module.stylus'
 import { classes } from "./utils/jsx-helper";
 import { is, iss } from "./utils/fp";
 import { server_config } from "./.server/config";
+import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } from "react";
+import { $ } from "./utils/reactive";
 
-export function AppNavigatorLink (_: { to: string, children: React.ReactNode, className?: string }) {
-	const toNormalized = _.to.startsWith('/') ? _.to : '/' + _.to
+export function AppNavigatorLink (props: { to: string, children: React.ReactNode, className?: string, onCurrent?: () => any, onNonCurrent?: () => any}) {
+	const onCurrentLast = $(false)
+	const toNormalized = props.to.startsWith('/') ? props.to : '/' + props.to
 	const currentRoute = useMatches()
 	const isOnCurrent = currentRoute[1]?.pathname == toNormalized
+	if (onCurrentLast.value != isOnCurrent) {
+		onCurrentLast.value = isOnCurrent
+		if (isOnCurrent) (props.onCurrent||(()=>{}))()
+		else (props.onNonCurrent||(()=>{}))()
+	}
 	return <>
-		<Link to={_.to} className={classes(is(isOnCurrent, css.on), _.className)}>
-			{_.children}
+		<Link to={props.to} className={classes(css.navigatorItem, is(isOnCurrent, css.on), props.className)}>
+			{props.children}
 		</Link>
 	</>
+}
+
+export interface AppNavigationBar_Exposed {
+	unsetCurrentIndex: () => void
+}
+
+export const AppNavigationBar = forwardRef(function AppNavigationBar (props: {}, ref: Ref<AppNavigationBar_Exposed>) {
+	
+	const currentEnabled = $(-1)
+	
+	let navIdStyles = {
+		'--nav-current-index': currentEnabled.value
+	} as CSSProperties
+	
+	useImperativeHandle(ref, () => {return {
+		unsetCurrentIndex: () => {
+			currentEnabled.value = -1
+		}
+	}})
+	
+	return <>
+		<div className={classes(css.navigatorBox)}>
+			<div className={classes(css.navigatorIndicator)} style={navIdStyles} />
+			<AppNavigatorLink onCurrent={() => currentEnabled.value = 0} to="templates">Templates</AppNavigatorLink>
+			<AppNavigatorLink onCurrent={() => currentEnabled.value = 1} to="settings">Settings</AppNavigatorLink>
+			<AppNavigatorLink onCurrent={() => currentEnabled.value = 2} to="login">Login</AppNavigatorLink>
+		</div>
+	</>
+	
+})
+
+export function AppHeader (_: {siteName: string, siteIcon: string}) {
+	
+	const appNavigationBar = useRef<AppNavigationBar_Exposed>(null)
+	
+	return <>
+		
+		<div className={classes(css.pageHeader)}>
+			
+			<div className={classes(css.left)}>
+				<AppNavigatorLink to="/" className={classes(css.logo)} onCurrent={() => appNavigationBar.current?.unsetCurrentIndex()}>
+					<img src={_.siteIcon} alt="logo" />
+				</AppNavigatorLink>
+			</div>
+			
+			<div className={classes(css.title)}>
+				<span>{ _.siteName }</span>
+			</div>
+			
+			<div className={classes(css.right)}>
+				<AppNavigationBar ref={appNavigationBar} />
+			</div>
+			
+		</div>
+		
+	</>
+	
 }
 
 export async function loader () {
@@ -37,12 +102,11 @@ export async function loader () {
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	
+	const navigation = useNavigation()
 	const data = useRouteLoaderData<typeof loader>('root')
 	if (data === undefined) {
 		throw new Error('Website root information cannot be loaded.')
 	}
-	
-	const navigation = useNavigation()
 	
 	const shouldAppCoverShows = navigation.state != 'idle'
 	
@@ -58,25 +122,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<body>
 				<div id="app" className={classes(css.app)}>
 					
-					<div className={classes(css.pageHeader)}>
-						
-						<div className={classes(css.left)}>
-							<AppNavigatorLink to="/" className={classes(css.logo)}>
-								<img src="/cclash.png" alt="logo" />
-							</AppNavigatorLink>
-						</div>
-						
-						<div className={classes(css.title)}>
-							<span>{ data.siteName }</span>
-						</div>
-						
-						<div className={classes(css.right)}>
-							<AppNavigatorLink to="templates">Templates</AppNavigatorLink>
-							<AppNavigatorLink to="settings">Settings</AppNavigatorLink>
-							<AppNavigatorLink to="login">Login</AppNavigatorLink>
-						</div>
-						
-					</div>
+					<AppHeader
+						siteName={data.siteName}
+						siteIcon="/cclash.png" />
 					
 					<div className={classes(css.pageBody)}>
 						{children}
