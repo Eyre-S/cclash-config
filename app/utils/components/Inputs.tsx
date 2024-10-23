@@ -1,4 +1,4 @@
-import { MouseEventHandler, TouchEventHandler, useRef } from "react"
+import { ReactNode, useRef } from "react"
 import { is, iss } from "../fp"
 import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
@@ -25,13 +25,10 @@ export function InputButton (_: {
 	
 	function startTimer (e: ButtonReceiveEvents) {
 		e.stopPropagation()
-		console.log("start down")
 		isPressing.value = true
 		pressTimeout.current = setTimeout(() => {
-			console.log("timeout down")
 			isPressing.value = false
 			pressTimeout.current = undefined
-			console.log("executed")
 			if (_.onClick) _.onClick(e)
 		}, 2000)
 	}
@@ -39,7 +36,6 @@ export function InputButton (_: {
 	function stopTimer (e: ButtonReceiveEvents) {
 		e.stopPropagation()
 		if (pressTimeout.current != undefined) {
-			console.log("stop down")
 			clearTimeout(pressTimeout.current)
 			pressTimeout.current = undefined
 			isPressing.value = false
@@ -78,7 +74,11 @@ export function InputText (_: {
 	minLength?: number
 	pattern?: RegExp
 	
-	className?: string[]
+	className?: string[],
+	
+	children?: ReactNode,
+	prefix?: ReactNode,
+	suffix?: ReactNode
 	
 }) {
 	
@@ -92,11 +92,20 @@ export function InputText (_: {
 	return <>
 		<div className={classes('input', 'input-text', css.input, css.text, is(_.password, 'password'), is(showPassword.value, css.showPassword), ..._.className||[])}>
 			
+			{is(typeof _.prefix !== 'undefined', <>
+				<span className={classes(css.prefix)}>{_.prefix}</span>
+				<span className={classes(css.prefixSeparator)} />
+			</>)}
+			
 			<input
 				value={_.value} onInput={e => _.onValueChange(e.currentTarget.value)}
 				type={type} disabled={_.disabled} placeholder={_.placeholder}
 				minLength={_.minLength} maxLength={_.maxLength} pattern={_.pattern?.source}
 			/>
+			
+			{is(typeof _.suffix !== 'undefined', <>
+				<span className={classes(css.suffix)}>{_.suffix}</span>
+			</>)}
 			
 			{iss(_.password,
 				<div className={classes(css.marker, css.password)} onClick={toggleShowPassword}>

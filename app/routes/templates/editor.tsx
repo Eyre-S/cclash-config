@@ -132,8 +132,9 @@ export default function () {
 					options={{ renderWhitespace: 'boundary' }} />
 			</div>
 			<div className={classes(css.controller)}>
-				<span>Language:</span>
-				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e} />
+				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e}
+					prefix="Language" placeholder="..."
+					/>
 				<InputButton onClick={reDetectCurrentLanguage} >Re-Detect</InputButton>
 			</div>
 		</div>

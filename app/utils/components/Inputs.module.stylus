@@ -87,7 +87,7 @@ button.input.button
 	
 	use-flex row
 	flex-wrap nowrap
-	column-gap 0.3em
+	column-gap 0.5em
 	
 	> input
 		flex 1 1 0
@@ -99,6 +99,19 @@ button.input.button
 		font-family inherit
 		font-size inherit
 		color inherit
+	
+	> .prefix, > .suffix
+		flex 0 0 auto
+	
+	> .prefix-separator
+		display inline-block
+		height 1.1em
+		width 1px
+		border-radius 1px
+		margin-inline-end 0.2em
+		background-color input-text-fg-color
+		opacity 0.4
+		user-select none
 	
 	> .marker
 	
@@ -120,5 +133,6 @@ button.input.button
 					width 0.55em
 	
 	> input:focus-visible + .marker
+	> input:focus-visible + .suffix + .marker
 		background-color input-marker-focus-color
 	

@@ -109,6 +109,7 @@ export default function Index() {
 	}
 	
 	const isInAction = loggingActionStatus.value != 'idle' || logOutActionStatus.value != 'idle'
+	const isCanLogin = !isInAction && inputPassword.value != ''
 	
 	return (
 		<>
@@ -170,7 +171,7 @@ export default function Index() {
 						<InputButton
 							className={[css.inputButton]}
 							onClick={() => doLogin()}
-							disabled={isInAction}>
+							disabled={!isCanLogin}>
 							{inCase (loggingActionStatus.value, [
 								['idle',            <>Login</>],
 								['logging-in',      <span className={css.waiting}>|</span>],
@@ -182,6 +183,7 @@ export default function Index() {
 						{is(initialLoginStatus == 'success', <>
 							<InputButton
 								className={[css.inputButton]}
+								theme="red"
 								onClick={() => doLogout()}
 								disabled={isInAction}>
 								{inCase (logOutActionStatus.value, [
