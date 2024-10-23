@@ -2,7 +2,7 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { TemplateIndex } from "~/.server/templates/template";
 
 import css from "./editor.module.stylus"
-import { unstable_usePrompt, useBeforeUnload, useLoaderData, useRevalidator } from "@remix-run/react";
+import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useRevalidator } from "@remix-run/react";
 import { classes } from "~/utils/jsx-helper";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
@@ -28,6 +28,7 @@ export default function () {
 	
 	const data = useLoaderData<typeof loader>()
 	const revalidator = useRevalidator()
+	const navigate = useNavigate()
 	
 	const editingTemplate = $('')
 	const editingContent = $('')
@@ -82,6 +83,16 @@ export default function () {
 		
 	}
 	
+	async function deleteThisTemplate () {
+		
+		if (!confirm("Really want to delete this template?\n You will lost this template FOREVER!!!"))
+			return
+		
+		alert("Deletion not implemented.")
+		navigate("..", { relative: 'route' })
+		
+	}
+	
 	async function reDetectCurrentLanguage () {
 		editingContentLanguage.value = guessCodeLanguage(editingContent.value)
 	}
@@ -105,6 +116,10 @@ export default function () {
 							disabled={isClearState}
 							onClick={updateContent}
 							>Save</InputButton>
+						<InputButton
+							theme="red" longPress
+							onClick={deleteThisTemplate}
+							><span>Delete</span></InputButton>
 					</div>
 				</div>
 			</div>

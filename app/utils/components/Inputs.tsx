@@ -1,24 +1,62 @@
-import { MouseEventHandler } from "react"
+import { MouseEventHandler, TouchEventHandler, useRef } from "react"
 import { is, iss } from "../fp"
 import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
 
 import css from './Inputs.module.stylus'
 
+type ButtonReceiveEvents = React.MouseEvent<HTMLButtonElement>|React.TouchEvent<HTMLButtonElement>
+
 export function InputButton (_: {
 	
 	disabled?: boolean,
 	
+	theme?: 'red',
+	longPress?: boolean,
+	
 	children?: string | JSX.Element
 	className?: string[]
-	onClick?: MouseEventHandler<HTMLButtonElement>
+	onClick?: (e: ButtonReceiveEvents) => any
 	
 }) {
 	
+	const isPressing = $(false)
+	const pressTimeout = useRef<NodeJS.Timeout>()
+	
+	function startTimer (e: ButtonReceiveEvents) {
+		e.stopPropagation()
+		console.log("start down")
+		isPressing.value = true
+		pressTimeout.current = setTimeout(() => {
+			console.log("timeout down")
+			isPressing.value = false
+			pressTimeout.current = undefined
+			console.log("executed")
+			if (_.onClick) _.onClick(e)
+		}, 2000)
+	}
+	
+	function stopTimer (e: ButtonReceiveEvents) {
+		e.stopPropagation()
+		if (pressTimeout.current != undefined) {
+			console.log("stop down")
+			clearTimeout(pressTimeout.current)
+			pressTimeout.current = undefined
+			isPressing.value = false
+		}
+	}
+	
 	return <>
 		<button
-			className={classes('input', 'button', css.input, css.button, is(_.disabled, css.disabled), ..._.className||[])}
-			onClick={_.onClick}>
+			className={classes('input', 'button', css.input, css.button, is(_.disabled, css.disabled), css[_.theme||''], ..._.className||[])}
+			onClick={is(!_.longPress, _.onClick)}
+			onMouseDown={is(_.longPress, startTimer)}
+			onMouseUp={is(_.longPress, stopTimer)}
+			onMouseLeave={is(_.longPress, stopTimer)}
+			onTouchStart={is(_.longPress, startTimer)}
+			onTouchEnd={is(_.longPress, stopTimer)}
+			onTouchCancel={is(_.longPress, stopTimer)}>
+			{is(_.longPress, <div className={classes(css.longPressIndicator, is(isPressing.value, css.pressing))} />)}
 			{_.children}
 		</button>
 	</>
