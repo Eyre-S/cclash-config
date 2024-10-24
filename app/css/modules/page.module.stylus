@@ -1,6 +1,6 @@
 
 .page
 	
-	size 100%
+	min-height 100%
 	background-color #f6f8fa
 	

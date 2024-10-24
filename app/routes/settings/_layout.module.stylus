@@ -12,7 +12,30 @@
 		> .nav
 			
 			use-flex-center row
-			height 48px
+			height 38px
+			--item-width 100px
+			
+			font-sw 14px 700
+			--transition-duration 200ms
+			
+			> .nav-item
+				
+				> a
+					
+					a-normalize()
+					
+					size 100%
+					use-flex-center()
+					
+					color #707173
+					text-decoration none
+					transition-property color
+					transition-duration var(--transition-duration)
+					
+				&.enabled
+					> a
+						color #f6f8fa
+				
 			
 		
 	

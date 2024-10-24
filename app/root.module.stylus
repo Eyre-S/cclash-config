@@ -1,7 +1,7 @@
 app-header-height = 55px
 
 app-cover-bar-size = 1.414rem
-
+app-border-raduis = 10px
 
 .app
 	
@@ -16,7 +16,7 @@ app-cover-bar-size = 1.414rem
 	.page-header
 		
 		background-color #f6f8fa
-		border-radius 10px
+		border-radius app-border-raduis
 		
 		display grid
 		grid-template-columns auto 1fr auto
@@ -53,10 +53,19 @@ app-cover-bar-size = 1.414rem
 			
 		
 	
-	.page-body
-		size 100%
-		box-sizing border-box
+	.page-body-box
+		
 		position relative
+		border-radius app-border-raduis
+		overflow hidden
+		
+	
+	.page-body
+		
+		box-sizing border-box
+		position absolute
+		pos 0
+		overflow auto
 		
 	
 	.app-cover

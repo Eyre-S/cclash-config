@@ -126,8 +126,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 						siteName={data.siteName}
 						siteIcon="/cclash.png" />
 					
-					<div className={classes(css.pageBody)}>
-						{children}
+					<div className={classes(css.pageBodyBox)}>
+						<div className={classes(css.pageBody)}>
+							{children}
+						</div>
 					</div>
 					
 					<div className={classes(css.appCover, iss(shouldAppCoverShows, css.show, css.notShow))}>

@@ -1,0 +1,35 @@
+
+.slide-switch
+	
+	background #ffffff
+	border-radius 10px
+	overflow hidden
+	
+	use-flex row
+	flex-wrap nowrap
+	--item-width 90px
+	--enabled-item-index -1
+	--transition-duration 200ms
+	position relative
+	
+	> .indicator
+		
+		position absolute
+		z-index 8
+		top 0
+		bottom 0
+		left calc(var(--enabled-item-index) * var(--item-width))
+		width var(--item-width)
+		transition-property left
+		transition-duration var(--transition-duration)
+		
+		background #d5e1f0
+		border-radius 10px
+		
+	
+	> *:not(.indicator)
+		z-index 10
+		width var(--item-width)
+		height 100%
+		use-flex-center()
+	
