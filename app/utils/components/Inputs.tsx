@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from "react"
+import { MouseEventHandler, ReactNode, useRef } from "react"
 import { is, iss } from "../fp"
 import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
@@ -45,13 +45,14 @@ export function InputButton (_: {
 	return <>
 		<button
 			className={classes('input', 'button', css.input, css.button, is(_.disabled, css.disabled), css[_.theme||''], ..._.className||[])}
+			type="button"
 			onClick={is(!_.longPress, _.onClick)}
 			onMouseDown={is(_.longPress, startTimer)}
 			onMouseUp={is(_.longPress, stopTimer)}
 			onMouseLeave={is(_.longPress, stopTimer)}
 			onTouchStart={is(_.longPress, startTimer)}
 			onTouchEnd={is(_.longPress, stopTimer)}
-			onTouchCancel={is(_.longPress, stopTimer)}>
+			onTouchCancel={is(_.longPress, stopTimer)} >
 			{is(_.longPress, <div className={classes(css.longPressIndicator, is(isPressing.value, css.pressing))} />)}
 			{_.children}
 		</button>
@@ -62,7 +63,8 @@ export function InputButton (_: {
 export function InputText (_: {
 	
 	value: string
-	onValueChange: (value: string) => void
+	onValueChange?: (value: string) => void
+	onClick?: MouseEventHandler<HTMLElement>
 	
 	disabled?: boolean
 	placeholder?: string
@@ -78,7 +80,8 @@ export function InputText (_: {
 	
 	children?: ReactNode,
 	prefix?: ReactNode,
-	suffix?: ReactNode
+	suffix?: ReactNode,
+	hideIndicator?: boolean
 	
 }) {
 	
@@ -90,29 +93,38 @@ export function InputText (_: {
 	const type = iss(_.password && !showPassword.value, 'password', 'text')
 	
 	return <>
-		<div className={classes('input', 'input-text', css.input, css.text, is(_.password, 'password'), is(showPassword.value, css.showPassword), ..._.className||[])}>
+		<div className={classes('input', 'input-text', css.input, css.text, is(_.password, 'password'), is(showPassword.value, css.showPassword), ..._.className||[])}
+			onClick={_.onClick}>
 			
 			{is(typeof _.prefix !== 'undefined', <>
-				<span className={classes(css.prefix)}>{_.prefix}</span>
-				<span className={classes(css.prefixSeparator)} />
+				<span className={classes(css.prefix)}
+					// onClick={_.onClick}
+					>{_.prefix}</span>
+				<span className={classes(css.prefixSeparator)}
+					// onClick={_.onClick}
+					/>
 			</>)}
 			
 			<input
-				value={_.value} onInput={e => _.onValueChange(e.currentTarget.value)}
+				name="__universal_input_text"
+				value={_.value} onInput={e => { if (_.onValueChange) {_.onValueChange(e.currentTarget.value)} }}
+				// onClick={_.onClick}
 				type={type} disabled={_.disabled} placeholder={_.placeholder}
 				minLength={_.minLength} maxLength={_.maxLength} pattern={_.pattern?.source}
 			/>
 			
 			{is(typeof _.suffix !== 'undefined', <>
-				<span className={classes(css.suffix)}>{_.suffix}</span>
+				<span className={classes(css.suffix)}
+					// onClick={_.onClick}
+					>{_.suffix}</span>
 			</>)}
 			
-			{iss(_.password,
+			{is(!_.hideIndicator, iss(_.password,
 				<div className={classes(css.marker, css.password)} onClick={toggleShowPassword}>
 					<div className={classes(css.showPassword, is(showPassword.value, css.on))}></div>
 				</div>,
 				<div className={classes(css.marker)}></div>,
-			)}
+			))}
 			
 		</div>
 	</>

@@ -1,0 +1,13 @@
+
+.outer-box
+	
+	display block
+	position relative
+	overflow hidden
+	
+	transition-property height
+	transition-duration 0.3s
+	
+	.inner-box
+		position absolute
+	

@@ -1,0 +1,21 @@
+
+.settings-page
+	
+	> .header
+		
+		use-flex-center row
+		height 55px
+		
+		> .title
+			font-sw 18px bold
+		
+		> .nav
+			
+			use-flex-center row
+			height 48px
+			
+		
+	
+	> .sub-page
+		// todo
+	

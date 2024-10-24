@@ -43,6 +43,7 @@ export default defineConfig({
 	css: {
 		modules: {
 			localsConvention: "camelCase",
+			generateScopedName: "[local]_[hash:base64:5]",
 		},
 		preprocessorOptions: {
 			stylus: stylusConfig,

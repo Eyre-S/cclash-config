@@ -1,3 +1,7 @@
+export function define <T> (value: T): T {
+	return value
+}
+
 export function it <T> (func: () => T): T {
 	return func()
 }

@@ -6,10 +6,12 @@ import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useRev
 import { classes } from "~/utils/jsx-helper";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
-import { is, it } from "~/utils/fp";
+import { inCase, is, it } from "~/utils/fp";
 import CryptoJS from "crypto-js";
 import { Editor } from "@monaco-editor/react";
-import { guessCodeLanguage } from "~/utils/code-lang";
+import { guessCodeLanguage, showSpecialChars } from "~/utils/code-lang";
+import { editor, Selection } from "monaco-editor";
+import { useRef } from "react";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -34,6 +36,66 @@ export default function () {
 	const editingContent = $('')
 	const editingInitialStatus = $('')
 	const editingContentLanguage = $('')
+	
+	const monacoInstance = useRef<editor.IStandaloneCodeEditor|null>(null)
+	const monacoStatus = $({
+		lineNumber: undefined as number | undefined,
+		column: undefined as number | undefined,
+		eol: undefined as string | undefined,
+		selection: undefined as Selection | undefined,
+		selection_areas: 0 as number,
+		insertSpaces: undefined as boolean | undefined,
+		tabSize: undefined as number | undefined,
+	})
+	function setMonacoStatus (newValues: Partial<typeof monacoStatus.value>) {
+		monacoStatus.set((current) => {
+			return { ...current, ...newValues }
+		})
+	}
+	function onMonacoMounts (editor: editor.IStandaloneCodeEditor) {
+		monacoInstance.current = editor
+		const editorModel = editor.getModel()
+		setMonacoStatus({
+			lineNumber: editor.getPosition()?.lineNumber,
+			column: editor.getPosition()?.column,
+			selection: editor.getSelection()||undefined,
+			selection_areas: editor.getSelections()?.length || 0,
+			eol: editorModel?.getEOL(),
+			tabSize: editorModel?.getOptions().indentSize,
+			insertSpaces: editorModel?.getOptions().insertSpaces,
+		})
+		editor.onDidChangeCursorPosition((e) => {
+			setMonacoStatus({
+				lineNumber: e.position.lineNumber,
+				column: e.position.column
+			})
+		})
+		editor.onDidChangeCursorSelection((e) => {
+			setMonacoStatus({
+				selection: editor.getSelection()||undefined,
+				selection_areas: editor.getSelections()?.length || 0
+			})
+		})
+		editor.onDidChangeModel((e) => {
+			const editorModel = editor.getModel()
+			setMonacoStatus({
+				eol: editorModel?.getEOL(),
+				tabSize: editorModel?.getOptions().indentSize,
+				insertSpaces: editorModel?.getOptions().insertSpaces,
+			})
+		})
+		editor.onDidChangeModelContent((e) => {
+			setMonacoStatus({
+				eol: e.eol,
+			})
+		})
+		editor.onDidChangeModelOptions((e) => {
+			setMonacoStatus({
+				tabSize: editor.getModel()?.getOptions().indentSize,
+				insertSpaces: editor.getModel()?.getOptions().insertSpaces,
+			})
+		})
+	}
 	
 	async function tryInit (enforce = false) {
 		if (editingTemplate.value != data.item.uuid || editingInitialStatus.value != data.contentSha1 || enforce) {
@@ -129,9 +191,29 @@ export default function () {
 					value={editingContent.value} onChange={e => editingContent.value = e as string}
 					path={editingTemplate.value}
 					language={editingContentLanguage.value}
-					options={{ renderWhitespace: 'boundary' }} />
+					options={{ renderWhitespace: 'boundary' }}
+					onMount={onMonacoMounts} />
 			</div>
 			<div className={classes(css.controller)}>
+				<InputText value={inCase(monacoStatus.value.insertSpaces, [[undefined, ''], [true, 'Spaces'], [false, 'Tabs']])}
+					prefix="indents" disabled hideIndicator className={[css.tabType]}
+					onClick={() => alert("not implemented")} />
+				<InputText value={monacoStatus.value.tabSize?.toString()||''}
+					prefix="tab size" disabled hideIndicator className={[css.tabSize]} />
+				<InputText value={showSpecialChars(monacoStatus.value.eol||'')}
+					disabled hideIndicator className={[css.eolType]} />
+				<InputText value={it(() => {
+						let content = ''
+						content += (monacoStatus.value.selection?.startLineNumber||'0') + ":" + (monacoStatus.value.selection?.startColumn||'0')
+						if (
+							monacoStatus.value.selection?.startLineNumber != monacoStatus.value.selection?.endLineNumber ||
+							monacoStatus.value.selection?.startColumn != monacoStatus.value.selection?.endColumn
+						) content += " - " + (monacoStatus.value.selection?.endLineNumber||'0') + ":" + (monacoStatus.value.selection?.endColumn||'0')
+						if (monacoStatus.value.selection_areas > 1) content += " * " + monacoStatus.value.selection_areas
+						return content
+					})}
+					disabled hideIndicator className={[css.cursor]}
+					onClick={() => alert("not implemented")} />
 				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e}
 					prefix="Language" placeholder="..."
 					/>

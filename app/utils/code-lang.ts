@@ -7,3 +7,11 @@ export function guessCodeLanguage (code: string): string {
 	return hljs.highlightAuto(code, supportedLanguages).language||'plaintext'
 	
 }
+
+export function showSpecialChars (code: string): string {
+	return code
+		.replace(/\r/g, 'CR')
+		.replace(/\n/g, 'LF')
+		.replace(/\t/g, 'TAB')
+		.replace(/ /g, 'SPACE')
+}

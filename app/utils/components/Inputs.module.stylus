@@ -89,10 +89,11 @@ button.input.button
 	flex-wrap nowrap
 	column-gap 0.5em
 	
+	--input-width 100%
 	> input
 		flex 1 1 0
 		clear-pad()
-		width 100%
+		width var(--input-width)
 		&:focus-visible
 			outline none
 		background input-input-background
@@ -104,6 +105,7 @@ button.input.button
 		flex 0 0 auto
 	
 	> .prefix-separator
+		flex 0 0 auto
 		display inline-block
 		height 1.1em
 		width 1px
@@ -115,7 +117,8 @@ button.input.button
 	
 	> .marker
 	
-		flex 0 0 0.35em
+		flex 0 0 auto
+		width 0.35em
 		background-color input-marker-color
 		border-radius 0.35em
 		transition background-color 150ms

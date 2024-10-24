@@ -12,7 +12,14 @@ export default function defineRoutes (route: DefineRouteFunction) {
 	route("/", "routes/index.tsx", routeKeys('index', 'index'))
 	
 	route("/login", "routes/login.tsx", routeKeys('login'))
-	route("/settings", "routes/settings/index.tsx", routeKeys('settings'))
+	
+	route("/settings", "routes/settings/_layout.tsx", routeKeys('settings'), () => {
+		
+		route("", "routes/settings/_index.ts", routeKeys('settings/index', 'index'))
+		route("user", "routes/settings/user.tsx", routeKeys('settings/user'))
+		route("server", "routes/settings/server.tsx", routeKeys('settings/server'))
+		
+	})
 	
 	route("/templates", "routes/templates/_layout.tsx", routeKeys('templates'), () => {
 		

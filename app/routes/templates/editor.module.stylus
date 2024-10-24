@@ -95,6 +95,23 @@
 		gap 10px
 		align-items center
 		justify-content flex-end
+		flex-wrap wrap
+		
+		> .cursor {
+			--input-width 10em
+		}
+		
+		> .eol-type {
+			--input-width 4em
+		}
+		
+		> .tab-size {
+			--input-width 2em
+		}
+		
+		> .tab-type {
+			--input-width 5em
+		}
 		
 	}
 	
