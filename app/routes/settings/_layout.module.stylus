@@ -1,6 +1,9 @@
 
 .settings-page
 	
+	display grid
+	grid-template-rows 55px 1fr
+	
 	> .header
 		
 		use-flex-center row
@@ -39,6 +42,17 @@
 			
 		
 	
-	> .sub-page
-		// todo
+	> .sub-page-box
+		position relative
+		overflow hidden
+		> .sub-page-container
+			position absolute
+			pos 0
+			overflow auto
+	
+
+.inner-page
+	
+	size 100%
+	use-flex-center column
 	

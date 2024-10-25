@@ -39,7 +39,8 @@ export default function SettingsLayout () {
 				</SlideSwitch>
 			</div>
 			
-			<div className={classes(css.subPage)}>
+			<div className={classes(css.subPageBox)}>
+				<div className={classes(css.subPageContainer)}></div>
 				<Outlet />
 			</div>
 			
