@@ -7,7 +7,7 @@ import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template";
 import { Link, Outlet, useBeforeUnload, useLoaderData, useParams, useRevalidator } from "@remix-run/react";
 import { $ } from "~/utils/reactive";
 import { is, iss } from "~/utils/fp";
-import { InputButton, InputText } from "~/utils/components/Inputs";
+import { ButtonReceiveEvents, InputButton, InputText } from "~/utils/components/Inputs";
 import { MouseEvent, useEffect } from "react";
 import { ApiGetCreate_Request, ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate } from "../api/require-auth/get_create";
 import { ApiResponse, ApiResponseError } from "~/apis/api";
@@ -46,8 +46,8 @@ function TemplateIndexItem (_: { index: TemplateIndexDef, enabled: boolean }) {
 export default function Index() {
 	
 	const revalidator = useRevalidator()
-	const data = useLoaderData<typeof loader>()
 	const params = useParams()
+	const data = useLoaderData<typeof loader>()
 	const current_index = params.uuid
 	
 	const isAdding = $(false)
@@ -79,7 +79,7 @@ export default function Index() {
 		cancelAdd()
 		
 	}
-	function cancelAdd (event?: MouseEvent) {
+	function cancelAdd (event?: ButtonReceiveEvents) {
 		if (event) event.stopPropagation()
 		isAdding.value = false
 		addingName.value = ''

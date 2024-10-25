@@ -5,7 +5,7 @@ import { $ } from "../reactive"
 
 import css from './Inputs.module.stylus'
 
-type ButtonReceiveEvents = React.MouseEvent<HTMLButtonElement>|React.TouchEvent<HTMLButtonElement>
+export type ButtonReceiveEvents = React.MouseEvent<HTMLButtonElement>|React.TouchEvent<HTMLButtonElement>
 
 export function InputButton (_: {
 	

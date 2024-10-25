@@ -3,7 +3,7 @@ import { DefineRouteFunction, DefineRouteOptions } from "@remix-run/dev/dist/con
 export function routeKeys (id: string, index?: 'index'): DefineRouteOptions {
 	return {
 		id: id,
-		index: index ? true : undefined
+		index: index ? true : undefined,
 	}
 }
 

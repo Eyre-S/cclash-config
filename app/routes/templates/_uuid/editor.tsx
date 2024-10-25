@@ -44,6 +44,19 @@ export default function () {
 	const editingInitialStatus = $('')
 	const editingContentLanguage = $('')
 	
+	useEffect(() => {
+		console.log("seems like the template has been changed, reloading data")
+		initData()
+	}, [data])
+	
+	async function initData () {
+		editingTemplate.value = data.item.uuid
+		editingContent.value = data.content
+		editingInitialStatus.value = data.contentSha1
+		editingContentLanguage.value = guessCodeLanguage(data.content)
+		console.log("reloaded data of", await editingTemplate.state())
+	}
+	
 	const monacoInstance = useRef<editor.IStandaloneCodeEditor|null>(null)
 	const monacoStatus = $({
 		lineNumber: undefined as number | undefined,
@@ -104,17 +117,6 @@ export default function () {
 		})
 	}
 	
-	async function tryInit (enforce = false) {
-		if (editingTemplate.value != data.item.uuid || editingInitialStatus.value != data.contentSha1 || enforce) {
-			console.log("seems like the template has been changed, reloading data")
-			editingTemplate.value = data.item.uuid
-			editingContent.value = data.content
-			editingInitialStatus.value = data.contentSha1
-			editingContentLanguage.value = guessCodeLanguage(data.content)
-			console.log("reloaded data of", await editingTemplate.state())
-		}
-	} tryInit()
-	
 	const isClearState = it(() => {
 		return editingInitialStatus.value == CryptoJS.SHA1(editingContent.value).toString()
 	})
@@ -134,7 +136,7 @@ export default function () {
 	}
 	
 	function resetToInitial () {
-		tryInit(true)
+		initData()
 	}
 	
 	async function updateContent () {

@@ -19,7 +19,7 @@
 			flex-wrap wrap
 			gap 0.6em
 			
-			> h2 {
+			> .name {
 				
 				font-size 1.3em
 				color alpha(black, 0.8)
@@ -44,7 +44,8 @@
 				// }
 				
 			}
-			> p {
+			> .uuid {
+				font-family monospace
 				font-size 12px
 				color alpha(black, 0.5)
 				clear-pad()

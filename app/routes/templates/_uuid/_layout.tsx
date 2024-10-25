@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node"
-import { Link, Outlet, useLoaderData, useMatches, useNavigate, useRevalidator } from "@remix-run/react"
+import { Link, Outlet, useLoaderData, useMatches, useNavigate } from "@remix-run/react"
 import { requireUILogin } from "~/.server/auth"
 import { TemplateIndex } from "~/.server/templates/template"
 
@@ -7,7 +7,7 @@ import css from './_layout.module.stylus'
 import { classes } from "~/utils/jsx-helper"
 import { InputButton } from "~/utils/components/Inputs"
 import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch"
-import { ReactNode, Ref, RefObject, useEffect, useRef } from "react"
+import { ReactNode, RefObject, useEffect, useRef } from "react"
 import { $ } from "~/utils/reactive"
 import { is } from "~/utils/fp"
 
@@ -19,9 +19,7 @@ export async function loader ({ params, request }: LoaderFunctionArgs) {
 	const item = TemplateIndex.findByUUID(uuid) as TemplateIndex
 	
 	return {
-		item: item,
-		content: item.getTemplate(),
-		contentSha1: item.getTemplateHash()
+		item: item
 	}
 	
 }
@@ -68,10 +66,11 @@ export default function TemplateItemLayout () {
 		<div className={classes(css.itemEdit)}>
 			<div className={classes(css.header)}>
 				<div className={classes(css.title)}>
-					<h2 ref={elemTitleBox} id="template-title">
-						{data.item.name}
+					<h2 className={classes(css.name)}>
+						<div ref={elemTitleBox} />
+						<span>{data.item.name}</span>
 					</h2>
-					<p>{data.item.uuid}</p>
+					<p className={classes(css.uuid)}>{data.item.uuid}</p>
 				</div>
 				<div className={classes(css.gap)} />
 				<div className={classes(css.controller)}>
@@ -81,7 +80,7 @@ export default function TemplateItemLayout () {
 						{TemplateEditorNav(currentSubPage.value, 'preview', "Preview")}
 					</SlideSwitch>
 					<div className={classes(css.buttons)}>
-						<div ref={elemControllerBox} id="template-controller-box" className={css.buttons}/>
+						<div ref={elemControllerBox} className={css.buttons}/>
 						<InputButton
 							theme="red" longPress
 							onClick={deleteThisTemplate}
