@@ -18,6 +18,12 @@ export function is <T> (statement: boolean|any, value: T): T | undefined {
 	}
 }
 
+export function isIt <T> (statement: boolean|any, func: ()=>T): T | undefined {
+	if (statement)
+		return func()
+	else return undefined
+}
+
 export function iss <T> (statement: boolean|any, value: T, orElse: T): T {
 	if (typeof statement == 'boolean') {
 		return statement ? value : orElse

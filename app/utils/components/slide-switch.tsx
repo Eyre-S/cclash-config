@@ -43,7 +43,7 @@ export function SlideSwitch ({
 	
 } & Omit<HTMLProps<HTMLDivElement>, 'children'>) {
 	
-	const enabled = $(0)
+	const enabled = $(-1)
 	
 	useEffect(() => {
 		

@@ -1,0 +1,117 @@
+.item-edit {
+	
+	box-sizing border-box
+	size 100%
+	padding 20px
+	use-flex column
+	gap 20px
+	
+	> .header {
+		
+		use-flex-center row axis
+		
+		> .title {
+			
+			padding-inline-start 1.4em
+			font-size 18px
+			use-flex row
+			align-items baseline
+			flex-wrap wrap
+			gap 0.6em
+			
+			> h2 {
+				
+				font-size 1.3em
+				color alpha(black, 0.8)
+				clear-pad()
+				z-index 30
+				position relative
+				
+				// > .edited-indicator {
+				// 	position absolute
+				// 	z-index 10
+				// 	top 50%
+				// 	left -0.6em
+				// 	size 0
+				// 	transform translate(-50%, -50%)
+				// 	border-radius 3px
+				// 	background-color #b2caea
+				// 	opacity 0.8
+				// 	transition width 100ms, height 100ms
+				// 	&.show {
+				// 		size 0.6em
+				// 	}
+				// }
+				
+			}
+			> p {
+				font-size 12px
+				color alpha(black, 0.5)
+				clear-pad()
+			}
+			
+		}
+		
+		> .gap {
+			flex auto
+		}
+		
+		> .controller {
+			
+			box-sizing border-box
+			
+			use-flex row-reverse
+			gap 10px
+			align-items center
+			justify-content flex-start
+			flex-wrap wrap
+			
+			.buttons {
+				use-flex-center row axis
+				justify-content flex-end
+				gap 10px
+			}
+			
+			.nav {
+				
+				height 35px
+				
+				a {
+					
+					a-normalize()
+					
+					use-flex-center()
+					size 100%
+					font-sw 14px bold
+					color #707173
+					transition-property color
+					transition-duration var(--transition-duration)
+					
+				}
+				
+				.enabled a {
+					color #ffffff
+				}
+				
+			}
+			
+		}
+		
+		
+	}
+	
+	.editor-box {
+		
+		flex 1 1 0
+		position relative
+		overflow hidden
+		
+		> .editor-container {
+			position absolute
+			pos 0
+			overflow auto
+		}
+		
+	}
+	
+}

@@ -1,0 +1,76 @@
+.editor-page {
+	
+	box-sizing border-box
+	size 100%
+	use-flex column
+	gap 20px
+	
+	> .editor-box {
+		
+		size 100%
+		position relative
+		border-radius 10px
+		overflow hidden
+		
+		background-color #ffffff
+		
+		.editor {
+			
+			box-sizing border-box
+			position absolute
+			pos 0
+			size 100%
+			
+		}
+	
+	}
+	
+	> .controller {
+		
+		box-sizing border-box
+		
+		use-flex row
+		gap 10px
+		align-items center
+		justify-content flex-end
+		flex-wrap wrap
+		
+		> .cursor {
+			--input-width 10em
+		}
+		
+		> .eol-type {
+			--input-width 4em
+		}
+		
+		> .tab-size {
+			--input-width 2em
+		}
+		
+		> .tab-type {
+			--input-width 5em
+		}
+		
+		> .language {
+			--input-width 10em
+		}
+		
+	}
+	
+}
+
+.edited-indicator {
+	position absolute
+	z-index 10
+	top 50%
+	left -0.6em
+	size 0
+	transform translate(-50%, -50%)
+	border-radius 3px
+	background-color #b2caea
+	opacity 0.8
+	transition width 100ms, height 100ms
+	&.show {
+		size 0.6em
+	}
+}

@@ -31,7 +31,6 @@
 					use-flex-center()
 					
 					color #707173
-					text-decoration none
 					transition-property color
 					transition-duration var(--transition-duration)
 					

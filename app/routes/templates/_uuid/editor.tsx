@@ -2,16 +2,20 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { TemplateIndex } from "~/.server/templates/template";
 
 import css from "./editor.module.stylus"
-import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useRevalidator } from "@remix-run/react";
+import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useOutletContext, useRevalidator } from "@remix-run/react";
 import { classes } from "~/utils/jsx-helper";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
-import { inCase, is, it } from "~/utils/fp";
+import { inCase, is, isIt, it } from "~/utils/fp";
 import CryptoJS from "crypto-js";
 import { Editor } from "@monaco-editor/react";
 import { guessCodeLanguage, showSpecialChars } from "~/utils/code-lang";
 import { editor, Selection } from "monaco-editor";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { TemplateItemLayoutContext } from "./_layout";
+import { ClientOnly } from "remix-utils/client-only";
+import { useHydrated } from "remix-utils/use-hydrated";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -29,8 +33,11 @@ export async function loader ({ params }: LoaderFunctionArgs) {
 export default function () {
 	
 	const data = useLoaderData<typeof loader>()
+	const layoutContext = useOutletContext<TemplateItemLayoutContext>()
 	const revalidator = useRevalidator()
-	const navigate = useNavigate()
+	
+	const ready = $(false)
+	useEffect(() => { ready.value = true }, [])
 	
 	const editingTemplate = $('')
 	const editingContent = $('')
@@ -145,46 +152,29 @@ export default function () {
 		
 	}
 	
-	async function deleteThisTemplate () {
-		
-		if (!confirm("Really want to delete this template?\n You will lost this template FOREVER!!!"))
-			return
-		
-		alert("Deletion not implemented.")
-		navigate("..", { relative: 'route' })
-		
-	}
-	
 	async function reDetectCurrentLanguage () {
 		editingContentLanguage.value = guessCodeLanguage(editingContent.value)
 	}
 	
 	return <>
-		<div className={classes(css.itemEdit)}>
-			<div className={classes(css.header)}>
-				<div className={classes(css.title)}>
-					<h2>
-						{data.item.name}
-						<div className={classes(css.editedIndicator, is(!isClearState, css.show))} />
-					</h2>
-					<p>{data.item.uuid}</p>
-					<div className={classes(css.gap)} />
-					<div className={classes(css.controller)}>
-						<InputButton
-							disabled={isClearState}
-							onClick={resetToInitial}
-							>Reset</InputButton>
-						<InputButton
-							disabled={isClearState}
-							onClick={updateContent}
-							>Save</InputButton>
-						<InputButton
-							theme="red" longPress
-							onClick={deleteThisTemplate}
-							><span>Delete</span></InputButton>
-					</div>
-				</div>
-			</div>
+		<div className={classes(css.editorPage)}>
+			
+			<ClientOnly>{() => <>
+				{isIt(ready.value, () => createPortal(<>
+					<div className={classes(css.editedIndicator, is(!isClearState, css.show))} />
+				</>, layoutContext.titleRef.current as HTMLElement))}
+				{isIt(ready.value, () => createPortal(<>
+					<InputButton
+						disabled={isClearState}
+						onClick={resetToInitial}
+						>Reset</InputButton>
+					<InputButton
+						disabled={isClearState}
+						onClick={updateContent}
+						>Save</InputButton>
+				</>, layoutContext.controllerRef.current as HTMLElement))}
+			</>}</ClientOnly>
+			
 			<div className={css.editorBox}>
 				<Editor
 					className={classes(css.editor)}
@@ -194,6 +184,7 @@ export default function () {
 					options={{ renderWhitespace: 'boundary' }}
 					onMount={onMonacoMounts} />
 			</div>
+			
 			<div className={classes(css.controller)}>
 				<InputText value={inCase(monacoStatus.value.insertSpaces, [[undefined, ''], [true, 'Spaces'], [false, 'Tabs']])}
 					prefix="indents" disabled hideIndicator className={[css.tabType]}
@@ -215,10 +206,11 @@ export default function () {
 					disabled hideIndicator className={[css.cursor]}
 					onClick={() => alert("not implemented")} />
 				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e}
-					prefix="Language" placeholder="..."
+					prefix="Language" placeholder="..." className={[css.language]}
 					/>
 				<InputButton onClick={reDetectCurrentLanguage} >Re-Detect</InputButton>
 			</div>
+			
 		</div>
 	</>
 	

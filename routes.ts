@@ -24,7 +24,14 @@ export default function defineRoutes (route: DefineRouteFunction) {
 	route("/templates", "routes/templates/_layout.tsx", routeKeys('templates'), () => {
 		
 		route("", "routes/templates/index.tsx", routeKeys('templates/index', 'index'))
-		route(":uuid", "routes/templates/editor.tsx", routeKeys('templates/_uuid'))
+		route(":uuid", "routes/templates/_uuid/_layout.tsx", routeKeys('templates/_uuid'), () => {
+			
+			route("", "routes/templates/_uuid/_index.tsx", routeKeys('templates/_uuid/index', 'index'))
+			route("editor", "routes/templates/_uuid/editor.tsx", routeKeys('templates/_uuid/editor'))
+			route("settings", "routes/templates/_uuid/settings.tsx", routeKeys('templates/_uuid/settings'))
+			route("preview", "routes/templates/_uuid/preview.tsx", routeKeys('templates/_uuid/preview'))
+			
+		})
 		
 	})
 	
