@@ -16,7 +16,7 @@ import { classes } from "./utils/jsx-helper";
 import { is, iss } from "./utils/fp";
 import { server_config } from "./.server/config";
 import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } from "react";
-import { $ } from "./utils/reactive";
+import { $, Reactive } from "./utils/reactive";
 import { defineAppTitle, defineMeta } from "./universal/app-meta";
 
 export const meta = defineMeta<typeof loader, {}>(({matches}) => {
@@ -108,15 +108,6 @@ export async function loader () {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-	
-	const navigation = useNavigation()
-	const data = useRouteLoaderData<typeof loader>('root')
-	if (data === undefined) {
-		throw new Error('Website root information cannot be loaded.')
-	}
-	
-	const shouldAppCoverShows = navigation.state != 'idle'
-	
 	return (
 		<html lang="en">
 			<head>
@@ -128,30 +119,58 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				<div id="app" className={classes(css.app)}>
-					
-					<AppHeader
-						siteName={data.siteName}
-						siteIcon="/cclash.png" />
-					
-					<div className={classes(css.pageBodyBox)}>
-						<div className={classes(css.pageBody)}>
-							{children}
-						</div>
-					</div>
-					
-					<div className={classes(css.appCover, iss(shouldAppCoverShows, css.show, css.notShow))}>
-						<div className={classes(css.progress)} />
-					</div>
-					
+					{children}
 				</div>
 				<ScrollRestoration />
 				<Scripts />
 			</body>
 		</html>
 	);
+}
+
+export interface AppLayoutContext {
+	
+	appCover: {
+		controller: Reactive<boolean>
+		node: HTMLElement | null
+	}
 	
 }
 
 export default function App() {
-	return <Outlet />;
+	
+	const navigation = useNavigation()
+	const data = useRouteLoaderData<typeof loader>('root')
+	if (data === undefined) {
+		throw new Error('Website root information cannot be loaded.')
+	}
+	
+	const elemAppCoverInjector = useRef<HTMLDivElement>(null)
+	const showAppCover = $(false)
+	
+	const shouldProgressBarShows = navigation.state != 'idle'
+	const shouldAppCoverShows = showAppCover.value || shouldProgressBarShows
+	
+	return <>
+		<AppHeader
+			siteName={data.siteName}
+			siteIcon="/cclash.png" />
+		
+		<div className={classes(css.pageBodyBox)}>
+			<div className={classes(css.pageBody)}>
+				<Outlet context={{
+					appCover: {
+						controller: showAppCover,
+						node: elemAppCoverInjector.current
+					}
+				} satisfies AppLayoutContext} />
+			</div>
+		</div>
+		
+		<div className={classes(css.appCover, iss(shouldAppCoverShows, css.show, css.notShow))}>
+			<div className={classes(css.injector)} ref={elemAppCoverInjector} ></div>
+			<div className={classes(css.progress, is(shouldProgressBarShows, css.show))} />
+		</div>
+	</>
+	
 }

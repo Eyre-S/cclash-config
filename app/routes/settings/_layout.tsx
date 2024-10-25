@@ -1,5 +1,5 @@
 import { Outlet, useMatches } from "@remix-run/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { classes } from "~/utils/jsx-helper";
 
 import css from './_layout.module.stylus'
@@ -9,6 +9,7 @@ import { ReactNode, useEffect } from "react";
 import { $ } from "~/utils/reactive";
 import { is } from "~/utils/fp";
 import { defineAppTitle, defineMeta } from "~/universal/app-meta";
+import { AppLayoutContext } from "~/root";
 
 export const meta = defineMeta((args) => {
 	return [
@@ -25,11 +26,15 @@ export function SettingsNav (targetPath: string, children: ReactNode, status: st
 	</SlideSwitchItem>
 }
 
+export interface SettingsLayoutContext extends AppLayoutContext {}
+
 export default function SettingsLayout () {
 	
+	const layoutContext = useOutletContext<AppLayoutContext>()
 	const navigate = useNavigate()
 	const routes = useMatches()
 	
+	console.log("Settings Layout got context is: ", layoutContext)
 	const currentOnSubPage = $('')
 	
 	useEffect(() => {
@@ -48,7 +53,7 @@ export default function SettingsLayout () {
 			
 			<div className={classes(css.subPageBox)}>
 				<div className={classes(css.subPageContainer)}></div>
-				<Outlet />
+				<Outlet context={{...layoutContext} satisfies SettingsLayoutContext} />
 			</div>
 			
 		</div>

@@ -15,6 +15,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { TemplateItemLayoutContext } from "./_layout";
 import { ClientOnly } from "remix-utils/client-only";
+import { usePopupNotification } from "~/utils/components/popup";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -34,6 +35,8 @@ export default function () {
 	const data = useLoaderData<typeof loader>()
 	const layoutContext = useOutletContext<TemplateItemLayoutContext>()
 	const revalidator = useRevalidator()
+	
+	const popupNotification = usePopupNotification(layoutContext)
 	
 	const ready = $(false)
 	useEffect(() => { ready.value = true }, [])
@@ -148,7 +151,10 @@ export default function () {
 			}
 		})
 		
-		alert(await submitResult.text())
+		popupNotification.openPopup({
+			title: "Template Updated!",
+			children: <code>{await submitResult.text()}</code>
+		})
 		revalidator.revalidate()
 		
 	}
@@ -159,6 +165,8 @@ export default function () {
 	
 	return <>
 		<div className={classes(css.editorPage)}>
+			
+			{popupNotification.element}
 			
 			<ClientOnly>{() => <>
 				{isIt(ready.value, () => createPortal(<>

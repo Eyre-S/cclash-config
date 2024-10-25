@@ -2,6 +2,12 @@ export function define <T> (value: T): T {
 	return value
 }
 
+export function nonnull <T> (nonnullValue: T | null | undefined): T {
+	if (typeof nonnullValue == 'undefined' || nonnullValue == null)
+		throw new Error('Value is null or undefined')
+	return nonnullValue
+}
+
 export function it <T> (func: () => T): T {
 	return func()
 }

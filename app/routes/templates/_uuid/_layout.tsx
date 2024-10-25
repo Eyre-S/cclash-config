@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node"
-import { Link, Outlet, useLoaderData, useMatches, useNavigate } from "@remix-run/react"
+import { Link, Outlet, useLoaderData, useMatches, useNavigate, useOutletContext } from "@remix-run/react"
 import { requireUILogin } from "~/.server/auth"
 import { TemplateIndex } from "~/.server/templates/template"
 
@@ -11,6 +11,7 @@ import { ReactNode, RefObject, useEffect, useRef } from "react"
 import { $ } from "~/utils/reactive"
 import { is } from "~/utils/fp"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+import { TemplatesLayoutContext } from "../_layout"
 
 export const meta = defineMeta<typeof loader, {}>((args) => {
 	return [
@@ -38,13 +39,14 @@ export function TemplateEditorNav (current: string, path: string, children: Reac
 	</SlideSwitchItem>
 }
 
-export interface TemplateItemLayoutContext {
+export interface TemplateItemLayoutContext extends TemplatesLayoutContext {
 	titleRef: RefObject<HTMLDivElement | null>
 	controllerRef: RefObject<HTMLDivElement | null>
 }
 
 export default function TemplateItemLayout () {
 	
+	const layoutContext = useOutletContext<TemplatesLayoutContext>()
 	const data = useLoaderData<typeof loader>()
 	const route = useMatches()
 	const navigate = useNavigate()
@@ -98,6 +100,7 @@ export default function TemplateItemLayout () {
 			<div className={css.editorBox}>
 				<div className={css.editorContainer}>
 					<Outlet context={{
+						...layoutContext,
 						titleRef: elemTitleBox,
 						controllerRef: elemControllerBox,
 					} satisfies TemplateItemLayoutContext} />

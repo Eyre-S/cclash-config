@@ -87,7 +87,14 @@ app-border-raduis = 10px
 			display block
 			animation progress-appear display-anima-speed linear
 		
-		.progress
+		> .injector
+			size 100%
+			use-flex-center()
+		
+		> .progress
+			display none
+			&.show
+				display block
 			position absolute
 			pos -10rem
 			z-index 1001
