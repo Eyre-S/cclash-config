@@ -2,7 +2,7 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { TemplateIndex } from "~/.server/templates/template";
 
 import css from "./editor.module.stylus"
-import { unstable_usePrompt, useBeforeUnload, useLoaderData, useNavigate, useOutletContext, useRevalidator } from "@remix-run/react";
+import { unstable_usePrompt, useBeforeUnload, useLoaderData, useOutletContext, useRevalidator } from "@remix-run/react";
 import { classes } from "~/utils/jsx-helper";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
@@ -15,7 +15,6 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { TemplateItemLayoutContext } from "./_layout";
 import { ClientOnly } from "remix-utils/client-only";
-import { useHydrated } from "remix-utils/use-hydrated";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	

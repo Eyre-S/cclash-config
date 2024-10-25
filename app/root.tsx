@@ -17,6 +17,13 @@ import { is, iss } from "./utils/fp";
 import { server_config } from "./.server/config";
 import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } from "react";
 import { $ } from "./utils/reactive";
+import { defineAppTitle, defineMeta } from "./universal/app-meta";
+
+export const meta = defineMeta<typeof loader, {}>(({matches}) => {
+	return [
+		defineAppTitle(matches)
+	]
+})
 
 export function AppNavigatorLink (props: { to: string, children: React.ReactNode, className?: string, onCurrent?: () => any, onNonCurrent?: () => any}) {
 	const onCurrentLast = $(false)

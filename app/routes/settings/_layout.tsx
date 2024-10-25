@@ -8,6 +8,13 @@ import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch";
 import { ReactNode, useEffect } from "react";
 import { $ } from "~/utils/reactive";
 import { is } from "~/utils/fp";
+import { defineAppTitle, defineMeta } from "~/universal/app-meta";
+
+export const meta = defineMeta((args) => {
+	return [
+		defineAppTitle(args.matches, 'Settings')
+	]
+})
 
 export function SettingsNav (targetPath: string, children: ReactNode, status: string) {
 	const enabled = status == targetPath

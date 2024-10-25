@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { readTemplate } from "~/.server/templates/template";
-import { defineApiErrorResponse, exportResponse } from "~/apis/api";
+import { exportResponse } from "~/apis/api";
 import { requireApiToken } from "~/.server/auth";
 import { defineTemplateNotFoundResponse } from "./_public";
 

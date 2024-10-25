@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, SessionData } from "@remix-run/node"
+import { createCookieSessionStorage } from "@remix-run/node"
 import { it } from "~/utils/fp"
 
 export interface AuthSessionData {

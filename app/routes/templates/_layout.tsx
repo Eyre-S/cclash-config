@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import { type LoaderFunctionArgs } from "@remix-run/node";
 
 import css from "./_layout.module.stylus";
 import { classes } from "~/utils/jsx-helper";
@@ -9,14 +9,13 @@ import { $ } from "~/utils/reactive";
 import { is, iss } from "~/utils/fp";
 import { ButtonReceiveEvents, InputButton, InputText } from "~/utils/components/Inputs";
 import { MouseEvent, useEffect } from "react";
-import { ApiGetCreate_Request, ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate } from "../api/require-auth/get_create";
+import { ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate } from "../api/require-auth/get_create";
 import { ApiResponse, ApiResponseError } from "~/apis/api";
+import { defineAppTitle, defineMeta } from "~/universal/app-meta";
 
-export const meta: MetaFunction = () => {
-	return [
-		{ title: "Dashboard - CClash Config Deliver" },
-	];
-};
+export const meta = defineMeta((args) => {
+	return [ defineAppTitle(args.matches, 'Templates') ]
+})
 
 export async function loader ({ request }: LoaderFunctionArgs) {
 	

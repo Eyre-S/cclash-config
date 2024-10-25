@@ -10,6 +10,13 @@ import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch"
 import { ReactNode, RefObject, useEffect, useRef } from "react"
 import { $ } from "~/utils/reactive"
 import { is } from "~/utils/fp"
+import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+
+export const meta = defineMeta<typeof loader, {}>((args) => {
+	return [
+		defineAppTitle(args.matches, 'Templates', args.data?.item.name || "???")
+	]
+})
 
 export async function loader ({ params, request }: LoaderFunctionArgs) {
 	
