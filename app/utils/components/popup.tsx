@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useRef } from 'react'
+import { ReactNode } from 'react'
 import { classes } from '../jsx-helper'
 import { InputButton } from './Inputs'
 import css from './popup.module.stylus'
@@ -50,6 +50,46 @@ export function usePopupNotification (context: AppLayoutContext) {
 			nonnull(context.appCover.node)
 		))}</ClientOnly>,
 		openPopup,
+	}
+	
+}
+
+export function useGlobalPopups () {
+	
+	const isOpen = $(false)
+	function onCheckedDefaults () {
+		isOpen.value = false
+	}
+	const parameters = $<PopupNotificationProps>({
+		title: '',
+		children: '',
+		onChecked: onCheckedDefaults
+	})
+	
+	async function open ({onChecked: propsOnChecked, ...props}: Omit<PopupNotificationProps, 'onChecked'> & { onChecked?: () => any }): Promise<void> {
+		const promise = new Promise<void>((resolve) => {
+			
+			let parametersNew: PopupNotificationProps = {
+				...parameters.value,
+				...props,
+				onChecked: () => {
+					if (propsOnChecked) propsOnChecked()
+					onCheckedDefaults()
+					resolve()
+				}
+			}
+			
+			parameters.value = parametersNew
+			isOpen.value = true
+			
+		})
+		return promise
+	}
+	
+	return {
+		element: <PopupNotification {...parameters.value} />,
+		open,
+		status: isOpen.value
 	}
 	
 }

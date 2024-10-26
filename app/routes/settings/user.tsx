@@ -3,12 +3,8 @@ import { classes } from "~/utils/jsx-helper";
 import layoutCss from './_layout.module.stylus'
 import { useOutletContext } from "@remix-run/react";
 import { SettingsLayoutContext } from "./_layout";
-import { ClientOnly } from "remix-utils/client-only";
-import { createPortal } from "react-dom";
-import { isIt, nonnull } from "~/utils/fp";
 import { InputButton } from "~/utils/components/Inputs";
-import { $ } from "~/utils/reactive";
-import { PopupNotification, usePopupNotification } from "~/utils/components/popup";
+import { usePopupNotification } from "~/utils/components/popup";
 
 export default function ClientSettingsPage () {
 	
@@ -23,11 +19,17 @@ export default function ClientSettingsPage () {
 		})
 	}
 	
-	function openCheckbox2 () {
-		PopupNotification.openPopup({
+	async function openCheckbox2 () {
+		
+		await layoutContext.popups.open({
 			title: "Another Checkbox",
 			children: "This is another checkbox! should be different from the first one!",
 		})
+		
+		await layoutContext.popups.open({
+			children: "This is another another checkbox! This should appears after the previous one is closed!",
+		})
+		
 	}
 	
 	return <>

@@ -18,6 +18,7 @@ import { server_config } from "./.server/config";
 import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } from "react";
 import { $, Reactive } from "./utils/reactive";
 import { defineAppTitle, defineMeta } from "./universal/app-meta";
+import { useGlobalPopups } from "./utils/components/popup";
 
 export const meta = defineMeta<typeof loader, {}>(({matches}) => {
 	return [
@@ -135,6 +136,8 @@ export interface AppLayoutContext {
 		node: HTMLElement | null
 	}
 	
+	popups: Omit<ReturnType<typeof useGlobalPopups>, 'element'>
+	
 }
 
 export default function App() {
@@ -145,11 +148,13 @@ export default function App() {
 		throw new Error('Website root information cannot be loaded.')
 	}
 	
+	const globalPopups = useGlobalPopups()
+	
 	const elemAppCoverInjector = useRef<HTMLDivElement>(null)
 	const showAppCover = $(false)
 	
 	const shouldProgressBarShows = navigation.state != 'idle'
-	const shouldAppCoverShows = showAppCover.value || shouldProgressBarShows
+	const shouldAppCoverShows = showAppCover.value || shouldProgressBarShows || globalPopups.status
 	
 	return <>
 		<AppHeader
@@ -162,13 +167,15 @@ export default function App() {
 					appCover: {
 						controller: showAppCover,
 						node: elemAppCoverInjector.current
-					}
+					},
+					popups: globalPopups,
 				} satisfies AppLayoutContext} />
 			</div>
 		</div>
 		
 		<div className={classes(css.appCover, iss(shouldAppCoverShows, css.show, css.notShow))}>
-			<div className={classes(css.injector)} ref={elemAppCoverInjector} ></div>
+			<div className={classes(css.injector, is(showAppCover, css.show))} ref={elemAppCoverInjector} ></div>
+			<div className={classes(css.injector, is(globalPopups.status, css.show))}>{globalPopups.element}</div>
 			<div className={classes(css.progress, is(shouldProgressBarShows, css.show))} />
 		</div>
 	</>

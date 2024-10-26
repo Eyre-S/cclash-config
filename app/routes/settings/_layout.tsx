@@ -1,5 +1,5 @@
 import { Outlet, useMatches } from "@remix-run/react";
-import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { classes } from "~/utils/jsx-helper";
 
 import css from './_layout.module.stylus'
@@ -31,10 +31,8 @@ export interface SettingsLayoutContext extends AppLayoutContext {}
 export default function SettingsLayout () {
 	
 	const layoutContext = useOutletContext<AppLayoutContext>()
-	const navigate = useNavigate()
 	const routes = useMatches()
 	
-	console.log("Settings Layout got context is: ", layoutContext)
 	const currentOnSubPage = $('')
 	
 	useEffect(() => {

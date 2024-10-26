@@ -88,8 +88,16 @@ app-border-raduis = 10px
 			animation progress-appear display-anima-speed linear
 		
 		> .injector
-			size 100%
+		
+			position absolute
+			pos 0
 			use-flex-center()
+			overflow hidden
+			
+			display none
+			&.show
+				display flex
+			
 		
 		> .progress
 			display none

@@ -5,6 +5,7 @@
 	color #404040
 	border-radius 10px
 	padding 20px
+	padding-block-start 30px
 	min-width calc(min(80vw, 300px))
 	max-width calc(min(80vw, 800px))
 	
@@ -16,7 +17,6 @@
 		margin-inline 18px
 	
 	> .title
-		margin-block-start 10px
 		padding-inline-start 0.8em
 		font-sw 20px bold
 	
