@@ -15,6 +15,8 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { TemplateItemLayoutContext } from "./_layout";
 import { ClientOnly } from "remix-utils/client-only";
+import { toast } from "react-toastify";
+import { Gap } from "~/utils/components";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -116,8 +118,9 @@ export default function () {
 		})
 	}
 	
+	const editingContentHash = it(() => CryptoJS.SHA1(editingContent.value).toString())
 	const isClearState = it(() => {
-		return editingInitialStatus.value == CryptoJS.SHA1(editingContent.value).toString()
+		return editingInitialStatus.value == editingContentHash
 	})
 	unstable_usePrompt({
 		when: !isClearState,
@@ -140,6 +143,20 @@ export default function () {
 	
 	async function updateContent () {
 		
+		const submit = updateContentImpl()
+		toast.promise(submit, {
+			pending: {
+				position: 'top-center',
+				render: "Updating Template..."
+			},
+			success: { position: 'top-center', render: ({data}) => <><span>Ok!</span><Gap size="10px" /><code>{data}</code></> },
+			error:   { position: 'top-center', render: ({data}) => <><span>Failed to update:</span><Gap size="10px" /><code>{JSON.stringify(data)}</code></> },
+		})
+		
+	}
+	
+	async function updateContentImpl () {
+		
 		const submitResult = await fetch(`/api/auth/_cookie_/get/uuid:${data.item.uuid}/set`, {
 			method: 'POST',
 			body: editingContent.value,
@@ -148,11 +165,8 @@ export default function () {
 			}
 		})
 		
-		await layoutContext.popups.open({
-			title: "Template Updated!",
-			children: <code>{await submitResult.text()}</code>
-		})
 		revalidator.revalidate()
+		return await submitResult.text()
 		
 	}
 	
@@ -190,6 +204,8 @@ export default function () {
 			</div>
 			
 			<div className={classes(css.controller)}>
+				<InputText value={editingContentHash}
+					prefix="sha1" disabled hideIndicator className={[css.sha1]} />
 				<InputText value={inCase(monacoStatus.value.insertSpaces, [[undefined, ''], [true, 'Spaces'], [false, 'Tabs']])}
 					prefix="indents" disabled hideIndicator className={[css.tabType]}
 					onClick={() => alert("not implemented")} />

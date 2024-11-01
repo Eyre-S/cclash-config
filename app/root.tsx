@@ -19,6 +19,9 @@ import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } fr
 import { $, Reactive } from "./utils/reactive";
 import { defineAppTitle, defineMeta } from "./universal/app-meta";
 import { useGlobalPopups } from "./utils/components/popup";
+import { Slide, ToastContainer } from "react-toastify";
+
+import 'react-toastify/dist/ReactToastify.css'
 
 export const meta = defineMeta<typeof loader, {}>(({matches}) => {
 	return [
@@ -122,6 +125,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<div id="app" className={classes(css.app)}>
 					{children}
 				</div>
+				<ToastContainer transition={Slide} />
 				<ScrollRestoration />
 				<Scripts />
 			</body>

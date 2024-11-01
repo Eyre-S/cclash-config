@@ -22,6 +22,7 @@
 		"morgan": "1.10.0",
 		"react": "19.0.0-beta-26f2496093-20240514",
 		"react-dom": "19.0.0-beta-26f2496093-20240514",
+		"react-toastify": "10.0.6",
 		"react-transition-group": "4.4.5",
 		"remix-utils": "7.7.0",
 		"uni-preprocessor": "0.3.0",

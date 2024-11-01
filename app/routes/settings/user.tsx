@@ -5,6 +5,7 @@ import { useOutletContext } from "@remix-run/react";
 import { SettingsLayoutContext } from "./_layout";
 import { InputButton } from "~/utils/components/Inputs";
 import { usePopupNotification } from "~/utils/components/popup";
+import { toast } from "react-toastify";
 
 export default function ClientSettingsPage () {
 	
@@ -32,6 +33,12 @@ export default function ClientSettingsPage () {
 		
 	}
 	
+	async function openToast () {
+		toast("This is a toast!", {
+			position: 'top-center',
+		})
+	}
+	
 	return <>
 		<div className={classes(layoutCss.innerPage)}>
 			
@@ -43,6 +50,7 @@ export default function ClientSettingsPage () {
 			
 			<InputButton onClick={openCheckbox}>Open checkbox!</InputButton>
 			<InputButton onClick={openCheckbox2}>Open another checkbox!</InputButton>
+			<InputButton onClick={openToast}>Open toast!</InputButton>
 			
 		</div>
 	</>
