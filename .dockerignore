@@ -1,4 +1,11 @@
 #-------------
+# Build unneeded files
+
+/.vscode
+README.md
+Dockerfile
+
+#-------------
 # Server runtime files
 
 /server
