@@ -6,3 +6,9 @@ html, body
 body
 	font-family 'Alibaba Puhuiti', 'Helvetica Neue', sans-serif
 	font-size 16px
+
+code
+	background #bdbdbd54
+	font-size 0.8em
+	padding 0.2em 0.4em
+	border-radius 0.2em

@@ -1,0 +1,110 @@
+.toast-item
+	--color-bg-unfocus #c5c5c5
+	--color-bg-focus #b0b0b0
+	--color-button-text #e6e6e6
+	--color-button-bg-focus #939393
+
+.toast-item.type-error
+	--color-bg-unfocus #f19c9f
+	--color-bg-focus #eb6f73
+	--color-button-text #f9cacb
+	--color-button-bg-focus #d55c60
+
+.toast-item.type-dev
+	--color-bg-unfocus #aecfff
+	--color-bg-focus #3091ff
+	--color-button-text #d9f1ff
+	--color-button-bg-focus #0048ff
+
+.toast-item.type-warn
+	--color-bg-unfocus #f7bfa7
+	--color-bg-focus #fd9a70
+	--color-button-text #ffddce
+	--color-button-bg-focus #f88b42
+
+.toast-item
+	
+	box-sizing border-box
+	// size 100%
+	min-width 200px
+	min-height 68px
+	max-width @css{min(40vw, 400px)}
+	
+	border-radius 8px
+	background-color var(--color-bg-unfocus)
+	opacity 0.8
+	&:hover
+		background-color var(--color-bg-focus)
+		opacity 1.0
+	color aliceblue
+	font-size 14px
+	
+	transition-property background-color,opacity
+	transition-duration 110ms
+	
+	use-flex row
+	flex-wrap nowrap
+	overflow hidden
+	gap 10px
+	position relative
+	
+	.starter-gap
+		flex 0 0 2px
+		height 100%
+	.icon
+		flex 0 0
+		padding-block 14px
+		// padding-inline-end 2px
+	.content
+		flex 1 1 0
+		padding-block 12px
+	.buttons
+		flex 0 0 22px
+	
+	.icon
+		font-size 22px
+	
+	.buttons
+		
+		use-flex column
+		
+		> .button
+			
+			flex 1 1 0
+			clear-pad()
+			padding-block-start 3px
+			
+			color var(--color-button-text)
+			font-size 16px
+			border-radius 8px
+			background-color inherit
+			&:hover
+				background-color var(--color-button-bg-focus)
+			transition background-color 110ms
+			
+			use-flex-center()
+			
+			> :global(.material-symbols)
+				font-variation-settings 'FILL' 1, 'wght' 700, 'GRAD' 200, 'opsz' 24
+				
+	
+	.progress-bar
+		
+		position absolute
+		top 0
+		left 0
+		height 5px
+		right 100%
+		background-color #00000014
+		
+		animation-name progress-bar-left-right
+		animation-timing-function linear
+		animation-fill-mode forwards
+		
+		@keyframes progress-bar-left-right
+			from
+				right 100%
+			to
+				right 0%
+		
+	

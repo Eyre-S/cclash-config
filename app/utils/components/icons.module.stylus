@@ -1,0 +1,8 @@
+.inherit-mode
+	font-weight inherit
+	font-style inherit
+	font-size inherit
+	font-variant inherit
+	line-height inherit
+	letter-spacing inherit
+	text-transform inherit

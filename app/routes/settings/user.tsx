@@ -5,7 +5,7 @@ import { useOutletContext } from "@remix-run/react";
 import { SettingsLayoutContext } from "./_layout";
 import { InputButton } from "~/utils/components/Inputs";
 import { usePopupNotification } from "~/utils/components/popup";
-import { toast } from "react-toastify";
+import toast from "~/universal/toast";
 
 export default function ClientSettingsPage () {
 	
@@ -33,10 +33,40 @@ export default function ClientSettingsPage () {
 		
 	}
 	
+	function generateRandomSentence(): string {
+		const sentences = [
+			"HI!",
+			"河流在倒流。",
+			"蓝色的猫在跳舞。",
+			"我在梦里遇到了一个会说话的石头。",
+			"在一个古老的图书馆里，每本书都有自己的生命，它们会在夜晚悄悄地讲述自己的故事。",
+		];
+		const randomIndex = Math.floor(Math.random() * sentences.length);
+		return sentences[randomIndex];
+	}
+	
 	async function openToast () {
-		toast("This is a toast!", {
-			position: 'top-center',
-		})
+		toast.pop({
+			type: toast.types.NOTICE,
+			buttons: [
+				{
+					icon: "check",
+					onClick: () => {
+						alert("Hi!")
+					},
+					closeToast: "none"
+				},
+				{
+					icon: "close"
+				}
+			],
+			checkButton: "forest"
+		})(
+			<>
+				在使用 NFSv4 時，<code>fsid=root</code> 或 <code>fsid=0</code> 選項指定了導出目錄「根」的位置；如果使用這些選項指定了導出目錄，那其它文件夾都必須位於該文件夾下。<code>/etc/nfs.conf</code> 文件中的 <code>rootdir</code> 選項在這種情況下不起效。如果沒有指定 <code>fsid=0</code>，那默認行為與 NFSv3 一致。
+			</>
+		);
+		toast.pop({type: toast.types.NOTICE, timeout: false})(generateRandomSentence());
 	}
 	
 	return <>
@@ -50,7 +80,7 @@ export default function ClientSettingsPage () {
 			
 			<InputButton onClick={openCheckbox}>Open checkbox!</InputButton>
 			<InputButton onClick={openCheckbox2}>Open another checkbox!</InputButton>
-			<InputButton onClick={openToast}>Open toast!</InputButton>
+			<InputButton onClick={openToast}>Open rich toast!</InputButton>
 			
 		</div>
 	</>

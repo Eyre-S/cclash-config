@@ -1,0 +1,49 @@
+.Toastify__toast-container
+	
+	--toastify-toast-offset 12px
+	--toastify-toast-top var(--toastify-toast-offset)
+	--toastify-toast-left var(--toastify-toast-offset)
+	--toastify-toast-right var(--toastify-toast-offset)
+	--toastify-toast-bottom var(--toastify-toast-offset)
+	size unset
+	
+	use-flex column
+	flex-wrap nowrap
+	
+
+.Toastify__toast-container--top-right
+	align-items flex-end
+
+.Toastify__toast-container--top-center
+	align-items center
+
+.Toastify__toast
+	
+	display block
+	clear-pad()
+	clear-shadow()
+	
+	background-color #00000000
+	border-radius 8px
+	max-height inherit
+	font-family inherit
+	min-height inherit
+	
+	box-sizing border-box
+	size unset
+	
+	& + &
+		margin-block-start var(--toastify-toast-offset)
+	
+.Toastify__toast-body
+	
+	display block
+	size unset
+	// width fit-content
+	box-sizing border-box
+	clear-pad()
+	align-items stretch
+	
+
+.Toastify__progress-bar--wrp
+	display none

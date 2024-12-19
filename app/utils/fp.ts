@@ -71,3 +71,10 @@ export function inCaseSafe <T, R> (value: T, cases: CaseDefinition<T, R>[], exce
 	}
 	return excepts(value)
 }
+
+export function select <T> (...value: (T|undefined)[]): T | undefined {
+	for (const i of value)
+		if (i !== undefined)
+			return i
+	return undefined
+}

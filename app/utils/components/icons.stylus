@@ -1,0 +1,11 @@
+// use Google Material Symbols (Rounded)
+// @see https://fonts.google.com/icons
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200")
+
+// use Nerd Font (Symbols Only)
+// @see https://www.nerdfonts.com/cheat-sheet
+@import url("https://www.nerdfonts.com/assets/css/webfont.css")
+
+.nf,
+.nerd-font
+	font-grayscale()

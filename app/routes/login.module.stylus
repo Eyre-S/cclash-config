@@ -59,12 +59,22 @@
 		}
 		
 		.input-elem
-			font-size 18px
 			width 100%
+			font-size 18px
+			> label
+				display inline-block
+				font-size 80%
+				color rgb(106, 106, 106)
+				margin-block-end 0.6em
+				margin-inline-start 1.2em
+			> :not(label)
+				box-sizing border-box
+				width 100%
+				font-size 100%
 		
 		.input-button
 			font-size 18px
-			width 80%
+			width 100%
 			.waiting
 				display inline-block
 				animation rotate-always 1s linear infinite

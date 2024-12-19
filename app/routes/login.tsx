@@ -14,6 +14,10 @@ import { $ } from "~/utils/reactive";
 import { Gap } from "~/utils/components";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { defineAppTitle, defineMeta } from "~/universal/app-meta";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { errors } from "da4s";
+import { I } from "~/utils/components/icons";
 
 export const meta = defineMeta((args) => {
 	return [
@@ -57,7 +61,29 @@ export default function Index() {
 		redirAfterLogin
 	} = useLoaderData<typeof loader>()
 	console.log(`User started login page with existing login status: `, initialLoginStatus)
-	if (redirAfterLogin) console.log(`User is redirect from ${redirAfterLogin}, and will be redirected to there after login.`)
+	if (redirAfterLogin)
+		console.log(`User is redirect from ${redirAfterLogin}, and will be redirected to there after login.`)
+	useEffect(() => {
+		
+		console.log(`notifying redir`)
+		if (redirAfterLogin) {
+			toast(<>
+				<p>You must login to access that page!</p>
+				<p>You will be redirect to {redirAfterLogin} after successfully logged in.</p>
+			</>, { position: 'top-center', type: 'warning' })
+		}
+		
+		if (initialLoginStatus == 'fail') {
+			toast(<>
+				<p>Your token seems already being invalid. Please re-login.</p>
+			</>, { position: 'top-center', type: 'warning' })
+		} else if (initialLoginStatus == 'success') {
+			toast(<>
+				<p>You are currently already logged in.</p>
+			</>, { position: 'top-center', type: 'info' })
+		}
+		
+	}, [])
 	
 	const loggingActionStatus = $<"idle"|"logging-in"|"success-waiting"|"success-redir">("idle")
 	const loggingResultStatus = $<"idle"|"success"|"fail"|'fail-err'>("idle")
@@ -73,15 +99,25 @@ export default function Index() {
 			if (result_json.data.ok) {
 				loggingResultStatus.value = "success"
 				loggingActionStatus.value = "success-waiting"
+				toast(<>
+					<p>Login succeed, redirecting...</p>
+				</>, { position: 'top-center', type: 'success' })
 				await wait(1000)
 				loggingActionStatus.value = "success-redir"
 				if (redirAfterLogin) navigate(redirAfterLogin)
 				else navigate("/")
 			} else {
+				toast(<>
+					<p>Login failed, please check your token and try again.</p>
+				</>, { position: 'top-center', type: 'error' })
 				loggingResultStatus.value = 'fail'
 				loggingActionStatus.value = "idle"
 			}
-		} catch {
+		} catch (e) {
+			toast(<>
+				<p>Login failed: Unknown error occurred.</p>
+				<pre><code>{errors.normalError(e)}</code></pre>
+			</>, { position: 'top-center', type: 'error' })
 			loggingResultStatus.value = 'fail-err'
 			loggingActionStatus.value = 'idle'
 		}
@@ -118,56 +154,15 @@ export default function Index() {
 				<div className={classes(css.loginBox)}>
 					
 					<h1 className={classes(css.title)}>Login</h1>
-					<div className={classes(css.noticeBox)}>
-						{inCase(initialLoginStatus, [
-							['none', <></>],
-							[
-								'success',
-								<div className={classes(css.notice, css.currentStatus)}>
-									<span>You are already logged in.</span>
-								</div>
-							],
-							[
-								'fail',
-								<div className={classes(css.notice, css.currentStatus)}>
-									<span>Your token seems already being invalid. Please re-login.</span>
-								</div>
-							],
-						])}
-						{is(redirAfterLogin, <>
-							<div className={classes(css.notice, css.redirStatus)}>
-								<span>You must login to access that page!</span><br/>
-								<span><small>You will be redirected to {redirAfterLogin} after logged in.</small></span>
-							</div>
-						</>)}
-						{inCase(loggingResultStatus.value, [
-							['idle', <></>],
-							[
-								'success',
-								<div className={classes(css.notice, css.newStatus)}>
-									<span>Login succeed, redirecting...</span>
-								</div>
-							],
-							[
-								'fail',
-								<div className={classes(css.notice, css.newStatus)}>
-									<span>Login failed, please check your token and try again.</span>
-								</div>
-							],
-							[
-								'fail-err',
-								<div className={classes(css.notice, css.newStatus)}>
-									<span>Unknown error occurred.</span>
-								</div>
-							],
-						])}
-					</div>
 					
 					<Gap size="10px" />
 					
 					<div className={classes(css.form)}>
 						
-						<InputText password className={[css.inputElem]} value={inputPassword.value} onValueChange={v => inputPassword.value = v} />
+						<div className={classes(css.inputElem)}>
+							<label>Token</label>
+							<InputText password value={inputPassword.value} onValueChange={v => inputPassword.value = v} />
+						</div>
 						
 						<InputButton
 							className={[css.inputButton]}
@@ -175,7 +170,7 @@ export default function Index() {
 							disabled={!isCanLogin}>
 							{inCase (loggingActionStatus.value, [
 								['idle',            <>Login</>],
-								['logging-in',      <span className={css.waiting}>|</span>],
+								['logging-in',      <span className={css.waiting}><I>progress_activity</I></span>],
 								['success-waiting', <>Success! waiting...</>],
 								['success-redir',   <>Success! waiting...</>]
 							])}
@@ -189,7 +184,7 @@ export default function Index() {
 								disabled={isInAction}>
 								{inCase (logOutActionStatus.value, [
 									['idle',            <>Logout</>],
-									['requesting',      <span className={css.waiting}>|</span>]
+									['requesting',      <span className={css.waiting}><I>progress_activity</I></span>]
 								])}
 							</InputButton>
 						</>)}
