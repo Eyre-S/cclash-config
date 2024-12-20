@@ -6,6 +6,7 @@ import { classes } from '../jsx-helper'
 import { it } from '../fp'
 
 interface MaterialSymbolProps {
+	
 	/**
 	 * The name or ID of the symbol/icon.
 	 * 
@@ -51,6 +52,9 @@ interface MaterialSymbolProps {
 	 * use this behavor.
 	 */
 	defaults?: boolean
+	
+	className?: string
+	
 }
 
 /**
@@ -80,7 +84,7 @@ export function MaterialSymbol (_: MaterialSymbolProps) {
 	} : undefined
 	
 	return <span
-		className={classes("material-symbols", clazz, inherit_mode?styles['inherit-mode']:'')}
+		className={classes("material-symbols", clazz, inherit_mode?styles['inherit-mode']:'', _.className)}
 		style={style}
 	>{_.children}</span>
 	
@@ -104,6 +108,9 @@ export interface NerdFontSymbolProps {
 	 * use this behavor.
 	 */
 	defaults?: boolean
+	
+	className?: string
+	
 }
 export function NerdFontSymbol (_: NerdFontSymbolProps) {
 	
@@ -115,7 +122,7 @@ export function NerdFontSymbol (_: NerdFontSymbolProps) {
 	const inherit_mode = !_.defaults
 	
 	return <span
-		className={classes('nf', 'nerd-font', 'nf-'+symbolName, inherit_mode?styles['inherit-mode']:'')}
+		className={classes('nf', 'nerd-font', 'nf-'+symbolName, inherit_mode?styles['inherit-mode']:'', _.className)}
 	/>
 	
 }
@@ -131,10 +138,12 @@ export function I (_: IconModel): JSX.Element {
 		return <MaterialSymbol {..._} />
 }
 
-export type IconDefinition = string | IconModel
+export type IconDefinition = string | IconModel | JSX.Element
 export function getIcon (iconDef: IconDefinition): JSX.Element {
 	if (typeof iconDef === "string") {
 		return <I>{iconDef}</I>
+	} else if ("type" in iconDef) {
+		return iconDef
 	} else {
 		return (<I {...iconDef} />)
 	}

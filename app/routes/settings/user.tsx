@@ -6,6 +6,7 @@ import { SettingsLayoutContext } from "./_layout";
 import { InputButton } from "~/utils/components/Inputs";
 import { usePopupNotification } from "~/utils/components/popup";
 import toast from "~/universal/toast";
+import { I } from "~/utils/components/icons";
 
 export default function ClientSettingsPage () {
 	
@@ -66,7 +67,22 @@ export default function ClientSettingsPage () {
 				在使用 NFSv4 時，<code>fsid=root</code> 或 <code>fsid=0</code> 選項指定了導出目錄「根」的位置；如果使用這些選項指定了導出目錄，那其它文件夾都必須位於該文件夾下。<code>/etc/nfs.conf</code> 文件中的 <code>rootdir</code> 選項在這種情況下不起效。如果沒有指定 <code>fsid=0</code>，那默認行為與 NFSv3 一致。
 			</>
 		);
-		toast.pop({type: toast.types.NOTICE, timeout: false})(generateRandomSentence());
+		toast.pop({type: toast.types.NOTICE, timeout: false})(
+			generateRandomSentence()
+		);
+	}
+	
+	async function openPromiseToast () {
+		
+		const prom = new Promise((resolve, reject) => { setTimeout(() => {
+			Math.random() > 0.5 ? resolve(1) : reject()
+		}, 3000); });
+		toast.promise()(prom, {
+			pending: { text: <>Pending a 3 seconds timeout...</> },
+			success: { text: <>Checked!</> },
+			error: { text: <>Failed!</> },
+		})
+		
 	}
 	
 	return <>
@@ -81,6 +97,7 @@ export default function ClientSettingsPage () {
 			<InputButton onClick={openCheckbox}>Open checkbox!</InputButton>
 			<InputButton onClick={openCheckbox2}>Open another checkbox!</InputButton>
 			<InputButton onClick={openToast}>Open rich toast!</InputButton>
+			<InputButton onClick={openPromiseToast}>Open a promise toast!</InputButton>
 			
 		</div>
 	</>

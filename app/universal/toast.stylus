@@ -1,0 +1,28 @@
+.outer
+	.inner
+		.most-inner
+			^[1..1] + ^[1..1]
+				height 10px
+
+@css{
+.toast-item {
+	:is(h4, h5, h6, p) + :is(h4, h5, h6, p) {
+		margin-block-start: 0.2em;
+	}
+}
+}
+
+.toast-item
+	
+	h4
+		
+		font-size 1.15em
+		font-weight bold
+		clear-pad()
+		
+	
+	p
+		
+		clear-pad()
+		
+	

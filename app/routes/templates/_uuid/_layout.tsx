@@ -63,11 +63,25 @@ export default function TemplateItemLayout () {
 	
 	async function deleteThisTemplate () {
 		
-		if (!confirm("Really want to delete this template?\n You will lost this template FOREVER!!!"))
-			return
-		
-		alert("Deletion not implemented.")
-		navigate("..", { relative: 'route' })
+		layoutContext.popups.open({
+			
+			title: "Deleting Template",
+			children: "Do you really want to delete this template? You will lost it FOREVER.",
+			
+			onChecked: () => {
+				
+				layoutContext.popups.open({
+					
+					children: "Delete template not implemented...",
+					onChecked: () => {
+						navigate("..", { relative: 'route' })
+					}
+					
+				})
+				
+			}
+			
+		})
 		
 	}
 	

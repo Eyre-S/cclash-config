@@ -39,7 +39,7 @@
 	color aliceblue
 	font-size 14px
 	
-	transition-property background-color,opacity
+	transition-property background-color,opacity,width,height
 	transition-duration 110ms
 	
 	use-flex row
@@ -62,11 +62,29 @@
 		flex 0 0 22px
 	
 	.icon
+		
 		font-size 22px
+		
+		.pending
+			transform-origin 50% 55%
+			@keyframes rotate
+				from
+					transform rotate(0deg) scale(1)
+				50%
+					transform rotate(180deg) scale(0.75)
+				to
+					transform rotate(360deg) scale(1)
+			animation-name rotate
+			animation-timing-function linear
+			animation-duration 1200ms
+			animation-iteration-count infinite
+		
 	
 	.buttons
 		
 		use-flex column
+		&.hidden
+			display none
 		
 		> .button
 			

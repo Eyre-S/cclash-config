@@ -15,8 +15,8 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { TemplateItemLayoutContext } from "./_layout";
 import { ClientOnly } from "remix-utils/client-only";
-import { toast } from "react-toastify";
 import { Gap } from "~/utils/components";
+import toast from "~/universal/toast";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -144,13 +144,10 @@ export default function () {
 	async function updateContent () {
 		
 		const submit = updateContentImpl()
-		toast.promise(submit, {
-			pending: {
-				position: 'top-center',
-				render: "Updating Template..."
-			},
-			success: { position: 'top-center', render: ({data}) => <><span>Ok!</span><Gap size="10px" /><code>{data}</code></> },
-			error:   { position: 'top-center', render: ({data}) => <><span>Failed to update:</span><Gap size="10px" /><code>{JSON.stringify(data)}</code></> },
+		toast.promise()(submit, {
+			pending: { text: "Updating Template..." },
+			success: (data) => ({ text: <><span>Ok!</span><Gap size="10px" /><code>{data}</code></> }),
+			error:   (data) => ({ text: <><span>Failed to update:</span><Gap size="10px" /><code>{JSON.stringify(data)}</code></> }),
 		})
 		
 	}

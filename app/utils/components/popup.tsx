@@ -8,7 +8,12 @@ import { AppLayoutContext } from '~/root'
 import { ClientOnly } from 'remix-utils/client-only'
 import { createPortal } from 'react-dom'
 
-export interface PopupNotificationProps { title?: ReactNode, children: ReactNode, onChecked: () => any }
+export interface PopupNotificationProps {
+	title?: ReactNode,
+	children: ReactNode,
+	onChecked: () => any
+}
+
 export function PopupNotification (_: PopupNotificationProps) {
 	
 	return <>
@@ -73,8 +78,8 @@ export function useGlobalPopups () {
 				...parameters.value,
 				...props,
 				onChecked: () => {
-					if (propsOnChecked) propsOnChecked()
 					onCheckedDefaults()
+					if (propsOnChecked) propsOnChecked()
 					resolve()
 				}
 			}

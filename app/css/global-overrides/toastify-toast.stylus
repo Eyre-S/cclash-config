@@ -47,3 +47,6 @@
 
 .Toastify__progress-bar--wrp
 	display none
+
+.Toastify__toast-icon
+	display none

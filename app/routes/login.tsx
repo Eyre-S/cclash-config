@@ -15,9 +15,9 @@ import { Gap } from "~/utils/components";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { defineAppTitle, defineMeta } from "~/universal/app-meta";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
 import { errors } from "da4s";
 import { I } from "~/utils/components/icons";
+import toast from "~/universal/toast";
 
 export const meta = defineMeta((args) => {
 	return [
@@ -67,20 +67,23 @@ export default function Index() {
 		
 		console.log(`notifying redir`)
 		if (redirAfterLogin) {
-			toast(<>
+			toast.pop({type: toast.types.WARNING})(<>
+				<h4>Require login!</h4>
 				<p>You must login to access that page!</p>
-				<p>You will be redirect to {redirAfterLogin} after successfully logged in.</p>
-			</>, { position: 'top-center', type: 'warning' })
+				<p>You will be redirect to <code>{redirAfterLogin}</code> after successfully logged in.</p>
+			</>)
 		}
 		
 		if (initialLoginStatus == 'fail') {
-			toast(<>
+			toast.pop({type: toast.types.WARNING})(<>
+				<h4>Login expired!</h4>
 				<p>Your token seems already being invalid. Please re-login.</p>
-			</>, { position: 'top-center', type: 'warning' })
+			</>)
 		} else if (initialLoginStatus == 'success') {
-			toast(<>
+			toast.pop({type: toast.types.NOTICE})(<>
 				<p>You are currently already logged in.</p>
-			</>, { position: 'top-center', type: 'info' })
+				<p>You can login to another account(not implemented yet), or logout here.</p>
+			</>)
 		}
 		
 	}, [])
@@ -99,25 +102,27 @@ export default function Index() {
 			if (result_json.data.ok) {
 				loggingResultStatus.value = "success"
 				loggingActionStatus.value = "success-waiting"
-				toast(<>
-					<p>Login succeed, redirecting...</p>
-				</>, { position: 'top-center', type: 'success' })
-				await wait(1000)
+				toast.pop({type: toast.types.NOTICE, timeout: toast.timeouts.short})(<>
+					<p>Login succeed.</p>
+				</>)
+				await wait(300)
 				loggingActionStatus.value = "success-redir"
 				if (redirAfterLogin) navigate(redirAfterLogin)
 				else navigate("/")
 			} else {
-				toast(<>
-					<p>Login failed, please check your token and try again.</p>
-				</>, { position: 'top-center', type: 'error' })
+				toast.pop({type: toast.types.ERROR})(<>
+					<h4>Login failed!</h4>
+					<p>Please check your token and try again.</p>
+				</>)
 				loggingResultStatus.value = 'fail'
 				loggingActionStatus.value = "idle"
 			}
 		} catch (e) {
-			toast(<>
-				<p>Login failed: Unknown error occurred.</p>
+			toast.pop({type: toast.types.ERROR})(<>
+				<h4>Login failed!</h4>
+				<p>Unknown error occurred.</p>
 				<pre><code>{errors.normalError(e)}</code></pre>
-			</>, { position: 'top-center', type: 'error' })
+			</>)
 			loggingResultStatus.value = 'fail-err'
 			loggingActionStatus.value = 'idle'
 		}

@@ -1,12 +1,13 @@
 import { toast, ToastContentProps, ToastOptions } from "react-toastify"
 import { getIcon, I, IconDefinition } from "~/utils/components/icons"
 import { classes } from "~/utils/jsx-helper"
-
-import "~/css/global-overrides/toastify-toast.stylus"
-import css from "./toast.module.stylus"
 import { ReactNode, useRef } from "react"
 import { inCase, is, isIt, iss, it, select } from "~/utils/fp"
 import { Reactive } from "~/utils/reactive"
+
+import "~/css/global-overrides/toastify-toast.stylus"
+import "./toast.stylus"
+import css from "./toast.module.stylus"
 
 export interface ToastType {
 	css_class: () => string
@@ -37,6 +38,11 @@ export class ToastTypes {
 	
 }
 
+export const ToastTimeouts = {
+	short: 2400,
+	normal: 5000
+}
+
 export interface ToastParameters {
 	
 	text: ReactNode,
@@ -46,6 +52,7 @@ export interface ToastParameters {
 	
 	buttons?: ToastButton[],
 	checkButton?: boolean|IconDefinition
+	hideButtons?: boolean
 	
 	timeout?: number | false
 	
@@ -58,29 +65,39 @@ export interface ToastButton {
 	closeToast?: "before"|"after"|"none"
 }
 
-export function createToast (props: ToastParameters) {
-	
-	return function ({ closeToast }: ToastContentProps) {
-		
+export function createToast <T> (props: ToastParameters) {
+	return function ({ closeToast }: ToastContentProps<T>) {
 		return <ToastItem
 			{...props}
 			closeToast={closeToast}
 		/>
-		
 	}
-	
+}
+
+export function createParamToast <T> (props: (data: T) => ToastParameters, mixins: Partial<ToastParameters> = {}) {
+	return function ({ closeToast, data }: ToastContentProps<T>) {
+		return <ToastItem
+			{...mixins}
+			{...props(data)}
+			closeToast={closeToast}
+		/>
+	}
 }
 
 function ToastItem ({closeToast, ...props}: ToastParameters & { closeToast: ()=>void }) {
 	
 	const icon = it(() => {
 		const icon_def = select(props.icon, props.type?.default_icon())
-		if (typeof icon_def === "string") {
-			return <I fill={1}>{icon_def}</I>
-		} else if (typeof icon_def === 'object') {
-			return (<I {...icon_def} />)
-		} else {
+		console.log("props.icon is", props.icon)
+		console.log("icon def is", icon_def)
+		if (icon_def === undefined) {
 			return undefined
+		} else if (typeof icon_def === "string") {
+			return <I fill={1}>{icon_def}</I>
+		} else if ("type" in icon_def) {
+			return icon_def
+		} else {
+			return (<I {...icon_def} />)
 		}
 	})
 	
@@ -104,16 +121,18 @@ function ToastItem ({closeToast, ...props}: ToastParameters & { closeToast: ()=>
 		</button>)
 	}) || []
 	
+	const timeout = props.timeout || ToastTimeouts.normal
+	
 	const isPaused = new Reactive<boolean>(false)
 	
 	return (<>
-		<div className={classes(css.testToast, css.toastItem, props.type?.css_class())}
+		<div className={classes("toast-item", css.toastItem, props.type?.css_class())}
 			onMouseEnter={() => isPaused.value = true}
 			onMouseLeave={() => isPaused.value = false}
 		>
 			
 			{isIt(props.timeout !== false, () => <ToastProgressBar
-				timeout={props.timeout || 3000}
+				timeout={timeout}
 				isPaused={isPaused.value}
 				closeToast={closeToast}
 			/>)}
@@ -125,7 +144,7 @@ function ToastItem ({closeToast, ...props}: ToastParameters & { closeToast: ()=>
 				<span>{props.text}</span>
 			</div>
 			
-			<div className={classes(css.buttons)}>
+			<div className={classes(css.buttons, is(props.hideButtons, css.hidden))}>
 				{buttons.map((buttonDef) => {
 					return buttonDef
 				})}
@@ -180,13 +199,59 @@ export function popupToast (params: Omit<ToastParameters, "text"> = {}, options:
 	}
 }
 
+export type ToastParametersFunc<T> = (data: T) => ToastParameters
+export type ToastParametersRich<T> = ToastParameters | ((data: T) => ToastParameters)
+export function enrichToastParameters <T> (params: ToastParametersRich<T>): ToastParametersFunc<T> {
+	if (typeof params === "function") return params
+	else return () => params
+}
+export interface PromiseToastParameters <TData, TError, TPending> {
+	pending: ToastParametersRich<TPending>,
+	success: ToastParametersRich<TData>,
+	error: ToastParametersRich<TError>,
+}
+export function popupPromiseToast (options: Omit<ToastOptions<any>, "render"> = defaultToastingConfig) {
+	return function <PT, ET, NT> (promise: Promise<PT>, parameters: PromiseToastParameters<PT, ET, NT>) {
+		const param_func_pending = enrichToastParameters(parameters.pending)
+		const param_func_success = enrichToastParameters(parameters.success)
+		const param_func_error = enrichToastParameters(parameters.error)
+		toast.promise<PT, ET, NT>(promise, {
+			pending: {
+				render: createParamToast(param_func_pending, {
+					type: ToastTypes.NOTICE,
+					icon: <I fill={1} optical={40} grade={200} className={classes(css.pending)}>atr</I>,
+					timeout: false,
+					checkButton: false,
+					hideButtons: true
+				}),
+				...options
+			},
+			success: {
+				render: createParamToast(param_func_success, {
+					type: ToastTypes.DEV,
+					timeout: ToastTimeouts.short
+				}),
+				...options
+			},
+			error: {
+				render: createParamToast(param_func_error, {
+					type: ToastTypes.ERROR
+				}),
+				...options
+			}
+		})
+	}
+}
+
 export default {
 	
 	defaultToastingConfig,
 	createToast,
 	
 	types: ToastTypes,
+	timeouts: ToastTimeouts,
 	
-	pop: popupToast
+	pop: popupToast,
+	promise: popupPromiseToast
 	
 }
