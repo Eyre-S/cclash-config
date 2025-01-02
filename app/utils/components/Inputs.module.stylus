@@ -88,6 +88,7 @@ button.input.button
 	use-flex row
 	flex-wrap nowrap
 	column-gap 0.5em
+	position relative
 	
 	--input-width 100%
 	> input
@@ -138,4 +139,11 @@ button.input.button
 	> input:focus-visible + .marker
 	> input:focus-visible + .suffix + .marker
 		background-color input-marker-focus-color
+	
+	> .cover
+		position absolute
+		z-index 100
+		pos 0
+		&.can-clicks
+			cursor pointer
 	

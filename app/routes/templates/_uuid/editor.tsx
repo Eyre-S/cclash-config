@@ -171,6 +171,16 @@ export default function () {
 		editingContentLanguage.value = guessCodeLanguage(editingContent.value)
 	}
 	
+	async function switchEol () {
+		const currentEol = monacoStatus.value.eol
+		if (currentEol == '\n') {
+			setEol('crlf')
+		} else if (currentEol == '\r\n') {
+			setEol('lf')
+		} else {
+			setEol('lf')
+		}
+	}
 	async function setEol (eol: "lf" | "crlf") {
 		monacoInstance.current?.getModel()?.setEOL(inCase(eol, [
 			['lf', 0],
@@ -214,15 +224,15 @@ export default function () {
 				{/* Indent Type */}
 				<InputText value={inCase(monacoStatus.value.insertSpaces, [[undefined, ''], [true, 'Spaces'], [false, 'Tabs']])}
 					prefix="indents" disabled hideIndicator className={[css.tabType]}
-					onClick={() => alert("not implemented")} />
+					onClick={() => alert("not implemented: switch spaces/tabs indent")} noSelect />
 				{/* Tab Size */}
 				<InputText value={monacoStatus.value.tabSize?.toString()||''}
-					prefix="tab size" disabled hideIndicator className={[css.tabSize]} />
+					prefix="tab size" disabled hideIndicator className={[css.tabSize]}
+					onClick={() => alert("not implemented: change indent size")} noSelect />
 				{/* End of Line (EOL) */}
 				<InputText value={showSpecialChars(monacoStatus.value.eol||'')}
+					onClick={switchEol} noSelect
 					disabled hideIndicator className={[css.eolType]} />
-				<InputButton onClick={() => setEol('lf')} >LF</InputButton>
-				<InputButton onClick={() => setEol('crlf')} >CRLF</InputButton>
 				{/* Cursor position */}
 				<InputText value={it(() => {
 						let content = ''
@@ -235,7 +245,7 @@ export default function () {
 						return content
 					})}
 					disabled hideIndicator className={[css.cursor]}
-					onClick={() => alert("not implemented")} />
+					onClick={() => alert("not implemented: jump to")} noSelect />
 				{/* Highlighting Language */}
 				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e}
 					prefix="Language" placeholder="..." className={[css.language]}

@@ -5,7 +5,7 @@ import { TemplateIndex } from "~/.server/templates/template"
 
 import css from './_layout.module.stylus'
 import { classes } from "~/utils/jsx-helper"
-import { InputButton } from "~/utils/components/Inputs"
+import { InputButton, InputText } from "~/utils/components/Inputs"
 import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch"
 import { ReactNode, RefObject, useEffect, useRef } from "react"
 import { $ } from "~/utils/reactive"
@@ -79,10 +79,10 @@ export default function TemplateItemLayout () {
 							icon: "wrong_location",
 							type: toast.types.ERROR,
 						})("Deleting template is not implemented yet.")
-					}}>Delete</InputButton>
+					}}>Yes, do as I say!</InputButton>
 					<InputButton onClick={async () => {
 						closePopups()
-					}}>Cancel</InputButton>
+					}}>Let me keep it for now.</InputButton>
 				</>)
 			}
 			

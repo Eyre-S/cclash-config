@@ -64,9 +64,11 @@ export function InputText (_: {
 	
 	value: string
 	onValueChange?: (value: string) => void
+	
 	onClick?: MouseEventHandler<HTMLElement>
 	
 	disabled?: boolean
+	noSelect?: boolean
 	placeholder?: string
 	
 	password?: boolean
@@ -108,7 +110,6 @@ export function InputText (_: {
 			<input
 				name="__universal_input_text"
 				value={_.value} onInput={e => { if (_.onValueChange) {_.onValueChange(e.currentTarget.value)} }}
-				// onClick={_.onClick}
 				type={type} disabled={_.disabled} placeholder={_.placeholder}
 				minLength={_.minLength} maxLength={_.maxLength} pattern={_.pattern?.source}
 			/>
@@ -125,6 +126,8 @@ export function InputText (_: {
 				</div>,
 				<div className={classes(css.marker)}></div>,
 			))}
+			
+			{is(_.noSelect, <div className={classes(css.cover, is(_.onClick, css.canClicks))} onClick={_.onClick} />)}
 			
 		</div>
 	</>
