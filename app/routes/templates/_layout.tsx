@@ -43,7 +43,9 @@ function TemplateIndexItem (_: { index: TemplateIndexDef, enabled: boolean }) {
 	
 }
 
-export interface TemplatesLayoutContext extends AppLayoutContext {}
+export interface TemplatesLayoutContext extends AppLayoutContext {
+	templateIndexRevalidator: ReturnType<typeof useRevalidator>
+}
 
 export default function TemplatesLayout() {
 	
@@ -136,7 +138,10 @@ export default function TemplatesLayout() {
 					
 				</div>
 				<div className={classes(css.pageContent)}>
-					<Outlet context={layoutContext satisfies TemplatesLayoutContext} />
+					<Outlet context={{
+						...layoutContext,
+						templateIndexRevalidator: revalidator
+					} satisfies TemplatesLayoutContext } />
 				</div>
 			</div>
 		</>

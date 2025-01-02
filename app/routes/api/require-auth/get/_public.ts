@@ -8,6 +8,11 @@ export interface TemplateBaseInformation {
 	uuid: string
 }
 
+export interface TemplateExtendedInformation extends TemplateBaseInformation {
+	name: string
+	alias: string[]
+}
+
 export interface TemplateUpdatingResponse {
 	sha1: string
 }

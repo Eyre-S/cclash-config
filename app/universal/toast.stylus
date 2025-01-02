@@ -15,14 +15,17 @@
 .toast-item
 	
 	h4
-		
 		font-size 1.15em
 		font-weight bold
 		clear-pad()
-		
+		margin-block 0.3em
 	
 	p
-		
 		clear-pad()
-		
+		margin-block 0.3em
+	
+	ul
+		clear-pad()
+		margin-block 0.3em
+		padding-inline-start 1.5em
 	

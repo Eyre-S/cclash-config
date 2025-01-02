@@ -67,6 +67,21 @@ export class TemplateIndex {
 		return fs.readFileSync(path, "utf-8")
 	}
 	
+	/**
+	 * Delete template.
+	 * 
+	 * This will do the following things:
+	 * - Delete the template files that stored in {@link getPath()} recursively.
+	 * - Delete the template metadata from the template index using {@link deleteFromIndex()}.
+	 * 
+	 * This method does not process the errors, so you should handle the errors by yourself.
+	 */
+	public deleteThis (): void {
+		const path = this.getPath()
+		fs.rmSync(path, { recursive: true })
+		TemplateIndex.deleteFromIndex(this.uuid)
+	}
+	
 	public static readIndex (): IndexDef {
 		const index_file = fs.readFileSync(templates_root + "/index.json", "utf-8")
 		const index = IndexDef.parse(JSON.parse(index_file))
@@ -141,6 +156,21 @@ export class TemplateIndex {
 		TemplateIndex.writeIndex([...currentIndexes, indexDef])
 		return new TemplateIndex(indexDef)
 		
+	}
+	
+	/**
+	 * Delete a template metadata from the template index.
+	 * 
+	 * This only delete the metadata, not the actual template files.
+	 * 
+	 * @param uuid The template UUID to delete.
+	 * @returns How much templates are deleted.
+	 */
+	public static deleteFromIndex (uuid: string): number {
+		const currentIndexes = TemplateIndex.readIndex()
+		const newIndexes = currentIndexes.filter((item) => item.uuid !== uuid)
+		TemplateIndex.writeIndex(newIndexes)
+		return currentIndexes.length - newIndexes.length;
 	}
 	
 }

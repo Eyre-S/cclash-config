@@ -65,6 +65,7 @@ export default function defineRoutes (route: DefineRouteFunction) {
 				// following are data operation endpoints, will follow API response format
 				route("about", "routes/api/require-auth/get/about.ts", routeKeys('api/_auth/get/_template/about'))
 				route("set", "routes/api/require-auth/get/set.ts", routeKeys('api/_auth/get/_template/set'))
+				route("delete", "routes/api/require-auth/get/delete.ts", routeKeys('api/_auth/get/_template/delete'))
 			})
 			
 		})
