@@ -14,7 +14,7 @@ export function InputButton (_: {
 	theme?: 'red',
 	longPress?: boolean,
 	
-	children?: string | JSX.Element
+	children?: ReactNode
 	className?: string[]
 	onClick?: (e: ButtonReceiveEvents) => any
 	

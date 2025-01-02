@@ -12,6 +12,7 @@ import { $ } from "~/utils/reactive"
 import { is } from "~/utils/fp"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"
 import { TemplatesLayoutContext } from "../_layout"
+import toast from "~/universal/toast"
 
 export const meta = defineMeta<typeof loader, {}>((args) => {
 	return [
@@ -68,17 +69,21 @@ export default function TemplateItemLayout () {
 			title: "Deleting Template",
 			children: "Do you really want to delete this template? You will lost it FOREVER.",
 			
-			onChecked: () => {
-				
-				layoutContext.popups.open({
-					
-					children: "Delete template not implemented...",
-					onChecked: () => {
-						navigate("..", { relative: 'route' })
-					}
-					
-				})
-				
+			onChecked: false,
+			button_mode: 'center',
+			buttons: (closePopups) => {
+				return (<>
+					<InputButton theme="red" longPress onClick={async () => {
+						closePopups()
+						toast.pop({
+							icon: "wrong_location",
+							type: toast.types.ERROR,
+						})("Deleting template is not implemented yet.")
+					}}>Delete</InputButton>
+					<InputButton onClick={async () => {
+						closePopups()
+					}}>Cancel</InputButton>
+				</>)
 			}
 			
 		})
@@ -105,7 +110,7 @@ export default function TemplateItemLayout () {
 					<div className={classes(css.buttons)}>
 						<div ref={elemControllerBox} className={css.buttons}/>
 						<InputButton
-							theme="red" longPress
+							theme="red"
 							onClick={deleteThisTemplate}
 							><span>Delete</span></InputButton>
 					</div>

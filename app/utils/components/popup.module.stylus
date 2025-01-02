@@ -25,8 +25,18 @@
 	
 	> .buttons
 		
-		use-flex row-reverse
 		gap 10px
 		padding-top 20px
+		
+		&.type-off
+			display none
+		&.type-align-right
+			use-flex row
+			justify-content flex-end
+		&.type-center
+			use-flex-center column
+			> button
+				width 80%
+				max-width 320px
 		
 	

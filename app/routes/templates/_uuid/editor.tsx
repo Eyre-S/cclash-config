@@ -15,7 +15,6 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { TemplateItemLayoutContext } from "./_layout";
 import { ClientOnly } from "remix-utils/client-only";
-import { Gap } from "~/utils/components";
 import toast from "~/universal/toast";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
@@ -112,6 +111,7 @@ export default function () {
 		})
 		editor.onDidChangeModelOptions((e) => {
 			setMonacoStatus({
+				eol: editorModel?.getEOL(),
 				tabSize: editor.getModel()?.getOptions().indentSize,
 				insertSpaces: editor.getModel()?.getOptions().insertSpaces,
 			})
@@ -146,8 +146,8 @@ export default function () {
 		const submit = updateContentImpl()
 		toast.promise()(submit, {
 			pending: { text: "Updating Template..." },
-			success: (data) => ({ text: <><span>Ok!</span><Gap size="10px" /><code>{data}</code></> }),
-			error:   (data) => ({ text: <><span>Failed to update:</span><Gap size="10px" /><code>{JSON.stringify(data)}</code></> }),
+			success: (data) => ({ text: <><span>saved!</span><p><code><pre>{data}</pre></code></p></> }),
+			error:   (data) => ({ text: <><h4>Save failed:</h4><p>Internal error occurred...</p><p><code>{JSON.stringify(data)}</code></p></> }),
 		})
 		
 	}
@@ -169,6 +169,13 @@ export default function () {
 	
 	async function reDetectCurrentLanguage () {
 		editingContentLanguage.value = guessCodeLanguage(editingContent.value)
+	}
+	
+	async function setEol (eol: "lf" | "crlf") {
+		monacoInstance.current?.getModel()?.setEOL(inCase(eol, [
+			['lf', 0],
+			['crlf', 1]
+		]))
 	}
 	
 	return <>
@@ -201,15 +208,22 @@ export default function () {
 			</div>
 			
 			<div className={classes(css.controller)}>
+				{/* current File SHA1 Hash */}
 				<InputText value={editingContentHash}
 					prefix="sha1" disabled hideIndicator className={[css.sha1]} />
+				{/* Indent Type */}
 				<InputText value={inCase(monacoStatus.value.insertSpaces, [[undefined, ''], [true, 'Spaces'], [false, 'Tabs']])}
 					prefix="indents" disabled hideIndicator className={[css.tabType]}
 					onClick={() => alert("not implemented")} />
+				{/* Tab Size */}
 				<InputText value={monacoStatus.value.tabSize?.toString()||''}
 					prefix="tab size" disabled hideIndicator className={[css.tabSize]} />
+				{/* End of Line (EOL) */}
 				<InputText value={showSpecialChars(monacoStatus.value.eol||'')}
 					disabled hideIndicator className={[css.eolType]} />
+				<InputButton onClick={() => setEol('lf')} >LF</InputButton>
+				<InputButton onClick={() => setEol('crlf')} >CRLF</InputButton>
+				{/* Cursor position */}
 				<InputText value={it(() => {
 						let content = ''
 						content += (monacoStatus.value.selection?.startLineNumber||'0') + ":" + (monacoStatus.value.selection?.startColumn||'0')
@@ -222,6 +236,7 @@ export default function () {
 					})}
 					disabled hideIndicator className={[css.cursor]}
 					onClick={() => alert("not implemented")} />
+				{/* Highlighting Language */}
 				<InputText value={editingContentLanguage.value} onValueChange={e => editingContentLanguage.value = e}
 					prefix="Language" placeholder="..." className={[css.language]}
 					/>

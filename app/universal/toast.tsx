@@ -3,7 +3,7 @@ import { getIcon, I, IconDefinition } from "~/utils/components/icons"
 import { classes } from "~/utils/jsx-helper"
 import { ReactNode, useRef } from "react"
 import { inCase, is, isIt, iss, it, select } from "~/utils/fp"
-import { Reactive } from "~/utils/reactive"
+import { $ } from "~/utils/reactive"
 
 import "~/css/global-overrides/toastify-toast.stylus"
 import "./toast.stylus"
@@ -123,7 +123,7 @@ function ToastItem ({closeToast, ...props}: ToastParameters & { closeToast: ()=>
 	
 	const timeout = props.timeout || ToastTimeouts.normal
 	
-	const isPaused = new Reactive<boolean>(false)
+	const isPaused = $<boolean>(false)
 	
 	return (<>
 		<div className={classes("toast-item", css.toastItem, props.type?.css_class())}

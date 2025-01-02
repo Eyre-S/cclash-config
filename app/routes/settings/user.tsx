@@ -4,18 +4,23 @@ import layoutCss from './_layout.module.stylus'
 import { useOutletContext } from "@remix-run/react";
 import { SettingsLayoutContext } from "./_layout";
 import { InputButton } from "~/utils/components/Inputs";
-import { usePopupNotification } from "~/utils/components/popup";
+// import { usePopupNotification } from "~/utils/components/popup";
 import toast from "~/universal/toast";
 import { I } from "~/utils/components/icons";
 
 export default function ClientSettingsPage () {
 	
 	const layoutContext = useOutletContext<SettingsLayoutContext>()
+	const popups = layoutContext.popups
 	
-	const PopupNotification = usePopupNotification(layoutContext)
+	// const PopupNotification = usePopupNotification(layoutContext)
 	
 	function openCheckbox () {
-		PopupNotification.openPopup({
+		// PopupNotification.openPopup({
+		// 	title: "Checkbox",
+		// 	children: "This is a checkbox!",
+		// })
+		popups.open({
 			title: "Checkbox",
 			children: "This is a checkbox!",
 		})
@@ -88,7 +93,7 @@ export default function ClientSettingsPage () {
 	return <>
 		<div className={classes(layoutCss.innerPage)}>
 			
-			{PopupNotification.element}
+			{/* {PopupNotification.element} */}
 			
 			<h1>Client Settings</h1>
 			

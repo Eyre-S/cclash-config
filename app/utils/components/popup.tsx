@@ -2,89 +2,131 @@ import { ReactNode } from 'react'
 import { classes } from '../jsx-helper'
 import { InputButton } from './Inputs'
 import css from './popup.module.stylus'
-import { is, isIt, nonnull } from '../fp'
+import { is, isIt, it, nonnull } from '../fp'
 import { $ } from '../reactive'
 import { AppLayoutContext } from '~/root'
 import { ClientOnly } from 'remix-utils/client-only'
 import { createPortal } from 'react-dom'
 
+export type PopupButtonsDefining = (closePopups: ()=>void) => ReactNode
+export interface PopupNotificationOnCheckedButtonDefinition { callback: () => any, text: ReactNode }
+
 export interface PopupNotificationProps {
-	title?: ReactNode,
-	children: ReactNode,
-	onChecked: () => any
+	
+	title?: ReactNode
+	
+	children: ReactNode
+	
+	onChecked?: {
+		callback?: (closePopups: () => void) => any,
+		text?: ReactNode
+	} | false
+	button_mode?: 'center' | 'align-right' | 'off'
+	buttons?: PopupButtonsDefining
+	
 }
 
-export function PopupNotification (_: PopupNotificationProps) {
+export interface PopupNotificationInnerArguments {
+	
+	title?: ReactNode
+	
+	children: ReactNode
+	
+	onChecked?: PopupNotificationOnCheckedButtonDefinition
+	button_mode: 'center' | 'align-right' | 'off'
+	buttons?: ReactNode
+	
+}
+
+interface PopupsContext {
+	closePopups: () => void
+}
+
+function Props2InnerArguments (props: PopupNotificationProps, context: PopupsContext): PopupNotificationInnerArguments {
+	const {onChecked, button_mode, buttons, ...rest} = props
+	return {
+		...rest,
+		onChecked: it(() => {
+			if (typeof onChecked === 'undefined') {
+				return { callback: context.closePopups, text: 'Ok' }
+			} else if (onChecked === false) {
+				return undefined
+			} else {
+				return {
+					callback: it(() => {
+						const cb = onChecked.callback
+						if (cb === undefined) return context.closePopups
+						else return () => { cb(context.closePopups) }
+					}),
+					text: onChecked.text || 'Ok'
+				}
+			}
+		}),
+		button_mode: button_mode || 'align-right',
+		buttons: buttons ? buttons(context.closePopups) : null
+	}
+}
+
+export function PopupNotification (props: PopupNotificationInnerArguments) {
 	
 	return <>
 		<div className={classes(css.popup)}>
-			{is(_.title, <div className={classes(css.title)}>{_.title}</div>)}
-			<div className={classes(css.message)}>{_.children}</div>
-			<div className={classes(css.buttons)}>
-				<InputButton onClick={_.onChecked}>Ok</InputButton>
+			{is(props.title, <div className={classes(css.title)}>{props.title}</div>)}
+			<div className={classes(css.message)}>{props.children}</div>
+			<div className={classes(css.buttons, css['type-' + (props.button_mode)])}>
+				{props.buttons}
+				{isIt(props.onChecked, () => <InputButton onClick={props.onChecked?.callback}>{props.onChecked?.text}</InputButton>)}
 			</div>
 		</div>
 	</>
 	
 }
 
-export function usePopupNotification (context: AppLayoutContext) {
+// export function usePopupNotification (context: AppLayoutContext) {
 	
-	const isOpen = $(false)
-	const parameters = $<PopupNotificationProps>({
-		title: '',
-		children: '',
-		onChecked: () => {
-			isOpen.value = false
-			context.appCover.controller.value = false
-		}
-	})
+// 	const isOpen = $(false)
+// 	const parameters = $<PopupNotificationInnerArguments>({
+// 		title: '',
+// 		children: '',
+// 		button_mode: 'align-right'
+// 	})
 	
-	function openPopup (props: Omit<PopupNotificationProps, 'onChecked'>) {
-		parameters.value = {
-			...parameters.value,
-			...props
-		}
-		isOpen.value = true
-		context.appCover.controller.value = true
-	}
+// 	function openPopup (props: Omit<PopupNotificationInnerArguments, 'onChecked'>) {
+// 		parameters.value = {
+// 			...parameters.value,
+// 			...props
+// 		}
+// 		isOpen.value = true
+// 		context.appCover.controller.value = true
+// 	}
 	
-	return {
-		element: <ClientOnly>{() => isIt(isOpen.value, () => createPortal(
-			<PopupNotification {...parameters.value} />,
-			nonnull(context.appCover.node)
-		))}</ClientOnly>,
-		openPopup,
-	}
+// 	return {
+// 		element: <ClientOnly>{() => isIt(isOpen.value, () => createPortal(
+// 			<PopupNotification {...parameters.value} />,
+// 			nonnull(context.appCover.node)
+// 		))}</ClientOnly>,
+// 		openPopup,
+// 	}
 	
-}
+// }
 
 export function useGlobalPopups () {
 	
 	const isOpen = $(false)
-	function onCheckedDefaults () {
+	function closePopups () {
 		isOpen.value = false
 	}
-	const parameters = $<PopupNotificationProps>({
-		title: '',
-		children: '',
-		onChecked: onCheckedDefaults
-	})
+	const parameters = $<PopupNotificationInnerArguments>(Props2InnerArguments({
+		children: 'nothing here...'
+	}, { closePopups }))
 	
-	async function open ({onChecked: propsOnChecked, ...props}: Omit<PopupNotificationProps, 'onChecked'> & { onChecked?: () => any }): Promise<void> {
+	async function open (props: PopupNotificationProps): Promise<void> {
 		const promise = new Promise<void>((resolve) => {
-			
-			let parametersNew: PopupNotificationProps = {
-				...parameters.value,
-				...props,
-				onChecked: () => {
-					onCheckedDefaults()
-					if (propsOnChecked) propsOnChecked()
-					resolve()
-				}
+			const myClosePopups = () => {
+				closePopups()
+				resolve()
 			}
-			
-			parameters.value = parametersNew
+			parameters.value = Props2InnerArguments(props, { closePopups: myClosePopups })
 			isOpen.value = true
 			
 		})
