@@ -4,6 +4,7 @@ import { z } from "zod";
 import { randomUUID } from "crypto";
 import { iss } from "~/utils/fp";
 import CryptoJS from "crypto-js";
+import files from "~/utils/files";
 
 const templates_root = server_root + "/templates"
 
@@ -76,9 +77,10 @@ export class TemplateIndex {
 	 * 
 	 * This method does not process the errors, so you should handle the errors by yourself.
 	 */
-	public deleteThis (): void {
-		const path = this.getPath()
-		fs.rmSync(path, { recursive: true })
+	public async deleteThis (): Promise<void> {
+		const path = fs.realpathSync(this.getPath() + "/")
+		console.log("deleting template at", path)
+		await files.removeRecursively(path)
 		TemplateIndex.deleteFromIndex(this.uuid)
 	}
 	

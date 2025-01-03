@@ -25,14 +25,17 @@ export async function action (args: ActionFunctionArgs) {
 	}
 	
 	try {
-		template.deleteThis()
-		return exportResponse(defineApiResponse({
-			ok: true,
+		const deletingMetadata = {
 			uuid: template.uuid,
 			name: template.name,
 			alias: template.alias,
 			sha1: template.getTemplateHash(),
-		} satisfies TemplateDeleteResponse))
+		}
+		await template.deleteThis()
+		return exportResponse(defineApiResponse({
+			ok: true,
+			...deletingMetadata
+		} satisfies TemplateDeleteResponse ))
 	} catch (e) {
 		return exportResponse(defineApiUniversalErrorResponse(e, 'api_template_delete'))
 	}
