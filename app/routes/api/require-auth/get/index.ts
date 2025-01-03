@@ -4,6 +4,8 @@ import { exportResponse } from "~/apis/api";
 import { requireApiToken } from "~/.server/auth";
 import upp from "uni-preprocessor"
 import { defineTemplateNotFoundResponse } from "./_public";
+import { API_Auths_Params as APIs_Auths_Params } from "..";
+import { API_delete } from "./delete";
 
 export async function loader (args: LoaderFunctionArgs) {
 	
@@ -34,4 +36,26 @@ export async function loader (args: LoaderFunctionArgs) {
 		
 	}
 	
+}
+
+export interface APIs_Get_Params {
+	auths: APIs_Auths_Params,
+	template_name: string
+}
+export function APIs_get (context: APIs_Auths_Params) {
+	function byName (templateName: string) {
+		const params = {
+			auths: context,
+			template_name: templateName
+		}
+		return {
+			delete: API_delete(params)
+		}
+	}
+	function byUUID (templateUUID: string) {
+		return byName("uuid:" + templateUUID)
+	}
+	return {
+		byName, byUUID
+	}
 }

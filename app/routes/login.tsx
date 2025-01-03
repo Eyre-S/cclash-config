@@ -166,12 +166,14 @@ export default function Index() {
 						
 						<div className={classes(css.inputElem)}>
 							<label>Token</label>
-							<InputText password value={inputPassword.value} onValueChange={v => inputPassword.value = v} />
+							<InputText password autofocus
+								value={inputPassword.value} onValueChange={v => inputPassword.value = v}
+								onEnterKeyDown={doLogin} />
 						</div>
 						
 						<InputButton
 							className={[css.inputButton]}
-							onClick={() => doLogin()}
+							onClick={doLogin}
 							disabled={!isCanLogin}>
 							{inCase (loggingActionStatus.value, [
 								['idle',            <>Login</>],
@@ -185,7 +187,7 @@ export default function Index() {
 							<InputButton
 								className={[css.inputButton]}
 								theme="red"
-								onClick={() => doLogout()}
+								onClick={doLogout}
 								disabled={isInAction}>
 								{inCase (logOutActionStatus.value, [
 									['idle',            <>Logout</>],

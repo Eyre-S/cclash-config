@@ -17,6 +17,7 @@ import { errors } from "da4s"
 import { TemplateDeleteResponse } from "~/routes/api/require-auth/get/delete"
 import { ApiResponseError } from "~/apis/api"
 import { TemplateNotFoundErrorResponse } from "~/routes/api/require-auth/get/_public"
+import api from "~/routes/api"
 
 export const meta = defineMeta<typeof loader, {}>((args) => {
 	return [
@@ -71,64 +72,50 @@ export default function TemplateItemLayout () {
 		async function doDeletion () {
 			
 			toast.promise()<ToastParameters, ToastParameters, any>(new Promise((resolve, reject) => { aIt(async () => {
-				try {
-					const submitResult = await fetch(`/api/auth/_cookie_/get/uuid:${data.item.uuid}/delete`, { method: 'DELETE' })
-					const resultJson = await submitResult.json()
-					if ('data' in resultJson) {
-						const resultJsonData = resultJson.data as TemplateDeleteResponse
-						resultJsonData.name
-						resolve({
-							text: <>
-								<h4>Template deleted:</h4>
-								<p>Successfully deleted <code>{resultJsonData.name}</code>.</p>
-								<ul>
-									<li>uuid: <code>{resultJsonData.uuid}</code></li>
-									<li>also known as: {resultJsonData.alias.map((x, i) => <code key={i}>{x}</code>)}</li>
-								</ul>
-							</>
-						} satisfies ToastParameters)
-					} else if ('e_id' in resultJson) {
-						const resultError = resultJson as ApiResponseError<any>
-						if (resultError.e_id === 'api_template_notfound_delete') {
-							const resultErrorData = resultError.error as TemplateNotFoundErrorResponse
-							reject({
-								text: <>
-									<h4>Failed delete template:</h4>
-									<p>Template <code>{resultErrorData.requesting_template_name}</code> not found.</p>
-								</>
-							} satisfies ToastParameters)
-						} else {
-							reject({
-								text: <>
-									<h4>Failed delete template:</h4>
-									<p>Unknown server error:</p>
-									<pre><code>{errors.normalError(resultError.error)}</code></pre>
-								</>
-							} satisfies ToastParameters)
-						}
-					}
-				} catch (e) {
-					if (e instanceof SyntaxError) {
-						// response is not valid json error
-						reject({
-							text: <>
-								<h4>Failed delete template:</h4>
-								<p>Unknown server response: {e.message}</p>
-							</>
-						} satisfies ToastParameters)
-					}
-					// unknown error
-					reject({
+				// executing delete action
+				api.auths.byCookies.get.byUUID(data.item.uuid).delete({
+					onSuccess: (data) => resolve({
+						text: <>
+							<h4>Template deleted:</h4>
+							<p>Successfully deleted <code>{data.name}</code>.</p>
+							<ul>
+								<li>uuid: <code>{data.uuid}</code></li>
+								<li>also known as: {data.alias.map((x, i) => <code key={i}>{x}</code>)}</li>
+							</ul>
+						</>
+					}),
+					onTemplateNotFound: (data) => reject({
+						text: <>
+							<h4>Failed delete template:</h4>
+							<p>Template <code>{data.requesting_template_name}</code> not found.</p>
+						</>
+					} satisfies ToastParameters),
+					onUnknownApiError: (data) => reject({
 						text: <>
 							<h4>Failed delete template:</h4>
 							<p>Unknown server error:</p>
-							<pre><code>{errors.normalError(e)}</code></pre>
+							<pre><code>{errors.normalError(data.error)}</code></pre>
 						</>
-					} satisfies ToastParameters)
-				} finally {
-					navigate("..", { relative: 'route' })
-					layoutContext.templateIndexRevalidator.revalidate()
-				}
+					} satisfies ToastParameters),
+					onInvalidApiResponse: (data) => reject({
+						text: <>
+							<h4>Failed delete template:</h4>
+							<p>Unknown server response: {data.message}</p>
+						</>
+					} satisfies ToastParameters),
+					onUnknownError: (data) => reject({
+						text: <>
+							<h4>Failed delete template:</h4>
+							<p>Unknown server error:</p>
+							<pre><code>{errors.normalError(data)}</code></pre>
+						</>
+					} satisfies ToastParameters),
+					onFinally: () => {
+						// navigating back and refresh index
+						navigate("..", { relative: 'route' })
+						layoutContext.templateIndexRevalidator.revalidate()
+					}
+				})
 			})}), {
 				pending: { text: <><h4>Deleting template...</h4><p>Deleting <code>{data.item.name}</code></p></> },
 				success: (data) => data,

@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode, useRef } from "react"
+import { KeyboardEventHandler, MouseEventHandler, ReactNode, useEffect, useRef } from "react"
 import { is, iss } from "../fp"
 import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
@@ -66,9 +66,11 @@ export function InputText (_: {
 	onValueChange?: (value: string) => void
 	
 	onClick?: MouseEventHandler<HTMLElement>
+	onEnterKeyDown?: KeyboardEventHandler<HTMLInputElement>
+	onEscKeyDown?: KeyboardEventHandler<HTMLInputElement>
 	
 	disabled?: boolean
-	noSelect?: boolean
+	autofocus?: boolean
 	placeholder?: string
 	
 	password?: boolean
@@ -85,6 +87,9 @@ export function InputText (_: {
 	suffix?: ReactNode,
 	hideIndicator?: boolean
 	
+	noSelect?: boolean
+	focus?: boolean
+	
 }) {
 	
 	const showPassword = $(_.showPassword||false)
@@ -93,6 +98,21 @@ export function InputText (_: {
 	}
 	
 	const type = iss(_.password && !showPassword.value, 'password', 'text')
+	function onKeyDown (e: React.KeyboardEvent<HTMLInputElement>) {
+		if (e.key === 'Enter' && _.onEnterKeyDown) {
+			_.onEnterKeyDown(e)
+		} else if (e.key === 'Escape' && _.onEscKeyDown) {
+			_.onEscKeyDown(e)
+		}
+	}
+	
+	const elem_input = useRef<HTMLInputElement>(null)
+	
+	useEffect(() => {
+		if (_.focus && elem_input.current) {
+			elem_input.current.focus()
+		}
+	}, [_.focus])
 	
 	return <>
 		<div className={classes('input', 'input-text', css.input, css.text, is(_.password, 'password'), is(showPassword.value, css.showPassword), ..._.className||[])}
@@ -108,9 +128,10 @@ export function InputText (_: {
 			</>)}
 			
 			<input
-				name="__universal_input_text"
+				name="__universal_input_text" ref={elem_input}
 				value={_.value} onInput={e => { if (_.onValueChange) {_.onValueChange(e.currentTarget.value)} }}
-				type={type} disabled={_.disabled} placeholder={_.placeholder}
+				onKeyDown={onKeyDown}
+				type={type} disabled={_.disabled} placeholder={_.placeholder} autoFocus={_.autofocus}
 				minLength={_.minLength} maxLength={_.maxLength} pattern={_.pattern?.source}
 			/>
 			

@@ -1,8 +1,11 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { requireApiToken } from "~/.server/auth";
 import { TemplateIndex } from "~/.server/templates/template";
-import { defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse } from "~/apis/api";
-import { defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateExtendedInformation, TemplateUpdatingResponse } from "./_public";
+import { ApiResponseError, defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse } from "~/apis/api";
+import { defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateExtendedInformation, TemplateNotFoundErrorResponse, TemplateUpdatingResponse } from "./_public";
+import { APIs_Get_Params } from ".";
+import { errors } from "da4s";
+import server from "~/routes/settings/server";
 
 export interface TemplateDeleteResponse extends TemplateBaseInformation, TemplateUpdatingResponse, TemplateExtendedInformation {
 	ok: boolean
@@ -41,3 +44,35 @@ export async function action (args: ActionFunctionArgs) {
 	}
 	
 }
+
+
+export function API_delete (context: APIs_Get_Params) { return async function (cbs: {
+	onSuccess: (data: TemplateDeleteResponse) => any
+	onTemplateNotFound: (data: TemplateNotFoundErrorResponse) => any
+	onUnknownApiError: (data: ApiResponseError<any>) => any
+	onInvalidApiResponse: (data: SyntaxError) => any
+	onUnknownError: (data: any) => any
+	onFinally?: () => any
+}) {
+	try {
+		const submitResult = await fetch(`/api/auth/${context.auths.token}/get/${context.template_name}/delete`, { method: 'DELETE' })
+		const resultJson = await submitResult.json()
+		if ('data' in resultJson) {
+			const resultJsonData = resultJson.data as TemplateDeleteResponse
+			cbs.onSuccess(resultJsonData)
+		} else if ('e_id' in resultJson) {
+			const resultError = resultJson as ApiResponseError<any>
+			if (resultError.e_id === 'api_template_notfound_delete') {
+				const resultErrorData = resultError.error as TemplateNotFoundErrorResponse
+				cbs.onTemplateNotFound(resultErrorData)
+			} else {
+				cbs.onUnknownApiError(resultError)
+			}
+		}
+	} catch (e) {
+		if (e instanceof SyntaxError) {
+			cbs.onInvalidApiResponse(e)
+		}
+		cbs.onUnknownError(e)
+	} finally { if (cbs.onFinally) cbs.onFinally() }
+}}

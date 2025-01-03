@@ -56,6 +56,7 @@ export default function TemplatesLayout() {
 	const current_index = params.uuid
 	
 	const isAdding = $(false)
+	const isAddingInputFocusing = $(false)
 	const addingName = $('')
 	
 	async function createNewTemplate () {
@@ -84,15 +85,16 @@ export default function TemplatesLayout() {
 		cancelAdd()
 		
 	}
-	function cancelAdd (event?: ButtonReceiveEvents) {
-		if (event) event.stopPropagation()
+	function cancelAdd () {
 		isAdding.value = false
+		isAddingInputFocusing.value = false
 		addingName.value = ''
 	}
 	function startAdd (event?: MouseEvent) {
 		if (event) event.stopPropagation()
 		if (isAdding.value) return
 		isAdding.value = true
+		isAddingInputFocusing.value = true
 		addingName.value = ''
 	}
 	
@@ -125,7 +127,11 @@ export default function TemplatesLayout() {
 						onClick={startAdd}>
 						{iss(isAdding.value,
 							<>
-								<InputText className={[css.inputName]} value={addingName.value} onValueChange={e => addingName.value = e} />
+								<InputText className={[css.inputName]}
+									focus={isAddingInputFocusing.value}
+									value={addingName.value}
+									onValueChange={e => addingName.value = e}
+									onEnterKeyDown={createNewTemplate} onEscKeyDown={cancelAdd} />
 								<div className={classes(css.controller)}>
 									<InputButton onClick={cancelAdd}>-</InputButton>
 									<InputButton onClick={createNewTemplate}>+</InputButton>

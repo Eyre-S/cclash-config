@@ -35,3 +35,8 @@ export async function loader () {
 	}))
 	
 }
+
+import { APIs_auths } from "./require-auth"
+export default {
+	auths: APIs_auths
+}
