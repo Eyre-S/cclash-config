@@ -1,4 +1,4 @@
-import { KeyboardEventHandler, MouseEventHandler, ReactNode, useEffect, useRef } from "react"
+import { FocusEventHandler, KeyboardEventHandler, MouseEventHandler, ReactNode, useEffect, useRef } from "react"
 import { is, iss } from "../fp"
 import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
@@ -68,6 +68,8 @@ export function InputText (_: {
 	onClick?: MouseEventHandler<HTMLElement>
 	onEnterKeyDown?: KeyboardEventHandler<HTMLInputElement>
 	onEscKeyDown?: KeyboardEventHandler<HTMLInputElement>
+	onFocus?: FocusEventHandler<HTMLInputElement>
+	onBlur?: FocusEventHandler<HTMLInputElement>
 	
 	disabled?: boolean
 	autofocus?: boolean
@@ -130,7 +132,7 @@ export function InputText (_: {
 			<input
 				name="__universal_input_text" ref={elem_input}
 				value={_.value} onInput={e => { if (_.onValueChange) {_.onValueChange(e.currentTarget.value)} }}
-				onKeyDown={onKeyDown}
+				onKeyDown={onKeyDown} onFocus={_.onFocus} onBlur={_.onBlur}
 				type={type} disabled={_.disabled} placeholder={_.placeholder} autoFocus={_.autofocus}
 				minLength={_.minLength} maxLength={_.maxLength} pattern={_.pattern?.source}
 			/>

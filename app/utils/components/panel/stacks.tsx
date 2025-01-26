@@ -14,3 +14,9 @@ export function FlexStack (props: { children: ReactNode }) {
 		{props.children}
 	</div>
 }
+
+export function HorizontalStack (props: { children: ReactNode, align?: 'center' }) {
+	return <div className={classes(css.horizontalStack, css[props.align||''])}>
+		{props.children}
+	</div>
+}

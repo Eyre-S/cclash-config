@@ -8,3 +8,9 @@
 	align-items flex-start
 	flex-wrap wrap
 	gap 10px
+
+.horizontal-stack
+	use-flex row
+	gap 10px
+	&.center
+		align-items center

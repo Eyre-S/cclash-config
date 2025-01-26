@@ -1,3 +1,5 @@
+import { Reactive } from "./reactive"
+
 export function classes (...args: (string | undefined)[]): string {
 	return args.filter(Boolean).join(" ")
 }
@@ -8,6 +10,15 @@ export function getInput (e: Event): HTMLInputElement {
 
 export function getInputValue (e: Event): HTMLInputElement['value'] {
 	return getInput(e).value
+}
+
+export function bindInputValue <T> (value: Reactive<T>) {
+	return {
+		value: value.value,
+		onValueChange: (newValue: T) => {
+			value.value = newValue
+		}
+	}
 }
 
 export interface InputExternalValues {

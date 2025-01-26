@@ -1,11 +1,11 @@
-import { classes } from "~/utils/jsx-helper";
+import { bindInputValue, classes } from "~/utils/jsx-helper";
 
 import css from './settings.module.stylus';
 import { ReactNode, useRef } from "react";
 import { InputButton, InputText } from "~/utils/components/Inputs";
 import { $ } from "~/utils/reactive";
 import { Editor } from "@monaco-editor/react";
-import { FlexStack, VerticalStack } from "~/utils/components/panel/stacks";
+import { FlexStack, HorizontalStack, VerticalStack } from "~/utils/components/panel/stacks";
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { TemplateIndex } from "~/.server/templates/template";
@@ -15,6 +15,7 @@ import { aIt } from "~/utils/fp";
 import api from "~/routes/api";
 import { errors } from "da4s";
 import { TemplateItemLayoutContext } from "./_layout";
+import { I } from "~/utils/components/icons";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -51,8 +52,17 @@ export default function TemplateSettingsPage (): ReactNode {
 			
 			const aliases = $(loaderData.item.alias)
 			
-			function AliasItemEditor (props: { value: string, onValueChange: (nv: string) => void }): ReactNode {
-				return <InputText {...props} />
+			function AliasItemEditor (props: { value: string, onValueChange: (nv: string) => void, onDeleteThis: ()=>void }): ReactNode {
+				const valueInner = $(props.value)
+				return <HorizontalStack align="center">
+					<InputText
+						{...bindInputValue(valueInner)}
+						onBlur={() => {
+							props.onValueChange(valueInner.value)
+						}}
+					/>
+					<InputButton className={[css.smallDeleteButton]} theme="red" onClick={props.onDeleteThis}><I>delete</I></InputButton>
+				</HorizontalStack>
 			}
 			
 			function addAlias () {
@@ -63,11 +73,18 @@ export default function TemplateSettingsPage (): ReactNode {
 				description={<><span className={classes(css.title)}>Aliases</span></>}
 				inputs={<VerticalStack>
 					{aliases.value.map((alias, i) =>
-						<AliasItemEditor key={i} value={alias} onValueChange={nv => {
-							const newAliases = [...aliases.value]
-							newAliases[i] = nv
-							aliases.value = newAliases
-						}} />
+						<AliasItemEditor key={i} value={alias}
+							onValueChange={nv => {
+								const newAliases = [...aliases.value]
+								newAliases[i] = nv
+								aliases.value = newAliases
+							}}
+							onDeleteThis={() => {
+								const newAliases = [...aliases.value]
+								newAliases.splice(i, 1)
+								aliases.value = newAliases
+							}}
+						/>
 					)}
 					<InputButton onClick={addAlias}>+</InputButton>
 				</VerticalStack>}
