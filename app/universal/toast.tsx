@@ -88,8 +88,8 @@ function ToastItem ({closeToast, ...props}: ToastParameters & { closeToast: ()=>
 	
 	const icon = it(() => {
 		const icon_def = select(props.icon, props.type?.default_icon())
-		console.log("props.icon is", props.icon)
-		console.log("icon def is", icon_def)
+		// console.log("props.icon is", props.icon)
+		// console.log("icon def is", icon_def)
 		if (icon_def === undefined) {
 			return undefined
 		} else if (typeof icon_def === "string") {

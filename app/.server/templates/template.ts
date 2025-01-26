@@ -56,14 +56,14 @@ export class TemplateIndex {
 	
 	public getComments (): string {
 		const path = this.getPath() + "/comments"
-		if (!fs.existsSync)
+		if (!fs.existsSync(path))
 			fs.writeFileSync(path, "")
 		return fs.readFileSync(path, "utf-8")
 	}
 	
 	public getConfigs (): string {
 		const path = this.getPath() + "/config.json"
-		if (!fs.existsSync)
+		if (!fs.existsSync(path))
 			fs.writeFileSync(path, JSON.stringify({}))
 		return fs.readFileSync(path, "utf-8")
 	}

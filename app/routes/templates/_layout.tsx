@@ -7,7 +7,7 @@ import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template";
 import { Link, Outlet, useBeforeUnload, useLoaderData, useOutletContext, useParams, useRevalidator } from "@remix-run/react";
 import { $ } from "~/utils/reactive";
 import { is, iss } from "~/utils/fp";
-import { ButtonReceiveEvents, InputButton, InputText } from "~/utils/components/Inputs";
+import { InputButton, InputText } from "~/utils/components/Inputs";
 import { MouseEvent, useEffect } from "react";
 import { ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate } from "../api/require-auth/get_create";
 import { ApiResponse, ApiResponseError } from "~/apis/api";

@@ -1,0 +1,10 @@
+.vertical-stack
+		use-flex column
+		align-items flex-start
+		gap 10px
+
+.flex-stack
+	use-flex row
+	align-items flex-start
+	flex-wrap wrap
+	gap 10px

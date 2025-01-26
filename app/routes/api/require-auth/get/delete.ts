@@ -32,7 +32,7 @@ export async function action (args: ActionFunctionArgs) {
 			uuid: template.uuid,
 			name: template.name,
 			alias: template.alias,
-			sha1: template.getTemplateHash(),
+			sha1: template.getTemplateHash(), // getTemplateHash() must runs before deleteThis()
 		}
 		await template.deleteThis()
 		return exportResponse(defineApiResponse({
