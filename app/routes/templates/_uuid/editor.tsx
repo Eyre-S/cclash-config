@@ -5,7 +5,7 @@ import css from "./editor.module.stylus"
 import { unstable_usePrompt, useBeforeUnload, useLoaderData, useOutletContext, useRevalidator } from "@remix-run/react";
 import { classes } from "~/utils/jsx-helper";
 import { InputButton, InputText } from "~/utils/components/Inputs";
-import { $ } from "~/utils/reactive";
+import { $, useDebouncedRef } from "~/utils/reactive";
 import { inCase, is, isIt, it } from "~/utils/fp";
 import CryptoJS from "crypto-js";
 import { Editor } from "@monaco-editor/react";
@@ -140,6 +140,11 @@ export default function () {
 	function resetToInitial () {
 		initData()
 	}
+	
+	
+	editingContent.addDebounceListener(500, () => {
+		updateContent()
+	})
 	
 	async function updateContent () {
 		

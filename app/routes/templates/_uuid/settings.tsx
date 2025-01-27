@@ -3,7 +3,7 @@ import { bindInputValue, classes } from "~/utils/jsx-helper";
 import css from './settings.module.stylus';
 import { ReactNode, useRef } from "react";
 import { InputButton, InputText } from "~/utils/components/Inputs";
-import { $ } from "~/utils/reactive";
+import { $, useDebouncedRef } from "~/utils/reactive";
 import { Editor } from "@monaco-editor/react";
 import { FlexStack, HorizontalStack, VerticalStack } from "~/utils/components/panel/stacks";
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
@@ -102,19 +102,18 @@ export default function TemplateSettingsPage (): ReactNode {
 		
 		function TemplateComment (): ReactNode {
 			
-			const itemCommentsSubmitted = useRef(loaderData.itemComments)
 			const itemComments = $(loaderData.itemComments)
+			const itemCommentsSubmitted = useRef(loaderData.itemComments)
+			
+			itemComments.addDebounceListener(500, () => {
+				tryUpdateTemplateComment()
+			})
 			
 			function tryUpdateTemplateComment () {
 				itemComments.runs(newValue => {
-						
+					
 					// do not save if the comments are not changed
-					if (itemCommentsSubmitted.current === newValue) {
-						console.log("comments are not changed, no need to save")
-						console.log("comments:", newValue)
-						console.log("commentsSubmitted:", itemCommentsSubmitted.current)
-						return
-					}
+					if (itemCommentsSubmitted.current === newValue) return
 					
 					// TODO: save the comments
 					itemCommentsSubmitted.current = newValue
@@ -124,15 +123,11 @@ export default function TemplateSettingsPage (): ReactNode {
 				})
 			}
 			
-			function onEditorMounts (editor: editor.IStandaloneCodeEditor) {
-				editor.onDidBlurEditorText(tryUpdateTemplateComment)
-			}
-			
 			return <SettingItem
 				description={<><span className={classes(css.title)}>Comments</span></>}
 				inputs={<VerticalStack>
 					<Editor className={classes(css.commentEditor)}
-						language="markdown" onMount={onEditorMounts}
+						language="markdown"
 						value={itemComments.value} onChange={value => itemComments.value = value as string} />
 				</VerticalStack>}
 			/>

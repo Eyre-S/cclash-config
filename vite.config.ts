@@ -14,7 +14,16 @@ export default defineConfig({
 	optimizeDeps: {
 		esbuildOptions: {
 			target: "es2022"
-		}
+		},
+		include: [
+			"react-use"
+		]
+	},
+	
+	ssr: {
+		noExternal: [
+			"react-use"
+		]
 	},
 	
 	plugins: [
