@@ -1,9 +1,12 @@
-import { FocusEventHandler, KeyboardEventHandler, MouseEventHandler, ReactNode, useEffect, useRef } from "react"
+import {
+	FocusEventHandler, KeyboardEventHandler, MouseEventHandler, ReactNode, useEffect, useRef
+} from "react"
+
 import { is, iss } from "../fp"
 import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
 
-import css from './Inputs.module.stylus'
+import css from "./Inputs.module.stylus"
 
 export type ButtonReceiveEvents = React.MouseEvent<HTMLButtonElement>|React.TouchEvent<HTMLButtonElement>
 

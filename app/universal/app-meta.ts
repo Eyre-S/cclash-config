@@ -1,4 +1,4 @@
-import { MetaDescriptor, MetaFunction } from "@remix-run/node";
+import { MetaDescriptor, MetaFunction } from "@remix-run/node"
 
 import { loader as rootLoader } from "~/root"
 

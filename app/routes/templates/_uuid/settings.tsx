@@ -1,21 +1,22 @@
-import { bindInputValue, classes } from "~/utils/jsx-helper";
+import { Editor } from "@monaco-editor/react"
+import { LoaderFunctionArgs } from "@remix-run/node"
+import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react"
+import { errors } from "da4s"
+import { ReactNode, useRef } from "react"
 
-import css from './settings.module.stylus';
-import { ReactNode, useRef } from "react";
-import { InputButton, InputText } from "~/utils/components/Inputs";
-import { $, useDebouncedRef } from "~/utils/reactive";
-import { Editor } from "@monaco-editor/react";
-import { FlexStack, HorizontalStack, VerticalStack } from "~/utils/components/panel/stacks";
-import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react";
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { TemplateIndex } from "~/.server/templates/template";
-import { editor } from "monaco-editor";
-import toast, { ToastParameters } from "~/universal/toast";
-import { aIt } from "~/utils/fp";
-import api from "~/routes/api";
-import { errors } from "da4s";
-import { TemplateItemLayoutContext } from "./_layout";
-import { I } from "~/utils/components/icons";
+import { TemplateIndex } from "~/.server/templates/template"
+import api from "~/routes/api"
+import toast, { ToastParameters } from "~/universal/toast"
+import { I } from "~/utils/components/icons"
+import { InputButton, InputText } from "~/utils/components/Inputs"
+import { FlexStack, HorizontalStack, VerticalStack } from "~/utils/components/panel/stacks"
+import { aIt } from "~/utils/fp"
+import { classes } from "~/utils/jsx-helper"
+import { $ } from "~/utils/reactive"
+
+import { TemplateItemLayoutContext } from "./_layout"
+
+import css from "./editor.module.stylus"
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	

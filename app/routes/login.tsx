@@ -1,23 +1,25 @@
-import { LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node"
+import { useLoaderData, useNavigate } from "@remix-run/react"
+import { errors } from "da4s"
+import { useEffect } from "react"
+import { wait } from "remix-utils/timers"
 
-import css from "./login.module.stylus";
-import { classes } from "~/utils/jsx-helper";
-import { useLoaderData, useNavigate } from "@remix-run/react";
-import { AuthSessionData } from "~/apis/sessions";
-import { getCookieHeader, getSearchParams } from "~/utils/http-helper";
-import { checkToken } from "~/.server/auth";
-import { aIt, inCase, is } from "~/utils/fp";
-import { LoginResults } from "./api/login";
-import { ApiResponseOk } from "~/apis/api";
-import { wait } from "remix-utils/timers";
-import { $ } from "~/utils/reactive";
-import { Gap } from "~/utils/components";
-import { InputButton, InputText } from "~/utils/components/Inputs";
-import { defineAppTitle, defineMeta } from "~/universal/app-meta";
-import { useEffect } from "react";
-import { errors } from "da4s";
-import { I } from "~/utils/components/icons";
-import toast from "~/universal/toast";
+import { checkToken } from "~/.server/auth"
+import { ApiResponseOk } from "~/apis/api"
+import { AuthSessionData } from "~/apis/sessions"
+import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+import toast from "~/universal/toast"
+import { Gap } from "~/utils/components"
+import { I } from "~/utils/components/icons"
+import { InputButton, InputText } from "~/utils/components/Inputs"
+import { aIt, inCase, is } from "~/utils/fp"
+import { getCookieHeader, getSearchParams } from "~/utils/http-helper"
+import { classes } from "~/utils/jsx-helper"
+import { $ } from "~/utils/reactive"
+
+import { LoginResults } from "./api/login"
+
+import css from "./login.module.stylus"
 
 export const meta = defineMeta((args) => {
 	return [

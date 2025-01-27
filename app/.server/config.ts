@@ -1,5 +1,5 @@
-import fs from "fs";
-import { z } from "zod";
+import fs from "fs"
+import { z } from "zod"
 
 export const server_root = "server"
 

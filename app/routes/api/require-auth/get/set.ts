@@ -1,8 +1,14 @@
-import { ActionFunctionArgs } from "@remix-run/node";
-import { requireApiToken } from "~/.server/auth";
-import { TemplateIndex } from "~/.server/templates/template";
-import { defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse } from "~/apis/api";
-import { defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateUpdatingResponse } from "./_public";
+import { ActionFunctionArgs } from "@remix-run/node"
+
+import { requireApiToken } from "~/.server/auth"
+import { TemplateIndex } from "~/.server/templates/template"
+import {
+	defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse
+} from "~/apis/api"
+
+import {
+	defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateUpdatingResponse
+} from "./_public"
 
 export interface TemplateSetResponse extends TemplateBaseInformation, TemplateUpdatingResponse {
 	ok: boolean

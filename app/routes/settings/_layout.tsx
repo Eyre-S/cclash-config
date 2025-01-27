@@ -1,15 +1,16 @@
-import { Outlet, useMatches } from "@remix-run/react";
-import { Link, useOutletContext } from "react-router-dom";
-import { classes } from "~/utils/jsx-helper";
+import { Outlet, useMatches } from "@remix-run/react"
+import { ReactNode, useEffect } from "react"
+import { Link, useOutletContext } from "react-router-dom"
 
-import css from './_layout.module.stylus'
-import moduleCss from "~/css/modules/module-css";
-import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch";
-import { ReactNode, useEffect } from "react";
-import { $ } from "~/utils/reactive";
-import { is } from "~/utils/fp";
-import { defineAppTitle, defineMeta } from "~/universal/app-meta";
-import { AppLayoutContext } from "~/root";
+import { AppLayoutContext } from "~/root"
+import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch"
+import { is } from "~/utils/fp"
+import { classes } from "~/utils/jsx-helper"
+import { $ } from "~/utils/reactive"
+
+import moduleCss from "~/css/modules/module-css"
+import css from "./_layout.module.stylus"
 
 export const meta = defineMeta((args) => {
 	return [

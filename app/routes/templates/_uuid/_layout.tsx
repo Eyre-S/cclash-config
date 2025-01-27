@@ -1,16 +1,18 @@
 import { LoaderFunctionArgs } from "@remix-run/node"
 import { Link, Outlet, useLoaderData, useMatches, useOutletContext } from "@remix-run/react"
+import { ReactNode, RefObject, useEffect, useRef } from "react"
+
 import { requireUILogin } from "~/.server/auth"
 import { TemplateIndex } from "~/.server/templates/template"
-
-import css from './_layout.module.stylus'
-import { classes } from "~/utils/jsx-helper"
-import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch"
-import { ReactNode, RefObject, useEffect, useRef } from "react"
-import { $ } from "~/utils/reactive"
-import { is } from "~/utils/fp"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch"
+import { is } from "~/utils/fp"
+import { classes } from "~/utils/jsx-helper"
+import { $ } from "~/utils/reactive"
+
 import { TemplatesLayoutContext } from "../_layout"
+
+import css from "./_layout.module.stylus"
 
 export const meta = defineMeta<typeof loader, {}>((args) => {
 	return [

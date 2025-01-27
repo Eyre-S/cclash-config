@@ -1,11 +1,17 @@
-import { ActionFunctionArgs } from "@remix-run/node";
-import { requireApiToken } from "~/.server/auth";
-import { TemplateIndex } from "~/.server/templates/template";
-import { ApiResponseError, defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse } from "~/apis/api";
-import { defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateExtendedInformation, TemplateNotFoundErrorResponse, TemplateUpdatingResponse } from "./_public";
-import { APIs_Get_Params } from ".";
-import { errors } from "da4s";
-import server from "~/routes/settings/server";
+import { ActionFunctionArgs } from "@remix-run/node"
+
+import { requireApiToken } from "~/.server/auth"
+import { TemplateIndex } from "~/.server/templates/template"
+import {
+	ApiResponseError, defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse,
+	exportResponse
+} from "~/apis/api"
+
+import { APIs_Get_Params } from "./"
+import {
+	defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateExtendedInformation,
+	TemplateNotFoundErrorResponse, TemplateUpdatingResponse
+} from "./_public"
 
 export interface TemplateDeleteResponse extends TemplateBaseInformation, TemplateUpdatingResponse, TemplateExtendedInformation {
 	ok: boolean

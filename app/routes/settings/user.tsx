@@ -1,12 +1,12 @@
-import { classes } from "~/utils/jsx-helper";
+import { useOutletContext } from "@remix-run/react"
 
-import layoutCss from './_layout.module.stylus'
-import { useOutletContext } from "@remix-run/react";
-import { SettingsLayoutContext } from "./_layout";
-import { InputButton } from "~/utils/components/Inputs";
-// import { usePopupNotification } from "~/utils/components/popup";
-import toast from "~/universal/toast";
-import { I } from "~/utils/components/icons";
+import toast from "~/universal/toast"
+import { InputButton } from "~/utils/components/Inputs"
+import { classes } from "~/utils/jsx-helper"
+
+import { SettingsLayoutContext } from "./_layout"
+
+import layoutCss from "./_layout.module.stylus"
 
 export default function ClientSettingsPage () {
 	

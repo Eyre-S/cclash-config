@@ -1,21 +1,25 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { TemplateIndex } from "~/.server/templates/template";
+import { Editor } from "@monaco-editor/react"
+import { LoaderFunctionArgs } from "@remix-run/node"
+import {
+	unstable_usePrompt, useBeforeUnload, useLoaderData, useOutletContext, useRevalidator
+} from "@remix-run/react"
+import CryptoJS from "crypto-js"
+import { editor, Selection } from "monaco-editor"
+import { useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
+import { ClientOnly } from "remix-utils/client-only"
+
+import { TemplateIndex } from "~/.server/templates/template"
+import toast from "~/universal/toast"
+import { guessCodeLanguage, showSpecialChars } from "~/utils/code-lang"
+import { InputButton, InputText } from "~/utils/components/Inputs"
+import { inCase, is, isIt, it } from "~/utils/fp"
+import { classes } from "~/utils/jsx-helper"
+import { $ } from "~/utils/reactive"
+
+import { TemplateItemLayoutContext } from "./_layout"
 
 import css from "./editor.module.stylus"
-import { unstable_usePrompt, useBeforeUnload, useLoaderData, useOutletContext, useRevalidator } from "@remix-run/react";
-import { classes } from "~/utils/jsx-helper";
-import { InputButton, InputText } from "~/utils/components/Inputs";
-import { $, useDebouncedRef } from "~/utils/reactive";
-import { inCase, is, isIt, it } from "~/utils/fp";
-import CryptoJS from "crypto-js";
-import { Editor } from "@monaco-editor/react";
-import { guessCodeLanguage, showSpecialChars } from "~/utils/code-lang";
-import { editor, Selection } from "monaco-editor";
-import { useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
-import { TemplateItemLayoutContext } from "./_layout";
-import { ClientOnly } from "remix-utils/client-only";
-import toast from "~/universal/toast";
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -140,7 +144,6 @@ export default function () {
 	function resetToInitial () {
 		initData()
 	}
-	
 	
 	editingContent.addDebounceListener(500, () => {
 		updateContent()

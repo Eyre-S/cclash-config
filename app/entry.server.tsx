@@ -4,19 +4,17 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import { PassThrough } from "node:stream";
-
-import type { AppLoadContext, EntryContext } from "@remix-run/node";
-import { createReadableStreamFromReadable } from "@remix-run/node";
-import { RemixServer } from "@remix-run/react";
-import { isbot } from "isbot";
-import { renderToPipeableStream } from "react-dom/server";
+import { AppLoadContext, createReadableStreamFromReadable, EntryContext } from "@remix-run/node"
+import { RemixServer } from "@remix-run/react"
+import { server_config } from "app/.server/config"
+import { isbot } from "isbot"
+import { PassThrough } from "node:stream"
+import { renderToPipeableStream } from "react-dom/server"
 
 const ABORT_DELAY = 5_000;
 
 console.log("loading needed server initializations...")
 
-import { server_config } from "app/.server/config"
 let _ = server_config
 
 console.log("loaded needed server initializations!")

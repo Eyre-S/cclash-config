@@ -1,8 +1,11 @@
-import { ActionFunctionArgs } from "@remix-run/node";
-import { z, ZodError } from "zod";
-import { requireApiToken } from "~/.server/auth";
-import { TemplateCreateError, TemplateIndex, TemplateIndexDef } from "~/.server/templates/template";
-import { exportResponse, defineApiErrorResponse, defineApiUniversalErrorResponse, defineApiResponse } from "~/apis/api";
+import { ActionFunctionArgs } from "@remix-run/node"
+import { z, ZodError } from "zod"
+
+import { requireApiToken } from "~/.server/auth"
+import { TemplateCreateError, TemplateIndex, TemplateIndexDef } from "~/.server/templates/template"
+import {
+	defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse
+} from "~/apis/api"
 
 export const ApiGetCreate_Request = z.object({
 	name: z.string(),

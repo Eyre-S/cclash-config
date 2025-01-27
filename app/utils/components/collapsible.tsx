@@ -1,9 +1,10 @@
-import { CSSProperties, HTMLProps, ReactNode, SyntheticEvent, useEffect, useRef } from "react";
-import { define } from "../fp";
-import { classes } from "../jsx-helper";
+import { CSSProperties, HTMLProps, ReactNode, SyntheticEvent, useEffect, useRef } from "react"
 
-import css from './collapsible.module.stylus'
-import { $ } from "../reactive";
+import { define } from "../fp"
+import { classes } from "../jsx-helper"
+import { $ } from "../reactive"
+
+import css from "./collapsible.module.stylus"
 
 export function Collapsible ({
 	show,

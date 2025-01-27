@@ -1,8 +1,10 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { readTemplateConfigs } from "~/.server/templates/template";
-import { exportResponse } from "~/apis/api";
-import { requireApiToken } from "~/.server/auth";
-import { defineTemplateNotFoundResponse } from "./_public";
+import { LoaderFunctionArgs } from "@remix-run/node"
+
+import { requireApiToken } from "~/.server/auth"
+import { readTemplateConfigs } from "~/.server/templates/template"
+import { exportResponse } from "~/apis/api"
+
+import { defineTemplateNotFoundResponse } from "./_public"
 
 export async function loader (args: LoaderFunctionArgs) {
 	

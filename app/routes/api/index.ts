@@ -1,4 +1,6 @@
-import { defineApiResponse, exportResponse } from "~/apis/api";
+import { defineApiResponse, exportResponse } from "~/apis/api"
+
+import { APIs_auths } from "./require-auth"
 
 export async function loader () {
 	
@@ -36,7 +38,6 @@ export async function loader () {
 	
 }
 
-import { APIs_auths } from "./require-auth"
 export default {
 	auths: APIs_auths
 }

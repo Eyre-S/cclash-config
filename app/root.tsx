@@ -1,27 +1,21 @@
 import {
-	Link,
-	Links,
-	Meta,
-	Outlet,
-	Scripts,
-	ScrollRestoration,
-	useMatches,
-	useNavigation,
-	useRouteLoaderData,
-} from "@remix-run/react";
+	Link, Links, Meta, Outlet, Scripts, ScrollRestoration, useMatches, useNavigation,
+	useRouteLoaderData
+} from "@remix-run/react"
+import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } from "react"
+import { Slide, ToastContainer } from "react-toastify"
 
-import './root.stylus';
-import css from './root.module.stylus'
-import { classes } from "./utils/jsx-helper";
-import { is, iss } from "./utils/fp";
-import { server_config } from "./.server/config";
-import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } from "react";
-import { $, Reactive } from "./utils/reactive";
-import { defineAppTitle, defineMeta } from "./universal/app-meta";
-import { useGlobalPopups } from "./utils/components/popup";
-import { Slide, ToastContainer } from "react-toastify";
+import { server_config } from "./.server/config"
+import { defineAppTitle, defineMeta } from "./universal/app-meta"
+import { useGlobalPopups } from "./utils/components/popup"
+import { is, iss } from "./utils/fp"
+import { classes } from "./utils/jsx-helper"
+import { $, Reactive } from "./utils/reactive"
 
-import 'react-toastify/dist/ReactToastify.css'
+import css from "./root.module.stylus"
+
+import "./root.stylus"
+import "react-toastify/dist/ReactToastify.css"
 
 export const meta = defineMeta<typeof loader, {}>(({matches}) => {
 	return [

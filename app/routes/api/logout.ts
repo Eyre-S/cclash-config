@@ -1,7 +1,9 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { defineApiResponse, exportResponse } from "~/apis/api";
-import { AuthSessionData } from "~/apis/sessions";
-import { LoginResults } from "./login";
+import { LoaderFunctionArgs } from "@remix-run/node"
+
+import { defineApiResponse, exportResponse } from "~/apis/api"
+import { AuthSessionData } from "~/apis/sessions"
+
+import { LoginResults } from "./login"
 
 export async function loader (args: LoaderFunctionArgs) {
 	

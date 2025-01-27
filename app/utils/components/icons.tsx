@@ -1,9 +1,11 @@
-import './icons.stylus'
-import styles from './icons.module.stylus'
+import { CSSProperties } from "react"
 
-import { CSSProperties } from 'react'
-import { classes } from '../jsx-helper'
-import { it } from '../fp'
+import { it } from "../fp"
+import { classes } from "../jsx-helper"
+
+import styles from "./icons.module.stylus"
+
+import "./icons.stylus"
 
 interface MaterialSymbolProps {
 	

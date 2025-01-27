@@ -1,8 +1,10 @@
-import { LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { server_config } from "./config";
-import { API_RESPONSE_UNAUTHORIZED, exportResponse } from "~/apis/api";
-import { AuthSessionData } from "~/apis/sessions";
-import { getCookieHeader, getPathOf } from "~/utils/http-helper";
+import { LoaderFunctionArgs, redirect } from "@remix-run/node"
+
+import { API_RESPONSE_UNAUTHORIZED, exportResponse } from "~/apis/api"
+import { AuthSessionData } from "~/apis/sessions"
+import { getCookieHeader, getPathOf } from "~/utils/http-helper"
+
+import { server_config } from "./config"
 
 export function checkToken (token: string): boolean {
 	return token === server_config.token

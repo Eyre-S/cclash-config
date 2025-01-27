@@ -1,8 +1,9 @@
-import { type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node"
+import { Link } from "@remix-run/react"
 
-import css from "./index.module.stylus";
-import { classes } from "~/utils/jsx-helper";
-import { Link } from "@remix-run/react";
+import { classes } from "~/utils/jsx-helper"
+
+import css from "./index.module.stylus"
 
 export async function loader ({}: LoaderFunctionArgs) {
 	

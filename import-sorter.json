@@ -1,0 +1,40 @@
+{
+	"importStringConfiguration": {
+		"quoteMark": "double",
+		"hasSemicolon": false,
+		"maximumNumberOfImportExpressionsPerLine": {
+			"count": 100
+		},
+		"tabSize": 4,
+		"tabType": "tab",
+		"numberOfEmptyLinesAfterAllImports": 1
+	},
+	"sortConfiguration": {
+		"defaultOrderLevel": 20,
+		"customOrderingRules": {
+			"rules": [
+				{
+					"type": "importMember",
+					"regex": "^$",
+					"orderLevel": 999,
+					"disableSort": true
+				},
+				{
+					"type": "path",
+					"regex": "(?:css|styl|stylus)$",
+					"orderLevel": 100
+				},
+				{
+					"type": "path",
+					"regex": "^\\.",
+					"orderLevel": 40
+				},
+				{
+					"type": "path",
+					"regex": "^~",
+					"orderLevel": 30
+				}
+			]
+		}
+	}
+}

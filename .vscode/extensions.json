@@ -1,6 +1,7 @@
 {
 	"recommendations": [
-		"clinyong.vscode-css-modules"
+		"clinyong.vscode-css-modules",
+		"mike-co.import-sorter"
 	],
 	"unwantedRecommendations": [
 		"vue.vscode-typescript-vue-plugin"

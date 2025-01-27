@@ -1,18 +1,23 @@
-import { type LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node"
+import {
+	Link, Outlet, useBeforeUnload, useLoaderData, useOutletContext, useParams, useRevalidator
+} from "@remix-run/react"
+import { MouseEvent, useEffect } from "react"
 
-import css from "./_layout.module.stylus";
-import { classes } from "~/utils/jsx-helper";
-import { requireUILogin } from "~/.server/auth";
-import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template";
-import { Link, Outlet, useBeforeUnload, useLoaderData, useOutletContext, useParams, useRevalidator } from "@remix-run/react";
-import { $ } from "~/utils/reactive";
-import { is, iss } from "~/utils/fp";
-import { InputButton, InputText } from "~/utils/components/Inputs";
-import { MouseEvent, useEffect } from "react";
-import { ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate } from "../api/require-auth/get_create";
-import { ApiResponse, ApiResponseError } from "~/apis/api";
-import { defineAppTitle, defineMeta } from "~/universal/app-meta";
-import { AppLayoutContext } from "~/root";
+import { requireUILogin } from "~/.server/auth"
+import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template"
+import { ApiResponse, ApiResponseError } from "~/apis/api"
+import { AppLayoutContext } from "~/root"
+import {
+	ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate
+} from "~/routes/api/require-auth/get_create"
+import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+import { InputButton, InputText } from "~/utils/components/Inputs"
+import { is, iss } from "~/utils/fp"
+import { classes } from "~/utils/jsx-helper"
+import { $ } from "~/utils/reactive"
+
+import css from "./_layout.module.stylus"
 
 export const meta = defineMeta((args) => {
 	return [ defineAppTitle(args.matches, 'Templates') ]

@@ -1,10 +1,12 @@
-import fs from "fs";
-import { server_root } from "../config";
-import { z } from "zod";
-import { randomUUID } from "crypto";
-import { iss } from "~/utils/fp";
-import CryptoJS from "crypto-js";
-import files from "~/utils/files";
+import { randomUUID } from "crypto"
+import CryptoJS from "crypto-js"
+import fs from "fs"
+import { z } from "zod"
+
+import files from "~/utils/files"
+import { iss } from "~/utils/fp"
+
+import { server_root } from "../config"
 
 const templates_root = server_root + "/templates"
 

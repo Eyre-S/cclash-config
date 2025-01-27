@@ -1,12 +1,11 @@
-import { ReactNode } from 'react'
-import { classes } from '../jsx-helper'
-import { InputButton } from './Inputs'
-import css from './popup.module.stylus'
-import { is, isIt, it, nonnull } from '../fp'
-import { $ } from '../reactive'
-import { AppLayoutContext } from '~/root'
-import { ClientOnly } from 'remix-utils/client-only'
-import { createPortal } from 'react-dom'
+import { ReactNode } from "react"
+
+import { is, isIt, it } from "../fp"
+import { classes } from "../jsx-helper"
+import { $ } from "../reactive"
+import { InputButton } from "./Inputs"
+
+import css from "./popup.module.stylus"
 
 export type PopupButtonsDefining = (closePopups: ()=>void) => ReactNode
 export interface PopupNotificationOnCheckedButtonDefinition { callback: () => any, text: ReactNode }

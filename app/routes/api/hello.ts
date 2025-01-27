@@ -1,7 +1,8 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { getClientIPAddress } from "remix-utils/get-client-ip-address";
-import { defineApiResponse, exportResponse } from "~/apis/api";
-import { it } from "~/utils/fp";
+import { LoaderFunctionArgs } from "@remix-run/node"
+import { getClientIPAddress } from "remix-utils/get-client-ip-address"
+
+import { defineApiResponse, exportResponse } from "~/apis/api"
+import { it } from "~/utils/fp"
 
 export interface HelloResponse {
 	hi: string

@@ -1,11 +1,13 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { readTemplate } from "~/.server/templates/template";
-import { exportResponse } from "~/apis/api";
-import { requireApiToken } from "~/.server/auth";
+import { LoaderFunctionArgs } from "@remix-run/node"
 import upp from "uni-preprocessor"
-import { defineTemplateNotFoundResponse } from "./_public";
-import { API_Auths_Params as APIs_Auths_Params } from "..";
-import { API_delete } from "./delete";
+
+import { requireApiToken } from "~/.server/auth"
+import { readTemplate } from "~/.server/templates/template"
+import { exportResponse } from "~/apis/api"
+
+import { API_Auths_Params as APIs_Auths_Params } from "../"
+import { defineTemplateNotFoundResponse } from "./_public"
+import { API_delete } from "./delete"
 
 export async function loader (args: LoaderFunctionArgs) {
 	

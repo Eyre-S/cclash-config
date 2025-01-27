@@ -1,7 +1,9 @@
-import { HTMLProps, ReactElement, useEffect } from 'react'
-import { classes } from '../jsx-helper'
-import { $ } from '../reactive'
-import css from './slide-switch.module.stylus'
+import { HTMLProps, ReactElement, useEffect } from "react"
+
+import { classes } from "../jsx-helper"
+import { $ } from "../reactive"
+
+import css from "./slide-switch.module.stylus"
 
 // export interface SlideSwitchItem {
 	

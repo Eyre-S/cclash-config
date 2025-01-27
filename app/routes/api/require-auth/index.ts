@@ -1,7 +1,10 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { requireApiToken } from "~/.server/auth";
-import { exportResponse, defineApiResponse } from "~/apis/api";
-import { AuthCheckResponse } from "./check";
+import { LoaderFunctionArgs } from "@remix-run/node"
+
+import { requireApiToken } from "~/.server/auth"
+import { defineApiResponse, exportResponse } from "~/apis/api"
+
+import { AuthCheckResponse } from "./check"
+import { APIs_get } from "./get"
 
 export async function loader (args: LoaderFunctionArgs) {
 	
@@ -14,7 +17,6 @@ export async function loader (args: LoaderFunctionArgs) {
 }
 
 
-import { APIs_get } from "./get";
 export interface API_Auths_Params {
 	token: string
 }
