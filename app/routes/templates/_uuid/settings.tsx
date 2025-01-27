@@ -50,39 +50,47 @@ export default function TemplateSettingsPage (): ReactNode {
 		
 		function TemplateAliases (): ReactNode {
 			
-			const aliases = $(loaderData.item.alias)
+			const aliases = useRef(loaderData.item.alias)
+			const aliasesCount = $(aliases.current.length)
 			
 			function AliasItemEditor (props: { value: string, onValueChange: (nv: string) => void, onDeleteThis: ()=>void }): ReactNode {
-				const valueInner = $(props.value)
+				const cache = $(props.value)
 				return <HorizontalStack align="center">
-					<InputText
-						{...bindInputValue(valueInner)}
-						onBlur={() => {
-							props.onValueChange(valueInner.value)
-						}}
-					/>
+					<InputText value={cache.value} onValueChange={(newValue) => {
+						cache.value = newValue
+						props.onValueChange(newValue)
+					}} />
 					<InputButton className={[css.smallDeleteButton]} theme="red" onClick={props.onDeleteThis}><I>delete</I></InputButton>
 				</HorizontalStack>
 			}
 			
 			function addAlias () {
-				aliases.value = [...aliases.value, ""]
+				aliases.current = [...aliases.current, ""]
+				aliasesCount.value = aliasesCount.value + 1
+				saveAlias()
+			}
+			
+			async function saveAlias () {
+				// todo: save the aliases
 			}
 			
 			return <SettingItem
 				description={<><span className={classes(css.title)}>Aliases</span></>}
 				inputs={<VerticalStack>
-					{aliases.value.map((alias, i) =>
+					{aliases.current.map((alias, i) =>
 						<AliasItemEditor key={i} value={alias}
 							onValueChange={nv => {
-								const newAliases = [...aliases.value]
+								const newAliases = [...aliases.current]
 								newAliases[i] = nv
-								aliases.value = newAliases
+								aliases.current = newAliases
+								saveAlias()
 							}}
 							onDeleteThis={() => {
-								const newAliases = [...aliases.value]
+								const newAliases = [...aliases.current]
 								newAliases.splice(i, 1)
-								aliases.value = newAliases
+								aliases.current = newAliases
+								aliasesCount.value = aliasesCount.value - 1
+								saveAlias()
 							}}
 						/>
 					)}
