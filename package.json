@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@monaco-editor/react": "4.6.0",
+		"@reactuses/core": "^6.0.1",
 		"@remix-run/node": "2.13.1",
 		"@remix-run/react": "2.13.1",
 		"@remix-run/serve": "^2.13.1",

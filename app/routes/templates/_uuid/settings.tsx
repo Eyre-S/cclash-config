@@ -17,6 +17,7 @@ import { $ } from "~/utils/reactive"
 import { TemplateItemLayoutContext } from "./_layout"
 
 import css from "./editor.module.stylus"
+import { useUpdate } from "react-use"
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -51,8 +52,8 @@ export default function TemplateSettingsPage (): ReactNode {
 		
 		function TemplateAliases (): ReactNode {
 			
+			const rerender_TemplateAliases = useUpdate()
 			const aliases = useRef(loaderData.item.alias)
-			const aliasesCount = $(aliases.current.length)
 			
 			function AliasItemEditor (props: { value: string, onValueChange: (nv: string) => void, onDeleteThis: ()=>void }): ReactNode {
 				const cache = $(props.value)
@@ -67,7 +68,7 @@ export default function TemplateSettingsPage (): ReactNode {
 			
 			function addAlias () {
 				aliases.current = [...aliases.current, ""]
-				aliasesCount.value = aliasesCount.value + 1
+				rerender_TemplateAliases()
 				saveAlias()
 			}
 			
@@ -90,7 +91,7 @@ export default function TemplateSettingsPage (): ReactNode {
 								const newAliases = [...aliases.current]
 								newAliases.splice(i, 1)
 								aliases.current = newAliases
-								aliasesCount.value = aliasesCount.value - 1
+								rerender_TemplateAliases()
 								saveAlias()
 							}}
 						/>

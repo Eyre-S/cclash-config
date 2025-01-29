@@ -10,9 +10,9 @@ export interface DebounceController {
 	 * - `null`: *initial*, means that the debounced value has not been initialized yet, or the debounce is
 	 *   cancelled by the {@link cancelDebounce} function.
 	 */
-	isDebounceReady: ReturnType<typeof useDebounce>[0]
+	isDebounceReady: () => boolean|null
 	/** cancel the debounce */
-	cancelDebounce: ReturnType<typeof useDebounce>[1]
+	cancelDebounce: () => void
 }
 
 export class Reactive<T> {
