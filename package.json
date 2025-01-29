@@ -1,52 +1,52 @@
 {
-	"name": "remix-react-express",
-	"private": true,
-	"sideEffects": false,
-	"type": "module",
-	"scripts": {
-		"build": "remix vite:build",
-		"dev": "remix vite:dev",
-		"start": "remix-serve ./build/server/index.js",
-		"typecheck": "tsc"
-	},
-	"dependencies": {
-		"@monaco-editor/react": "4.6.0",
-		"@reactuses/core": "^6.0.1",
-		"@remix-run/node": "2.13.1",
-		"@remix-run/react": "2.13.1",
-		"@remix-run/serve": "^2.13.1",
-		"@types/crypto-js": "4.2.2",
-		"compression": "1.7.5",
-		"crypto-js": "4.2.0",
-		"da4s": "0.1.0",
-		"highlight.js": "11.11.0",
-		"is-ip": "5.0.1",
-		"isbot": "4.4.0",
-		"morgan": "1.10.0",
-		"react": "19.0.0-beta-26f2496093-20240514",
-		"react-dom": "19.0.0-beta-26f2496093-20240514",
-		"react-toastify": "11.0.1",
-		"react-transition-group": "4.4.5",
-		"react-use": "^17.6.0",
-		"remix-utils": "7.7.0",
-		"uni-preprocessor": "0.3.0",
-		"zod": "3.24.1"
-	},
-	"devDependencies": {
-		"@remix-run/dev": "2.13.1",
-		"@types/compression": "1.7.5",
-		"@types/morgan": "1.9.9",
-		"@types/react": "18.3.11",
-		"@types/react-dom": "18.3.1",
-		"cross-env": "7.0.3",
-		"monaco-editor": "0.52.2",
-		"stylus": "0.64.0",
-		"typescript": "5.7.2",
-		"vite": "5.4.9",
-		"vite-plugin-stylus-alias-next": "1.2.2-beta.1",
-		"vite-tsconfig-paths": "5.1.4"
-	},
-	"engines": {
-		"node": ">=18.0.0"
-	}
+  "name": "remix-react-express",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
+    "start": "remix-serve ./build/server/index.js",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "4.6.0",
+    "@reactuses/core": "^6.0.1",
+    "@remix-run/node": "2.15.2",
+    "@remix-run/react": "2.15.2",
+    "@remix-run/serve": "^2.15.2",
+    "@types/crypto-js": "4.2.2",
+    "compression": "1.7.5",
+    "crypto-js": "4.2.0",
+    "da4s": "0.1.0",
+    "highlight.js": "11.11.1",
+    "is-ip": "5.0.1",
+    "isbot": "5.1.22",
+    "morgan": "1.10.0",
+    "react": "19.0.0-beta-26f2496093-20240514",
+    "react-dom": "19.0.0-beta-26f2496093-20240514",
+    "react-toastify": "11.0.3",
+    "react-transition-group": "4.4.5",
+    "react-use": "^17.6.0",
+    "remix-utils": "8.1.0",
+    "uni-preprocessor": "0.3.0",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "2.15.2",
+    "@types/compression": "1.7.5",
+    "@types/morgan": "1.9.9",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
+    "cross-env": "7.0.3",
+    "monaco-editor": "0.52.2",
+    "stylus": "0.64.0",
+    "typescript": "5.7.3",
+    "vite": "6.0.11",
+    "vite-plugin-stylus-alias-next": "1.2.2-beta.1",
+    "vite-tsconfig-paths": "5.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

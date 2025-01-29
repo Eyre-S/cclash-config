@@ -7,5 +7,6 @@
 @import url("https://www.nerdfonts.com/assets/css/webfont.css")
 
 .nf,
-.nerd-font
+.nerd-font,
+.material-symbols
 	font-grayscale()
