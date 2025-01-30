@@ -19,6 +19,7 @@ import { $ } from "~/utils/reactive"
 
 import css from "./_layout.module.stylus"
 import { I } from "~/utils/components/icons"
+import toast from "~/universal/toast"
 
 export const meta = defineMeta((args) => {
 	return [ defineAppTitle(args.matches, 'Templates') ]
@@ -83,9 +84,15 @@ export default function TemplatesLayout() {
 			const jsonErr = json as ApiResponseError<any>
 			if (jsonErr.e_id == 'api_getCreate_create') {
 				const jsonErrCreate = jsonErr as ApiResponseError<ApiGetCreate_Response_ECreate>
-				alert("Failed to create new template: " + jsonErrCreate.error.caused)
+				toast.pop({ type: toast.types.ERROR })(<>
+					<h4>Failed to create new template:</h4>
+					<p>{jsonErrCreate.error.caused}</p>
+				</>)
 			} else {
-				alert("500 Internal Server Error: " + JSON.stringify(json))
+				toast.pop({ type: toast.types.ERROR })(<>
+					<h4>500 Internal Server Error:</h4>
+					<pre><code>{JSON.stringify(json)}</code></pre>
+				</>)
 			}
 		}
 		cancelAdd()

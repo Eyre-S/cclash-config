@@ -128,6 +128,17 @@ export class TemplateIndex {
 	}
 	
 	/**
+	 * Create a new template metadata and store it in the template index.
+	 * 
+	 * This does not create the template files etc. The files will be auto-created when you
+	 * trying to read or write them.
+	 * 
+	 * The name and aliases have the following rules:
+	 * 
+	 * - Cannot starts with `uuid:`.
+	 * - Cannot be a empty string.
+	 * - Template names cannot be duplicated. (for now, the aliases can be duplicated with names, or other aliases)
+	 * 
 	 * @throws TemplateCreateError
 	 */
 	public static create (name: string, alias: string[] = []): TemplateIndex {
@@ -145,9 +156,15 @@ export class TemplateIndex {
 		if (indexDef.name.startsWith('uuid:')) {
 			throw new TemplateCreateError("Template name cannot start with 'uuid:'.")
 		}
+		if (indexDef.name === '') {
+			throw new TemplateCreateError("Template name cannot be empty.")
+		}
 		for (const alias of indexDef.alias) {
 			if (alias.startsWith('uuid:')) {
 				throw new TemplateCreateError("Template alias name cannot start with 'uuid:'.")
+			}
+			if (alias === '') {
+				throw new TemplateCreateError("Template alias name cannot be empty.")
 			}
 		}
 		for (const item of currentIndexes) {
