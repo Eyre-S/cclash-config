@@ -5,30 +5,6 @@
 	padding 20px 45px
 	
 
-.setting-item
-	
-	use-flex row
-	gap 36px
-	
-	font-size 15px
-	
-	> .descriptionBox
-		flex 2 2 0
-		use-flex row
-		padding-top 3px
-		justify-content flex-end
-		> .descriptionContent
-			font-size 14px
-			font-weight bold
-			color #a7aeb6
-	
-	// > .gap
-	// 	flex 1 1 0
-	
-	> .inputsBox
-		flex 9 9 0
-	
-
 .comment-editor
 	height 15em
 	width 100%

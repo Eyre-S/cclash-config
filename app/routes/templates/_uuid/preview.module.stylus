@@ -1,0 +1,30 @@
+.preview-page
+	
+	padding-block-start 2em
+	
+	use-flex column
+	gap 40px
+	
+	> div
+		padding-inline 2em
+	
+	> .preview-heading
+		
+		padding-inline 1em
+		
+		> .url
+			font-size 20px
+		
+	
+	> .preview-control-panel
+		
+		use-flex column
+		gap 15px
+		
+	
+
+.editor
+	height 30em
+	border-radius 0.5em
+	overflow hidden
+	

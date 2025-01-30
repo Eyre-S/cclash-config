@@ -3,12 +3,14 @@ import { LoaderFunctionArgs } from "@remix-run/node"
 import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react"
 import { errors } from "da4s"
 import { ReactNode, useRef } from "react"
+import { useUpdate } from "react-use"
 
 import { TemplateIndex } from "~/.server/templates/template"
 import api from "~/routes/api"
 import toast, { ToastParameters } from "~/universal/toast"
 import { I } from "~/utils/components/icons"
 import { InputButton, InputText } from "~/utils/components/Inputs"
+import { SettingItem } from "~/utils/components/panel/setting-item"
 import { FlexStack, HorizontalStack, VerticalStack } from "~/utils/components/panel/stacks"
 import { aIt } from "~/utils/fp"
 import { classes } from "~/utils/jsx-helper"
@@ -17,7 +19,6 @@ import { $ } from "~/utils/reactive"
 import { TemplateItemLayoutContext } from "./_layout"
 
 import css from "./settings.module.stylus"
-import { useUpdate } from "react-use"
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
@@ -232,26 +233,6 @@ export default function TemplateSettingsPage (): ReactNode {
 	return <>
 		<div className={classes(css.settingsPage)}>
 			{settingItems.map((Item, i) => <Item key={i}></Item>)}
-		</div>
-	</>
-	
-}
-
-export function SettingItem (props: { description: ReactNode, inputs: ReactNode }): ReactNode {
-	
-	return <>
-		<div className={classes(css.settingItem)}>
-			<div className={classes(css.descriptionBox)}>
-				<div className={classes(css.descriptionContent)}>
-					{props.description}
-				</div>
-			</div>
-			{/* <div className={classes(css.gap)}></div> */}
-			<div className={classes(css.inputsBox)}>
-				<div className={classes(css.inputsContent)}>
-					{props.inputs}
-				</div>
-			</div>
 		</div>
 	</>
 	

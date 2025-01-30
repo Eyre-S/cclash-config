@@ -26,13 +26,11 @@ export class Reactive<T> {
 		this.setter = setter
 	}
 	
-	get value (): T {
-		return this.getter
-	}
+	get value (): T { return this.getter }
+	set value (newValue: T) { this.setter(newValue) }
 	
-	set value (newValue: T) {
-		this.setter(newValue)
-	}
+	get current (): T { return this.getter }
+	set current (newValue: T) { this.setter(newValue) }
 	
 	public set (x: SetStateAction<T>): void {
 		this.setter(x)

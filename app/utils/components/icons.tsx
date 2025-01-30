@@ -90,6 +90,10 @@ interface MaterialSymbolProps extends UniversalIconProps {
 	 */
 	optical?: number
 	
+	// todo:
+	//  whether to add switch adjusting the baseline of icon.
+	//  related documentation: https://m3.material.io/styles/icons/applying-icons#e27c90d0-0024-44b5-818c-4ccdecc87015
+	
 }
 
 /**

@@ -1,15 +1,20 @@
 {
 	"importStringConfiguration": {
+		
 		"quoteMark": "double",
 		"hasSemicolon": false,
+		
 		"maximumNumberOfImportExpressionsPerLine": {
 			"count": 100
 		},
 		"tabSize": 4,
 		"tabType": "tab",
+		
 		"numberOfEmptyLinesAfterAllImports": 1
+		
 	},
 	"sortConfiguration": {
+		
 		"defaultOrderLevel": 20,
 		"customOrderingRules": {
 			"rules": [
@@ -36,5 +41,6 @@
 				}
 			]
 		}
+		
 	}
 }
