@@ -1,5 +1,5 @@
-:global(.nerd-font),
-:global(.material-symbols)
+:global(.icon)
+	
 	&.inherit-mode
 		font-weight inherit
 		font-style inherit
@@ -8,3 +8,7 @@
 		line-height inherit
 		letter-spacing inherit
 		text-transform inherit
+	
+	&.img-mode
+		display block
+	

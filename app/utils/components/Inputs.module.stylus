@@ -20,6 +20,9 @@ button.input.button
 	
 	clear-pad()
 	padding 0 1.1em
+	&.padding-blocks
+		padding 0
+		width 2.5em
 	height 2.2em
 	border-radius 0.6em
 	position relative

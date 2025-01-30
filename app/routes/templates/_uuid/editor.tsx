@@ -146,6 +146,7 @@ export default function () {
 	}
 	
 	editingContent.addDebounceListener(500, () => {
+		if (isClearState) return
 		updateContent()
 	})
 	

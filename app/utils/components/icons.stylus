@@ -6,7 +6,5 @@
 // @see https://www.nerdfonts.com/cheat-sheet
 @import url("https://www.nerdfonts.com/assets/css/webfont.css")
 
-.nf,
-.nerd-font,
-.material-symbols
+.icon
 	font-grayscale()

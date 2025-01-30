@@ -62,7 +62,7 @@ export default function TemplateSettingsPage (): ReactNode {
 						cache.value = newValue
 						props.onValueChange(newValue)
 					}} />
-					<InputButton className={[css.smallDeleteButton]} theme="red" onClick={props.onDeleteThis}><I>delete</I></InputButton>
+					<InputButton blocks className={[css.smallDeleteButton]} theme="red" onClick={props.onDeleteThis}><I mg>delete</I></InputButton>
 				</HorizontalStack>
 			}
 			
@@ -96,7 +96,7 @@ export default function TemplateSettingsPage (): ReactNode {
 							}}
 						/>
 					)}
-					<InputButton onClick={addAlias}>+</InputButton>
+					<InputButton blocks onClick={addAlias}><I mg>add</I></InputButton>
 				</VerticalStack>}
 			/>
 			

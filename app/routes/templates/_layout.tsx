@@ -18,6 +18,7 @@ import { classes } from "~/utils/jsx-helper"
 import { $ } from "~/utils/reactive"
 
 import css from "./_layout.module.stylus"
+import { I } from "~/utils/components/icons"
 
 export const meta = defineMeta((args) => {
 	return [ defineAppTitle(args.matches, 'Templates') ]
@@ -138,8 +139,7 @@ export default function TemplatesLayout() {
 									onValueChange={e => addingName.value = e}
 									onEnterKeyDown={createNewTemplate} onEscKeyDown={cancelAdd} />
 								<div className={classes(css.controller)}>
-									<InputButton onClick={cancelAdd}>-</InputButton>
-									<InputButton onClick={createNewTemplate}>+</InputButton>
+									<InputButton onClick={createNewTemplate}><I mg>check</I></InputButton>
 								</div>
 							</>,
 							<span>+</span>

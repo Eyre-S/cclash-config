@@ -16,6 +16,7 @@ export function InputButton (_: {
 	
 	theme?: 'red',
 	longPress?: boolean,
+	blocks?: boolean,
 	
 	children?: ReactNode
 	className?: string[]
@@ -47,7 +48,11 @@ export function InputButton (_: {
 	
 	return <>
 		<button
-			className={classes('input', 'button', css.input, css.button, is(_.disabled, css.disabled), css[_.theme||''], ..._.className||[])}
+			className={classes(
+				'input', 'button', css.input, css.button,
+				is(_.disabled, css.disabled), css[_.theme||''], is(_.blocks, css.paddingBlocks),
+				..._.className||[]
+			)}
 			type="button"
 			onClick={is(!_.longPress, _.onClick)}
 			onMouseDown={is(_.longPress, startTimer)}
