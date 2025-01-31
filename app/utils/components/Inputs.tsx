@@ -202,12 +202,27 @@ export function InputSelect (props: {
 	} satisfies CSSProperties
 	
 	const isSelecting = toggle$(false)
-	function closeSelector () {
-		isSelecting.current = false
+	const isSelecting_nextValue = $<boolean|null>(null)
+	function toggleSelector () {
+		isSelecting_nextValue.runs(vNext => {
+			if (vNext == null) {
+				// there are no previous click, means the click from outside
+				// close the selector
+				isSelecting.value = false
+			} else { isSelecting.runs(v => {
+				if (vNext == v) {
+					// the status should not change, ignore
+				} else {
+					// apply the change that from the previous click
+					isSelecting.current = vNext
+					isSelecting_nextValue.value = null
+				}
+			}) }
+		})
 	}
 	useLifecycles(
-		() => { window.addEventListener('click', closeSelector, { capture: true }) },
-		() => { window.removeEventListener('click', closeSelector, { capture: true }) }
+		() => { window.addEventListener('click', toggleSelector) },
+		() => { window.removeEventListener('click', toggleSelector) }
 	)
 	
 	function onSelect (selectingOption: string) {
@@ -218,7 +233,7 @@ export function InputSelect (props: {
 	return <>
 		<div className={classes('input', 'select', css.input, css.select)}
 			style={outerBoxStyle}
-			onClick={isSelecting.toggle}
+			onClick={() => isSelecting_nextValue.current = !isSelecting.current}
 		>
 			
 			<div className={classes(css.selected)}>
@@ -231,7 +246,7 @@ export function InputSelect (props: {
 			
 			<Collapsible show={isSelecting.current} outerProps={{ className: classes(css.optionSelectorBox) }}>
 				<div className={classes(css.optionSelector, is(isSelecting.current, css.show))}
-				ref={optionBox} onClick={e => { e.stopPropagation(); isSelecting.value = true }}>
+				ref={optionBox} onClick={() => { isSelecting_nextValue.value = true }}>
 					{props.options.map(option => <>
 						<div className={classes(css.option, is(option == props.selected, css.selected))}
 							onClick={() => onSelect(option)}>
