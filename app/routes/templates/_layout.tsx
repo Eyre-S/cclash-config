@@ -1,8 +1,9 @@
 import { LoaderFunctionArgs } from "@remix-run/node"
 import {
-	Link, Outlet, useBeforeUnload, useLoaderData, useOutletContext, useParams, useRevalidator
+	Link, Outlet, useLoaderData, useOutletContext, useParams, useRevalidator
 } from "@remix-run/react"
-import { MouseEvent, useEffect } from "react"
+import { MouseEvent } from "react"
+import { useLifecycles } from "react-use"
 
 import { requireUILogin } from "~/.server/auth"
 import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template"
@@ -12,14 +13,14 @@ import {
 	ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate
 } from "~/routes/api/require-auth/get_create"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+import toast from "~/universal/toast"
+import { I } from "~/utils/components/icons"
 import { InputButton, InputText } from "~/utils/components/Inputs"
 import { is, iss } from "~/utils/fp"
 import { classes } from "~/utils/jsx-helper"
 import { $ } from "~/utils/reactive"
 
 import css from "./_layout.module.stylus"
-import { I } from "~/utils/components/icons"
-import toast from "~/universal/toast"
 
 export const meta = defineMeta((args) => {
 	return [ defineAppTitle(args.matches, 'Templates') ]
@@ -114,12 +115,10 @@ export default function TemplatesLayout() {
 	function handleOverAddAreaClick () {
 		cancelAdd()
 	}
-	useEffect(() => {
-		window.onclick = handleOverAddAreaClick
-	}, [])
-	useBeforeUnload(() => {
-		window.onclick = null
-	})
+	useLifecycles(
+		() => { window.addEventListener('click', handleOverAddAreaClick) },
+		() => { window.removeEventListener('click', handleOverAddAreaClick) }
+	)
 	
 	return (
 		<>

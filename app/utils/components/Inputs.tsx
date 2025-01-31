@@ -1,10 +1,15 @@
+import { useElementSize } from "@reactuses/core"
 import {
-	FocusEventHandler, KeyboardEventHandler, MouseEventHandler, ReactNode, useEffect, useRef
+	CSSProperties, FocusEventHandler, KeyboardEventHandler, MouseEventHandler, ReactNode, useEffect,
+	useRef
 } from "react"
+import { useLifecycles } from "react-use"
 
 import { is, iss } from "../fp"
 import { classes } from "../jsx-helper"
-import { $ } from "../reactive"
+import { $, toggle$ } from "../reactive"
+import { Collapsible } from "./collapsible"
+import { I } from "./icons"
 
 import css from "./Inputs.module.stylus"
 
@@ -22,7 +27,7 @@ export function InputButton (_: {
 	className?: string[]
 	onClick?: (e: ButtonReceiveEvents) => any
 	
-}) {
+}): ReactNode {
 	
 	const isPressing = $(false)
 	const pressTimeout = useRef<NodeJS.Timeout>()
@@ -100,7 +105,7 @@ export function InputText (_: {
 	noSelect?: boolean
 	focus?: boolean
 	
-}) {
+}): ReactNode {
 	
 	const showPassword = $(_.showPassword||false)
 	function toggleShowPassword () {
@@ -159,6 +164,83 @@ export function InputText (_: {
 			))}
 			
 			{is(_.noSelect, <div className={classes(css.cover, is(_.onClick, css.canClicks))} onClick={_.onClick} />)}
+			
+		</div>
+	</>
+	
+}
+
+export function InputSwitch (props: {
+	value: boolean,
+	onValueChange: (newValue: boolean) => void,
+}): ReactNode {
+	
+	return <>
+		<div className={classes('input', 'switch', css.input, css.switch, is(props.value, css.on))}
+			onClick={() => props.onValueChange(!props.value)}
+		>
+			<div className={classes(css.checkIcon)}></div>
+			<div className={classes(css.checkEmpty)}></div>
+		</div>
+	</>
+	
+}
+
+export function InputSelect (props: {
+	
+	options: string[],
+	selected: string,
+	
+	onSelect?: (option: string) => void
+	
+}): ReactNode {
+	
+	const optionBox = useRef<HTMLDivElement>(null)
+	const [optionBoxWidth, _] = useElementSize(optionBox, { box: 'border-box' })
+	const outerBoxStyle = {
+		width: optionBoxWidth + "px"
+	} satisfies CSSProperties
+	
+	const isSelecting = toggle$(false)
+	function closeSelector () {
+		isSelecting.current = false
+	}
+	useLifecycles(
+		() => { window.addEventListener('click', closeSelector, { capture: true }) },
+		() => { window.removeEventListener('click', closeSelector, { capture: true }) }
+	)
+	
+	function onSelect (selectingOption: string) {
+		if (props.selected == selectingOption) return
+		if (props.onSelect) props.onSelect(selectingOption)
+	}
+	
+	return <>
+		<div className={classes('input', 'select', css.input, css.select)}
+			style={outerBoxStyle}
+			onClick={isSelecting.toggle}
+		>
+			
+			<div className={classes(css.selected)}>
+				<span className={classes(css.text)}>{props.selected}</span>
+			</div>
+			
+			<div className={classes(css.indicator, is(isSelecting.current, css.open))}>
+				<I mg>keyboard_arrow_up</I>
+			</div>
+			
+			<Collapsible show={isSelecting.current} outerProps={{ className: classes(css.optionSelectorBox) }}>
+				<div className={classes(css.optionSelector, is(isSelecting.current, css.show))}
+				ref={optionBox} onClick={e => { e.stopPropagation(); isSelecting.value = true }}>
+					{props.options.map(option => <>
+						<div className={classes(css.option, is(option == props.selected, css.selected))}
+							onClick={() => onSelect(option)}>
+							<span className={classes(css.text)}>{option}</span>
+							<div className={classes(css.indicator)} />
+						</div>
+					</>)}
+				</div>
+			</Collapsible>
 			
 		</div>
 	</>

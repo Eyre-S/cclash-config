@@ -6,12 +6,14 @@ import { createPortal } from "react-dom"
 import { useMount } from "react-use"
 import { ClientOnly } from "remix-utils/client-only"
 
+import { TemplateIndex } from "~/.server/templates/template"
 import toast from "~/universal/toast"
 import { guessCodeLanguage } from "~/utils/code-lang"
-import { InputText } from "~/utils/components/Inputs"
+import { InputSelect, InputSwitch, InputText } from "~/utils/components/Inputs"
 import { SettingItem } from "~/utils/components/panel/setting-item"
+import { FlexStack } from "~/utils/components/panel/stacks"
 import { isIt, it } from "~/utils/fp"
-import { classes } from "~/utils/jsx-helper"
+import { bindInputValue, classes } from "~/utils/jsx-helper"
 import { useReadyState } from "~/utils/react-utils"
 import { $ } from "~/utils/reactive"
 
@@ -24,7 +26,8 @@ export async function loader ({ params }: LoaderFunctionArgs) {
 	const uuid = params.uuid as string
 	
 	return {
-		uuid
+		uuid,
+		item: TemplateIndex.findByUUID(uuid) as TemplateIndex
 	}
 	
 }
@@ -95,9 +98,10 @@ export default function TemplatePreviewPage () {
 		
 		<ClientOnly>{() => <>{isIt(isReady.value, () => createPortal(
 			<>
-				<select>
-					<option>[new setup]</option>
-				</select>
+				<InputSelect
+					options={['[new setup]']}
+					selected='[new setup]'
+				/>
 			</>,
 			layoutContext.controllerRef.current as HTMLElement
 		))}</>}</ClientOnly>
@@ -112,28 +116,26 @@ export default function TemplatePreviewPage () {
 				<SettingItem
 					description={<><span>auth uses</span></>}
 					inputs={<>
-						<select>
-							<option>_cookie_</option>
-							<option>key</option>
-						</select>
+						<InputSelect
+							options={['_cookie_', '<some very random key>']}
+							selected='_cookie_'
+						/>
 					</>}
 				/>
 				<SettingItem
 					description={<><span>name uses</span></>}
-					inputs={<>
-						<select>
-							<option>uuid</option>
-							<option>name</option>
-						</select>
-					</>}
+					inputs={<FlexStack>
+						<InputSelect
+							options={[`uuid:${loaderData.uuid}`, loaderData.item.name, ...loaderData.item.alias]}
+							selected={previewTemplateName.current}
+							onSelect={nv => previewTemplateName.current = nv}
+						/>
+					</FlexStack>}
 				/>
 				<SettingItem
 					description={<><span>raw mode</span></>}
 					inputs={<>
-						<input type='checkbox'
-							checked={previewUseRawMode.current}
-							onChange={(e) => previewUseRawMode.current = e.target.checked}
-						/>
+						<InputSwitch {...bindInputValue(previewUseRawMode)} />
 					</>}
 				/>
 				{/* <SettingItem

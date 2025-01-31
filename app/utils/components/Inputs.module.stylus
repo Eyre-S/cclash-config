@@ -150,3 +150,145 @@ button.input.button
 		&.can-clicks
 			cursor pointer
 	
+
+.input.switch
+	
+	--switch-size 30px
+	--switch-border-radius calc(var(--switch-size) / 6)
+	--switch-inner-whitespace calc(var(--switch-size) * 0.48)
+	
+	box-sizing border-box
+	size calc(var(--switch-size) * 1.4) calc(var(--switch-size) * 0.93)
+	
+	border-radius var(--switch-border-radius)
+	background-color #c8dcf7
+	
+	transition width 200ms
+	
+	&:hover
+		width calc(var(--switch-size) * 1.76)
+	
+	position relative
+	overflow hidden
+	
+	> .check-icon
+		
+		position absolute
+		pos 0
+		right 100%
+		background-color #84b9fe
+		border-radius var(--switch-border-radius)
+		transition right 450ms ease-out, left 250ms ease-in-out
+		
+	&.on > .check-icon
+		right 0%
+		left var(--switch-inner-whitespace)
+	
+	> .check-empty
+		
+		position absolute
+		pos 0
+		right unset
+		width var(--switch-inner-whitespace)
+		background-color #e4effe
+		border-radius var(--switch-border-radius)
+		transition width 350ms ease-out, left 300ms ease-in-out
+		
+	&.on > .check-empty
+		left 100%
+	
+
+.input.select
+	
+	padding-outer-block = 0.3em
+	padding-outer-inline = 0.5em
+	padding-text-block = 0.3em
+	padding-text-inline = 0.5em
+	padding-front-indicator = 0.4em
+	radius = 0.4em
+	floating-margin = 0.6em
+	indicator-width = 1.5em
+	
+	use-flex row
+	box-sizing border-box
+	
+	font-size 14px
+	color input-text-fg-color
+	background #ffffff
+	border-radius radius
+	padding padding-outer-block padding-outer-inline
+	> .selected
+		padding padding-text-block padding-text-inline
+		padding-inline-start (padding-text-inline + padding-front-indicator)
+		flex 1 1 0
+	
+	.text
+		white-space nowrap
+	
+	position relative
+	
+	> .indicator
+		
+		width indicator-width
+		use-flex-center row
+		
+		> :global(.icon)
+			font-size 1.4em
+			transition transform 250ms
+		&.open > :global(.icon)
+			transform rotate(180deg)
+		
+	
+	> .option-selector-box
+		
+		position absolute
+		top "calc(100% + %s)" % floating-margin
+		left 0
+		z-index 98
+		border-radius radius
+		box-shadow: -1px 1px 12px 1px #e3e3e3;
+		
+		overflow hidden
+		transition height 250ms
+		
+	.option-selector
+		
+		option-padding = 0.1em
+		
+		// position absolute
+		// top "calc(100% + %s)" % floating-margin
+		// left 0
+		// z-index 98
+		
+		padding (option-padding + 0.3em) option-padding
+		
+		background #ffffff
+		border-radius radius
+		
+		> .option
+			
+			padding-block (padding-text-block + padding-outer-block - option-padding)
+			padding-inline-start (padding-text-inline + padding-outer-inline + padding-front-indicator - option-padding)
+			padding-inline-end (padding-text-inline + padding-outer-inline + indicator-width - option-padding)
+			border-radius radius
+			
+			&:hover
+				background #f3f3f3
+			&.selected
+				color #7ba5db
+			
+			position relative
+			
+			> .indicator
+				position absolute
+				z-index 100
+				background-color #7ba5db
+				border-radius 0.3em
+				width 0.3em
+				left ((@padding-inline-start - @width) / 2)
+			&.selected > .indicator
+				top @padding-block
+				bottom @padding-block
+			
+		
+	

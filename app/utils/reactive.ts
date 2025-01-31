@@ -15,6 +15,13 @@ export interface DebounceController {
 	cancelDebounce: () => void
 }
 
+export interface ToggleController {
+	/**
+	 * Set the value to the opposite of the current value.
+	 */
+	toggle: () => void
+}
+
 export class Reactive<T> {
 	
 	private readonly getter: T
@@ -71,6 +78,16 @@ export class Reactive<T> {
 
 export function $<T> (initValue: T): Reactive<T> {
 	return new Reactive<T>(initValue)
+}
+
+export function toggle$ (initValue: boolean): Reactive<boolean> & ToggleController {
+	const toggleValue = $<boolean>(initValue)
+	const toggleController = {
+		toggle: () => {
+			toggleValue.value = !toggleValue.value
+		}
+	}
+	return Object.assign(toggleValue, toggleController)
 }
 
 export interface DebouncedMutableRefObject<T> extends MutableRefObject<T>, DebounceController {}

@@ -8,3 +8,4 @@
 
 .icon
 	font-grayscale()
+	user-select none
