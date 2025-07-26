@@ -1,4 +1,4 @@
-import { CSSProperties } from "react"
+import { CSSProperties, JSX } from "react"
 
 import { is, it } from "../fp"
 import { classes } from "../jsx-helper"

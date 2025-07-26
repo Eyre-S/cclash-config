@@ -30,7 +30,7 @@ export function InputButton (_: {
 }): ReactNode {
 	
 	const isPressing = $(false)
-	const pressTimeout = useRef<NodeJS.Timeout>()
+	const pressTimeout = useRef<NodeJS.Timeout|undefined>(undefined)
 	
 	function startTimer (e: ButtonReceiveEvents) {
 		e.stopPropagation()

@@ -2,7 +2,6 @@ import { LoaderFunctionArgs } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import { errors } from "da4s"
 import { useEffect } from "react"
-import { wait } from "remix-utils/timers"
 
 import { checkToken } from "~/.server/auth"
 import { ApiResponseOk } from "~/apis/api"
@@ -107,7 +106,8 @@ export default function Index() {
 				toast.pop({type: toast.types.NOTICE, timeout: toast.timeouts.short})(<>
 					<p>Login succeed.</p>
 				</>)
-				await wait(300)
+				// todo: wait method
+				// await wait(300)
 				loggingActionStatus.value = "success-redir"
 				if (redirAfterLogin) navigate(redirAfterLogin)
 				else navigate("/")
@@ -141,7 +141,8 @@ export default function Index() {
 			const result_json = await result.json() as ApiResponseOk<LoginResults>
 			if (result_json.data.ok) {
 				logOutResultStatus.value = "success"
-				await wait(1000)
+				// todo: wait method
+				// await wait(1000)
 				window.location.reload()
 			} else {
 				logOutResultStatus.value = 'fail-err'

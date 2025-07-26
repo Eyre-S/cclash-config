@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from "react"
+import { JSX, ReactNode, useRef } from "react"
 import { toast, ToastContentProps, ToastOptions } from "react-toastify"
 
 import { getIcon, I, IconDefinition } from "~/utils/components/icons"
