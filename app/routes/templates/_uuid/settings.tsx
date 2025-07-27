@@ -6,7 +6,7 @@ import { ReactNode, useRef } from "react"
 import { useUpdate } from "react-use"
 
 import { TemplateIndex } from "~/.server/templates/template"
-import api from "~/routes/api"
+import { ClientAPIs } from "~/routes/api"
 import toast, { ToastParameters } from "~/universal/toast"
 import { I } from "~/utils/components/icons"
 import { InputButton, InputText } from "~/utils/components/Inputs"
@@ -145,7 +145,7 @@ export default function TemplateSettingsPage (): ReactNode {
 					
 					toast.promise()<ToastParameters, ToastParameters, any>(new Promise((resolve, reject) => { aIt(async () => {
 						// executing delete action
-						api.auths.byCookies.get.byUUID(loaderData.item.uuid).delete({
+						ClientAPIs.auths.byCookies.get.byUUID(loaderData.item.uuid).delete({
 							onSuccess: (data) => resolve({
 								text: <>
 									<h4>Template deleted:</h4>

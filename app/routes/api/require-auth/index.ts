@@ -25,8 +25,7 @@ function byToken (token: string) {
 		get: APIs_get({ token })
 	}
 }
-const byCookies = byToken("_cookie_")
 export const APIs_auths = {
 	byToken,
-	byCookies
+	byCookies: byToken("_cookie_")
 }

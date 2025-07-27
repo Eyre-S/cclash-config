@@ -38,6 +38,6 @@ export async function loader () {
 	
 }
 
-export default {
+export const ClientAPIs = {
 	auths: APIs_auths
 }
