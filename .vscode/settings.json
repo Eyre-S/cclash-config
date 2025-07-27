@@ -35,4 +35,7 @@
 		}
 	],
 	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"code-runner.executorMap": {
+		"typescript": "tsx --tsconfig $workspaceRoot/tsconfig.json $fullFileName",
+	},
 }

@@ -1,50 +1,104 @@
 import { randomUUID } from "crypto"
 import CryptoJS from "crypto-js"
-import fs from "fs"
-import { z } from "zod"
 
-import files from "~/utils/files"
-import { iss } from "~/utils/fp"
+import { database } from "../database"
 
-import { server_root } from "../config"
+export interface TemplateIndexDef {
+	uuid: string,
+	name: string,
+	alias: string[]
+}
 
-const templates_root = server_root + "/templates"
+export type TemplateIndexList = TemplateIndexDef[]
 
-fs.mkdirSync(templates_root, { recursive: true })
-
-const TemplateIndexDef = z.object({
-	uuid: z.string().uuid(),
-	name: z.string(),
-	alias: z.string().array().default([]),
-})
-export type TemplateIndexDef = z.infer<typeof TemplateIndexDef>
-const IndexDef = TemplateIndexDef.array()
-export type IndexDef = z.infer<typeof IndexDef>
-
-export class TemplateIndex {
+export interface TemplateIndex {
 	
-	public readonly uuid: string
-	public readonly name: string
-	public readonly alias: string[]
+	readonly uuid: string,
+	readonly name: string,
+	readonly alias: string[],
 	
-	constructor (def: TemplateIndexDef) {
-		this.uuid = def.uuid
-		this.name = def.name
-		this.alias = def.alias
+	getTemplate (): string
+	getTemplateHash (): string
+	writeTemplate (write: string): void
+	getComments (): string
+	getConfigs (): string
+	
+	deleteThis (): Promise<void>
+	
+}
+
+class TemplateIndexFromDatabaseV1 implements TemplateIndex {
+	
+	readonly uuid: string
+	readonly name: string
+	readonly alias: string[]
+	
+	private constructor (uuid: string, name: string, alias: string[]) {
+		this.uuid = uuid
+		this.name = name
+		this.alias = alias
 	}
 	
-	public getPath (file?: string): string {
-		const path = templates_root + "/" + this.uuid
-		if (!fs.existsSync(path))
-			fs.mkdirSync(path, { recursive: true })
-		return iss(file, path + "/" + file, path)
+	public static allUUIDs (): string[] {
+		const sql = database.prepare("select distinct uuid from templates_identifiers;")
+		const data = sql.all() as { uuid: string }[]
+		return data.map((i) => i.uuid as string)
+	}
+	
+	public static fromUUID (uuid: string): TemplateIndexFromDatabaseV1|null {
+		const sql = database.prepare("select name, is_primary from templates_identifiers where uuid = ?")
+		const data = sql.all(uuid) as { name: string, is_primary: boolean }[]
+		if (data.length === 0) return null
+		const alias = []
+		let name: string | undefined = undefined
+		for (const i of data) {
+			if (i.is_primary) {
+				name = i.name as string
+			} else {
+				alias.push(i.name as string)
+			}
+		}
+		if (name === undefined) {
+			throw new Error(`Template ${uuid}'s primary name not found in database.`)
+		}
+		return new TemplateIndexFromDatabaseV1(uuid, name, alias)
+	}
+	
+	public static fromName (name: string): TemplateIndexFromDatabaseV1|null {
+		const sql = database.prepare("select uuid from templates_identifiers where name = ?")
+		const data = sql.get(name) as { uuid: string } | undefined
+		if (!data) return null
+		return TemplateIndexFromDatabaseV1.fromUUID(data.uuid as string)
+	}
+	
+	public static create (def: TemplateIndexDef): TemplateIndexFromDatabaseV1 {
+		
+		const CREATE_PRIMARY = database.prepare("insert into templates_identifiers (uuid, name, is_primary) values (:uuid, :name, 1);")
+		const CREATE_ALIAS = database.prepare("insert into templates_identifiers (uuid, name, is_primary) values (:uuid, :alias, 0);")
+		const INIT_DATA = database.prepare("insert into templates_data (uuid, content, comment) values (:uuid, '', '');")
+		const createItem = database.transaction((def: TemplateIndexDef) => {
+			CREATE_PRIMARY.run({ uuid: def.uuid, name: def.name })
+			for (const alias of def.alias) {
+				CREATE_ALIAS.run({ uuid: def.uuid, alias })
+			}
+			INIT_DATA.run({ uuid: def.uuid })
+		})
+		
+		createItem(def)
+		
+		return new TemplateIndexFromDatabaseV1(def.uuid, def.name, def.alias)
+		
 	}
 	
 	public getTemplate (): string {
-		const path = this.getPath('template')
-		if (!fs.existsSync(path))
-			fs.writeFileSync(path, "")
-		return fs.readFileSync(path, "utf-8")
+		const sql = database.prepare("select content from templates_data where uuid = ?")
+		const data = sql.get(this.uuid) as { content: string|null } | undefined
+		if (!data) {
+			throw new Error(`Template with UUID ${this.uuid} not found in database.`)
+		} else if (!data.content) {
+			return ""
+		}
+		return data.content
 	}
 	
 	public getTemplateHash (): string {
@@ -52,22 +106,28 @@ export class TemplateIndex {
 	}
 	
 	public writeTemplate (write: string) {
-		const path = this.getPath() + "/template"
-		fs.writeFileSync(path, write, { encoding: "utf-8" })
+		const sql = database.prepare("update templates_data set content = ? where uuid = ?")
+		sql.run(write, this.uuid)
 	}
 	
 	public getComments (): string {
-		const path = this.getPath() + "/comments"
-		if (!fs.existsSync(path))
-			fs.writeFileSync(path, "")
-		return fs.readFileSync(path, "utf-8")
+		const sql = database.prepare("select comment from templates_data where uuid = ?")
+		const data = sql.get(this.uuid) as { comment: string|null } | undefined
+		if (!data) {
+			throw new Error(`Template with UUID ${this.uuid} not found in database.`)
+		} else if (!data.comment) {
+			return ""
+		}
+		return data.comment
 	}
 	
 	public getConfigs (): string {
-		const path = this.getPath() + "/config.json"
-		if (!fs.existsSync(path))
-			fs.writeFileSync(path, JSON.stringify({}))
-		return fs.readFileSync(path, "utf-8")
+		const sql = database.prepare("select config_name from templates_configs where uuid = ?")
+		const data = sql.get(this.uuid) as { config_name: string } | undefined
+		if (!data) {
+			throw new Error(`Template with UUID ${this.uuid} not found in database.`)
+		}
+		return data.config_name
 	}
 	
 	/**
@@ -80,43 +140,41 @@ export class TemplateIndex {
 	 * This method does not process the errors, so you should handle the errors by yourself.
 	 */
 	public async deleteThis (): Promise<void> {
-		const path = fs.realpathSync(this.getPath() + "/")
-		console.log("deleting template at", path)
-		await files.removeRecursively(path)
-		TemplateIndex.deleteFromIndex(this.uuid)
+		console.log(`Deleting template ${this.uuid} (${this.name})...`)
+		const DELETE_CONFIGS = database.prepare("delete from templates_configs where uuid = ?;")
+		const DELETE_DATA = database.prepare("delete from templates_data where uuid = ?;")
+		const DELETE_IDENTIFIERS = database.prepare("delete from templates_identifiers where uuid = ?;")
+		const DELETE_ALL = database.transaction((uuid: string) => {
+			const config_changes = DELETE_CONFIGS.run(uuid).changes
+			const data_changes = DELETE_DATA.run(uuid).changes
+			const name_changes = DELETE_IDENTIFIERS.run(uuid).changes
+			return {
+				config_changes,
+				data_changes,
+				name_changes
+			}
+		})
+		const result = DELETE_ALL(this.uuid)
+		console.log(`Deleted ${this.uuid}! ${result.config_changes} config, ${result.data_changes} data, ${result.name_changes} name record deleted.`)
+		return;
 	}
 	
-	public static readIndex (): IndexDef {
-		const index_file = fs.readFileSync(templates_root + "/index.json", "utf-8")
-		const index = IndexDef.parse(JSON.parse(index_file))
-		return index
-	}
-	public static writeIndex (write: IndexDef) {
-		const index = JSON.stringify(write, null, '\t')
-		fs.writeFileSync(templates_root + "/index.json", index, { encoding: "utf-8" })
+}
+
+export class TemplateIndex {
+	
+	public static readIndex (): TemplateIndexList {
+		return TemplateIndexFromDatabaseV1.allUUIDs()
+			.map((uuid) => TemplateIndexFromDatabaseV1.fromUUID(uuid))
+			.filter((i): i is TemplateIndexFromDatabaseV1 => i !== null)
 	}
 	
 	public static findByUUID (uuid: string): TemplateIndex|null {
-		const index = TemplateIndex.readIndex()
-		const found = index.find((item) => item.uuid === uuid)
-		if (!found) {
-			return null
-		}
-		return new TemplateIndex(found)
+		return TemplateIndexFromDatabaseV1.fromUUID(uuid)
 	}
 	
 	public static findByName (name: string): TemplateIndex|null {
-		const index = TemplateIndex.readIndex()
-		const found = index.find((item) => {
-			if (item.name === name) {
-				return true
-			}
-			return item.alias.includes(name)
-		})
-		if (!found) {
-			return null
-		}
-		return new TemplateIndex(found)
+		return TemplateIndexFromDatabaseV1.fromName(name)
 	}
 	
 	public static find (nameOrUUID: string): TemplateIndex|null {
@@ -174,24 +232,24 @@ export class TemplateIndex {
 		}
 		
 		// execute writes
-		TemplateIndex.writeIndex([...currentIndexes, indexDef])
-		return new TemplateIndex(indexDef)
+		return TemplateIndexFromDatabaseV1.create(indexDef);
 		
 	}
 	
 	/**
 	 * Delete a template metadata from the template index.
 	 * 
-	 * This only delete the metadata, not the actual template files.
+	 * Under file-based implementation, This only delete the metadata, not the actual template files.
+	 * Under database-based implementation, this will delete the metadata and all the linked template data.
 	 * 
 	 * @param uuid The template UUID to delete.
 	 * @returns How much templates are deleted.
 	 */
 	public static deleteFromIndex (uuid: string): number {
-		const currentIndexes = TemplateIndex.readIndex()
-		const newIndexes = currentIndexes.filter((item) => item.uuid !== uuid)
-		TemplateIndex.writeIndex(newIndexes)
-		return currentIndexes.length - newIndexes.length;
+		const item = TemplateIndexFromDatabaseV1.fromUUID(uuid)
+		if (!item) return 0;
+		item.deleteThis();
+		return 1;
 	}
 	
 }
