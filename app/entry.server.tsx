@@ -4,14 +4,15 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import { AppLoadContext, createReadableStreamFromReadable, EntryContext } from "@remix-run/node"
-import { RemixServer } from "@remix-run/react"
+import { createReadableStreamFromReadable } from "@react-router/node"
+import { AppLoadContext, EntryContext, ServerRouter } from "react-router";
 import { server_config } from "app/.server/config"
 import { isbot } from "isbot"
 import { PassThrough } from "node:stream"
 import { renderToPipeableStream } from "react-dom/server"
 
-const ABORT_DELAY = 5_000;
+// Reject/cancel all pending promises after 5 seconds
+export const streamTimeout = 5000;
 
 console.log("loading needed server initializations...")
 
@@ -53,10 +54,9 @@ function handleBotRequest(
 	return new Promise((resolve, reject) => {
 		let shellRendered = false;
 		const { pipe, abort } = renderToPipeableStream(
-			<RemixServer
+			<ServerRouter
 				context={remixContext}
 				url={request.url}
-				abortDelay={ABORT_DELAY}
 			/>,
 			{
 				onAllReady() {
@@ -89,8 +89,9 @@ function handleBotRequest(
 				},
 			}
 		);
-
-		setTimeout(abort, ABORT_DELAY);
+		// Automatically timeout the React renderer after 6 seconds, which ensures
+		// React has enough time to flush down the rejected boundary contents
+		setTimeout(abort, streamTimeout + 1000);
 	});
 }
 
@@ -103,10 +104,9 @@ function handleBrowserRequest(
 	return new Promise((resolve, reject) => {
 		let shellRendered = false;
 		const { pipe, abort } = renderToPipeableStream(
-			<RemixServer
+			<ServerRouter
 				context={remixContext}
 				url={request.url}
-				abortDelay={ABORT_DELAY}
 			/>,
 			{
 				onShellReady() {
@@ -140,6 +140,8 @@ function handleBrowserRequest(
 			}
 		);
 
-		setTimeout(abort, ABORT_DELAY);
+		// Automatically timeout the React renderer after 6 seconds, which ensures
+		// React has enough time to flush down the rejected boundary contents
+		setTimeout(abort, streamTimeout + 1000);
 	});
 }

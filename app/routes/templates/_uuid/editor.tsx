@@ -1,8 +1,8 @@
 import { Editor } from "@monaco-editor/react"
-import { LoaderFunctionArgs } from "@remix-run/node"
+import { LoaderFunctionArgs } from "react-router"
 import {
 	unstable_usePrompt, useBeforeUnload, useLoaderData, useOutletContext, useRevalidator
-} from "@remix-run/react"
+} from "react-router"
 import CryptoJS from "crypto-js"
 import { editor, Selection } from "monaco-editor"
 import { useEffect, useRef } from "react"

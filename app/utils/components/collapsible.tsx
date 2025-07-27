@@ -18,7 +18,7 @@ export function Collapsible ({
 	const shouldShowHeight = $(0)
 	
 	function innerOnResize (event: SyntheticEvent<HTMLDivElement>) {
-		// console.log("due to inner box resize, updating inner box height is", event.currentTarget.scrollHeight)
+		console.log("due to inner box resize, updating inner box height is", event.currentTarget.scrollHeight)
 		innerHeight.current = event.currentTarget.offsetHeight
 		if (show) shouldShowHeight.value = innerHeight.current
 	}
@@ -42,7 +42,7 @@ export function Collapsible ({
 	
 	return <>
 		<div className={classes(css.outerBox)} style={outerStyles} {...outerProps} >
-			<div className={classes(css.innerBox)} ref={innerBox} onResize={innerOnResize} {...innerProps}>
+			<div className={classes(css.innerBox)} ref={innerBox} {...innerProps} >
 				{children}
 			</div>
 		</div>

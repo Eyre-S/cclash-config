@@ -1,5 +1,5 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
-import { Link, Outlet, useLoaderData, useMatches, useOutletContext } from "@remix-run/react"
+import { LoaderFunctionArgs } from "react-router"
+import { Link, Outlet, useLoaderData, useMatches, useOutletContext } from "react-router"
 import { ReactNode, RefObject, useEffect, useRef } from "react"
 
 import { requireUILogin } from "~/.server/auth"

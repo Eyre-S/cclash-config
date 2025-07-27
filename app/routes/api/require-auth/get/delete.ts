@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs } from "react-router"
 
 import { requireApiToken } from "~/.server/auth"
 import { TemplateIndex } from "~/.server/templates/template"

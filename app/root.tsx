@@ -1,12 +1,11 @@
 import {
 	Link, Links, Meta, Outlet, Scripts, ScrollRestoration, useMatches, useNavigation,
 	useRouteLoaderData
-} from "@remix-run/react"
+} from "react-router"
 import React, { CSSProperties, forwardRef, Ref, useImperativeHandle, useRef } from "react"
 import { Slide, ToastContainer } from "react-toastify"
 
 import { server_config } from "./.server/config"
-import { defineAppTitle, defineMeta } from "./universal/app-meta"
 import { useGlobalPopups } from "./utils/components/popup"
 import { is, iss } from "./utils/fp"
 import { classes } from "./utils/jsx-helper"
@@ -16,12 +15,6 @@ import css from "./root.module.stylus"
 
 import "./root.stylus"
 import "react-toastify/dist/ReactToastify.css"
-
-export const meta = defineMeta<typeof loader, {}>(({matches}) => {
-	return [
-		defineAppTitle(matches)
-	]
-})
 
 export function AppNavigatorLink (props: { to: string, children: React.ReactNode, className?: string, onCurrent?: () => any, onNonCurrent?: () => any}) {
 	const onCurrentLast = $(false)

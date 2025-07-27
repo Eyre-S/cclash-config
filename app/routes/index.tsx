@@ -1,9 +1,14 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { LoaderFunctionArgs } from "react-router"
+import { Link } from "react-router"
 
 import { classes } from "~/utils/jsx-helper"
 
 import css from "./index.module.stylus"
+import { defineAppTitle, defineMeta } from "~/universal/app-meta"
+
+export const meta = defineMeta((args) => [
+	defineAppTitle(args.matches)
+])
 
 export async function loader ({}: LoaderFunctionArgs) {
 	

@@ -24,4 +24,15 @@
 		"typecheck",
 		"urara"
 	],
+	"sqltools.useNodeRuntime": true,
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"driver": "SQLite",
+			"name": "cclash-sqlite",
+			"group": "cclash",
+			"database": "./server/database-v1.sqlite"
+		}
+	],
+	"typescript.tsdk": "node_modules\\typescript\\lib",
 }

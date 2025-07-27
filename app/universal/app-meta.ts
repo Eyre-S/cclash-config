@@ -1,4 +1,4 @@
-import { MetaDescriptor, MetaFunction } from "@remix-run/node"
+import { MetaDescriptor, MetaFunction } from "react-router"
 
 import { loader as rootLoader } from "~/root"
 
@@ -18,7 +18,7 @@ export function defineMeta <L, R> (metaFunction: AppMetaFunction<L, R>): AppMeta
 }
 
 export function defineAppTitle <R> (matches: AppMatches<R>, ...title: string[]): MetaDescriptor {
-	const _matches = matches as AppMatches<{}>
+	const _matches = matches as unknown as AppMatches<{}>
 	const _title = [...title.reverse(), _matches.find(match => match.id == "root")?.data.siteName || ""]
 	return { title: _title.join(' - ') }
 }

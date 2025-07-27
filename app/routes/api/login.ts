@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
+import { LoaderFunctionArgs } from "react-router"
 
 import { checkToken } from "~/.server/auth"
 import { defineApiResponse, exportResponse } from "~/apis/api"

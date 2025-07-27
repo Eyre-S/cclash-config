@@ -1,6 +1,6 @@
-import { Outlet, useMatches } from "@remix-run/react"
+import { Outlet, useMatches } from "react-router"
 import { ReactNode, useEffect } from "react"
-import { Link, useOutletContext } from "react-router-dom"
+import { Link, useOutletContext } from "react-router"
 
 import { AppLayoutContext } from "~/root"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"

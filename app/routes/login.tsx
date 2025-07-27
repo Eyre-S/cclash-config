@@ -1,5 +1,5 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
-import { useLoaderData, useNavigate } from "@remix-run/react"
+import { LoaderFunctionArgs } from "react-router"
+import { useLoaderData, useNavigate } from "react-router"
 import { errors } from "da4s"
 import { useEffect } from "react"
 

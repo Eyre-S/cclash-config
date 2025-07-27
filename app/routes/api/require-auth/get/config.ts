@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
+import { LoaderFunctionArgs } from "react-router"
 
 import { requireApiToken } from "~/.server/auth"
 import { readTemplateConfigs } from "~/.server/templates/template"

@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
+import { LoaderFunctionArgs } from "react-router"
 
 import { requireUILogin } from "~/.server/auth"
 import { classes } from "~/utils/jsx-helper"

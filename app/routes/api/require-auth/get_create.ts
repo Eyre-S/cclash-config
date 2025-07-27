@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node"
+import { ActionFunctionArgs } from "react-router"
 import { z, ZodError } from "zod"
 
 import { requireApiToken } from "~/.server/auth"

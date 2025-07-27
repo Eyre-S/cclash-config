@@ -1,6 +1,6 @@
 import { Editor } from "@monaco-editor/react"
-import { LoaderFunctionArgs } from "@remix-run/node"
-import { useLoaderData, useNavigate, useOutletContext } from "@remix-run/react"
+import { LoaderFunctionArgs } from "react-router"
+import { useLoaderData, useNavigate, useOutletContext } from "react-router"
 import { errors } from "da4s"
 import { ReactNode, useRef } from "react"
 import { useUpdate } from "react-use"

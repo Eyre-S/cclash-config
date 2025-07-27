@@ -1,7 +1,7 @@
-import { LoaderFunctionArgs } from "@remix-run/node"
+import { LoaderFunctionArgs } from "react-router"
 import {
 	Link, Outlet, useLoaderData, useOutletContext, useParams, useRevalidator
-} from "@remix-run/react"
+} from "react-router"
 import { MouseEvent } from "react"
 import { useLifecycles } from "react-use"
 

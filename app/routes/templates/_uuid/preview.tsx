@@ -1,6 +1,6 @@
 import { Editor } from "@monaco-editor/react"
-import { LoaderFunctionArgs } from "@remix-run/node"
-import { useLoaderData, useOutletContext } from "@remix-run/react"
+import { LoaderFunctionArgs } from "react-router"
+import { useLoaderData, useOutletContext } from "react-router"
 import { useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { useMount } from "react-use"

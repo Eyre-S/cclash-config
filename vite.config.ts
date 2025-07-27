@@ -1,9 +1,8 @@
-import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
+import { reactRouter } from "@react-router/dev/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import stylusAlias from "vite-plugin-stylus-alias-next";
 import path from "node:path";
-import routes from "./routes";
 
 const stylusConfig = {
 	additionalData: `@import "${path.resolve(__dirname,'./app/css/mixins')}"`
@@ -27,20 +26,7 @@ export default defineConfig({
 	},
 	
 	plugins: [
-		remix({
-			
-			ignoredRouteFiles: [
-				"**/*.styl",
-				"**/*.stylus",
-				"**/*.ts",
-				"**/*.tsx",
-			],
-			
-			routes: async (defineRoutes) => {
-				return defineRoutes(routes)
-			},
-			
-		}),
+		reactRouter(),
 		tsconfigPaths(),
 		stylusAlias(),
 	],

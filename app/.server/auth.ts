@@ -1,13 +1,20 @@
-import { LoaderFunctionArgs, redirect } from "@remix-run/node"
+import { LoaderFunctionArgs, redirect } from "react-router"
 
 import { API_RESPONSE_UNAUTHORIZED, exportResponse } from "~/apis/api"
 import { AuthSessionData } from "~/apis/sessions"
 import { getCookieHeader, getPathOf } from "~/utils/http-helper"
 
-import { server_config } from "./config"
+import { database } from "./database"
 
 export function checkToken (token: string): boolean {
-	return token === server_config.token
+	
+	const check = database
+		.prepare("select count(*) as ok from tokens where token = ?")
+		.all(token) as [{ok: number}]
+	
+	console.log("Token check:", check)
+	return check[0].ok > 0
+	
 }
 
 export async function requireApiToken (args: LoaderFunctionArgs) {
