@@ -2,8 +2,6 @@ import { LoaderFunctionArgs } from "react-router"
 import { Link, Outlet, useLoaderData, useMatches, useOutletContext } from "react-router"
 import { ReactNode, RefObject, useEffect, useRef } from "react"
 
-import { requireUILogin } from "~/.server/auth"
-import { TemplateIndex } from "~/.server/templates/template"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"
 import { SlideSwitch, SlideSwitchItem } from "~/utils/components/slide-switch"
 import { is } from "~/utils/fp"
@@ -13,6 +11,9 @@ import { $ } from "~/utils/reactive"
 import { TemplatesLayoutContext } from "../_layout"
 
 import css from "./_layout.module.stylus"
+import { requireUILogin } from "~/data/authentication/login.server"
+import { TemplateIndexes } from "~/data/template/loader.server"
+import { TemplateIndex } from "~/data/template/template"
 
 export const meta = defineMeta<typeof loader, {}>((args) => {
 	return [
@@ -25,7 +26,7 @@ export async function loader ({ params, request }: LoaderFunctionArgs) {
 	await requireUILogin(request)
 	
 	const uuid = params.uuid as string
-	const item = TemplateIndex.findByUUID(uuid) as TemplateIndex
+	const item = TemplateIndexes.findByUUID(uuid) as TemplateIndex
 	
 	return {
 		item: item

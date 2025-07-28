@@ -1,14 +1,15 @@
 import { Editor } from "@monaco-editor/react"
-import { LoaderFunctionArgs } from "react-router"
-import { useLoaderData, useOutletContext } from "react-router"
 import { useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
+import { LoaderFunctionArgs, useLoaderData, useOutletContext } from "react-router"
 import { useMount } from "react-use"
 import { ClientOnly } from "remix-utils/client-only"
 
-import { TemplateIndex } from "~/.server/templates/template"
+import { TemplateIndexes } from "~/data/template/loader.server"
+import { TemplateConfig, TemplateConfigs, TemplateIndex } from "~/data/template/template"
 import toast from "~/universal/toast"
 import { guessCodeLanguage } from "~/utils/code-lang"
+import { array2map } from "~/utils/collections"
 import { InputSelect, InputSwitch, InputText } from "~/utils/components/Inputs"
 import { SettingItem } from "~/utils/components/panel/setting-item"
 import { FlexStack } from "~/utils/components/panel/stacks"
@@ -24,13 +25,20 @@ import css from "./preview.module.stylus"
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
 	const uuid = params.uuid as string
+	const item = TemplateIndexes.findByUUID(uuid)
+	if (!item) {
+		throw new Response("Template not found", { status: 404 })
+	}
 	
 	return {
 		uuid,
-		item: TemplateIndex.findByUUID(uuid) as TemplateIndex
+		item: item satisfies TemplateIndex,
+		configs: item.getConfigs() satisfies TemplateConfig[]
 	}
 	
 }
+
+const INIT_RAW_CONFIG_NAME = '[raw]'
 
 export default function TemplatePreviewPage () {
 	
@@ -43,11 +51,14 @@ export default function TemplatePreviewPage () {
 	const userToken = $('_cookie_')
 	const previewTemplateName = $(`uuid:${loaderData.uuid}`)
 	
-	const previewUseRawMode = $(true)
+	const configs = $(array2map([TemplateConfigs.getDefaultRaw(), ...loaderData.configs], (x) => x.name))
+	const previewUsingConfigName = $(INIT_RAW_CONFIG_NAME)
 	
 	const previewParams = it(() => {
-		if (previewUseRawMode.current) return "/raw"
-		else return ""
+		if (configs.value[previewUsingConfigName.value].is_raw) return "/raw"
+		else {
+			return "?target=" + configs.value[previewUsingConfigName.value].targets.join(",")
+		}
 	})
 	
 	useMount(() => {
@@ -99,8 +110,9 @@ export default function TemplatePreviewPage () {
 		<ClientOnly>{() => <>{isIt(isReady.value, () => createPortal(
 			<>
 				<InputSelect
-					options={['[new setup]']}
-					selected='[new setup]'
+					options={[INIT_RAW_CONFIG_NAME, ...loaderData.configs.map(c => c.name)]}
+					selected={previewUsingConfigName.value}
+					onSelect={nv => previewUsingConfigName.value = nv}
 				/>
 			</>,
 			layoutContext.controllerRef.current as HTMLElement
@@ -135,7 +147,11 @@ export default function TemplatePreviewPage () {
 				<SettingItem
 					description={<><span>raw mode</span></>}
 					inputs={<>
-						<InputSwitch {...bindInputValue(previewUseRawMode)} />
+						<InputSwitch
+							// {...bindInputValue(configs.value[previewUsingConfigName.value].is_raw)}
+							value={configs.value[previewUsingConfigName.value].is_raw}
+							onValueChange={()=>{}}
+						/>
 					</>}
 				/>
 				{/* <SettingItem

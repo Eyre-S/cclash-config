@@ -1,9 +1,9 @@
 import { LoaderFunctionArgs } from "react-router"
 import upp from "uni-preprocessor"
 
-import { requireApiToken } from "~/.server/auth"
-import { readTemplate } from "~/.server/templates/template"
 import { exportResponse } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
+import { readTemplate } from "~/data/template/loader.server"
 
 import { API_Auths_Params as APIs_Auths_Params } from "../"
 import { defineTemplateNotFoundResponse } from "./_public"

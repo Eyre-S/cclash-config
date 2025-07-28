@@ -1,8 +1,8 @@
 import { LoaderFunctionArgs } from "react-router"
 
-import { checkToken } from "~/.server/auth"
 import { defineApiResponse, exportResponse } from "~/apis/api"
 import { AuthSessionData } from "~/apis/sessions"
+import { checkToken } from "~/data/authentication/tokens.server"
 import { getSearchParams } from "~/utils/http-helper"
 
 export interface LoginResults {

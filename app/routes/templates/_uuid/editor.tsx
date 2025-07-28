@@ -1,15 +1,16 @@
 import { Editor } from "@monaco-editor/react"
-import { LoaderFunctionArgs } from "react-router"
-import {
-	unstable_usePrompt, useBeforeUnload, useLoaderData, useOutletContext, useRevalidator
-} from "react-router"
 import CryptoJS from "crypto-js"
 import { editor, Selection } from "monaco-editor"
 import { useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
+import {
+	LoaderFunctionArgs, unstable_usePrompt, useBeforeUnload, useLoaderData, useOutletContext,
+	useRevalidator
+} from "react-router"
 import { ClientOnly } from "remix-utils/client-only"
 
-import { TemplateIndex } from "~/.server/templates/template"
+import { TemplateIndexes } from "~/data/template/loader.server"
+import { TemplateIndex } from "~/data/template/template"
 import toast from "~/universal/toast"
 import { guessCodeLanguage, showSpecialChars } from "~/utils/code-lang"
 import { InputButton, InputText } from "~/utils/components/Inputs"
@@ -24,7 +25,7 @@ import css from "./editor.module.stylus"
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
 	const uuid = params.uuid as string
-	const item = TemplateIndex.findByUUID(uuid) as TemplateIndex
+	const item = TemplateIndexes.findByUUID(uuid) as TemplateIndex
 	
 	return {
 		item: item,

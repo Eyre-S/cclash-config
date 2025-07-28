@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs } from "react-router"
 
-import { requireApiToken } from "~/.server/auth"
 import { defineApiResponse, exportResponse } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
 
 export interface AuthCheckResponse {
 	ok: boolean

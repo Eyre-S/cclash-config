@@ -1,10 +1,10 @@
 import { ActionFunctionArgs } from "react-router"
 
-import { requireApiToken } from "~/.server/auth"
-import { TemplateIndex } from "~/.server/templates/template"
 import {
 	defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse
 } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
+import { TemplateIndexes } from "~/data/template/loader.server"
 
 import {
 	defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateUpdatingResponse
@@ -19,7 +19,7 @@ export async function action (args: ActionFunctionArgs) {
 	await requireApiToken(args)
 	
 	const templateName = args.params.template_name as string
-	const template = TemplateIndex.find(templateName)
+	const template = TemplateIndexes.find(templateName)
 	if (template === null) {
 		return exportResponse(defineTemplateNotFoundResponse(templateName, "set"))
 	}

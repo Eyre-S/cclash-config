@@ -1,11 +1,11 @@
 import { LoaderFunctionArgs } from "react-router"
 import { ZodError } from "zod"
 
-import { requireApiToken } from "~/.server/auth"
-import config from "~/.server/config"
 import {
 	defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse
 } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
+import config from "~/data/config/config.server"
 
 export async function loader (args: LoaderFunctionArgs) {
 	

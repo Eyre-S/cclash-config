@@ -1,8 +1,8 @@
 import { LoaderFunctionArgs } from "react-router"
 
-import { requireApiToken } from "~/.server/auth"
-import { readTemplateConfigs } from "~/.server/templates/template"
 import { exportResponse } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
+import { readTemplateConfigs } from "~/data/template/loader.server"
 
 import { defineTemplateNotFoundResponse } from "./_public"
 

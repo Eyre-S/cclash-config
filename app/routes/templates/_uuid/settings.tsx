@@ -1,11 +1,10 @@
 import { Editor } from "@monaco-editor/react"
-import { LoaderFunctionArgs } from "react-router"
-import { useLoaderData, useNavigate, useOutletContext } from "react-router"
 import { errors } from "da4s"
 import { ReactNode, useRef } from "react"
+import { LoaderFunctionArgs, useLoaderData, useNavigate, useOutletContext } from "react-router"
 import { useUpdate } from "react-use"
 
-import { TemplateIndex } from "~/.server/templates/template"
+import { TemplateIndexes } from "~/data/template/loader.server"
 import { ClientAPIs } from "~/routes/api"
 import toast, { ToastParameters } from "~/universal/toast"
 import { I } from "~/utils/components/icons"
@@ -23,7 +22,11 @@ import css from "./settings.module.stylus"
 export async function loader ({ params }: LoaderFunctionArgs) {
 	
 	const uuid = params.uuid as string
-	const item = TemplateIndex.findByUUID(uuid) as TemplateIndex
+	const item = TemplateIndexes.findByUUID(uuid)
+	
+	if (!item) {
+		throw new Response("Template not found", { status: 404 })
+	}
 	
 	return {
 		item: item,

@@ -1,13 +1,13 @@
-import { LoaderFunctionArgs } from "react-router"
-import {
-	Link, Outlet, useLoaderData, useOutletContext, useParams, useRevalidator
-} from "react-router"
 import { MouseEvent } from "react"
+import {
+	Link, LoaderFunctionArgs, Outlet, useLoaderData, useOutletContext, useParams, useRevalidator
+} from "react-router"
 import { useLifecycles } from "react-use"
 
-import { requireUILogin } from "~/.server/auth"
-import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template"
 import { ApiResponse, ApiResponseError } from "~/apis/api"
+import { requireUILogin } from "~/data/authentication/login.server"
+import { TemplateIndexes } from "~/data/template/loader.server"
+import { TemplateIndexDef } from "~/data/template/template"
 import { AppLayoutContext } from "~/root"
 import {
 	ApiGetCreate_RequestDef, ApiGetCreate_Response_ECreate
@@ -31,7 +31,7 @@ export async function loader ({ request }: LoaderFunctionArgs) {
 	await requireUILogin(request)
 	
 	return {
-		indexes: TemplateIndex.readIndex()
+		indexes: TemplateIndexes.readIndex()
 	};
 	
 }

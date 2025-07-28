@@ -1,11 +1,12 @@
 import { ActionFunctionArgs } from "react-router"
 import { z, ZodError } from "zod"
 
-import { requireApiToken } from "~/.server/auth"
-import { TemplateCreateError, TemplateIndex, TemplateIndexDef } from "~/.server/templates/template"
 import {
 	defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse, exportResponse
 } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
+import { TemplateCreateError, TemplateIndexes } from "~/data/template/loader.server"
+import { TemplateIndexDef } from "~/data/template/template"
 
 export const ApiGetCreate_Request = z.object({
 	name: z.string(),
@@ -31,7 +32,7 @@ export async function action (args: ActionFunctionArgs) {
 		
 		const requestArgs = ApiGetCreate_Request.parse(await args.request.json())
 		
-		const newTemplate = TemplateIndex.create(requestArgs.name, requestArgs.alias)
+		const newTemplate = TemplateIndexes.create(requestArgs.name, requestArgs.alias)
 		
 		return exportResponse(defineApiResponse<ApiGetCreate_Response_Ok>({
 			ok: true,

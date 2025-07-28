@@ -1,10 +1,8 @@
-import { LoaderFunctionArgs, redirect } from "react-router"
+import { LoaderFunctionArgs } from "react-router"
 
 import { API_RESPONSE_UNAUTHORIZED, exportResponse } from "~/apis/api"
-import { AuthSessionData } from "~/apis/sessions"
-import { getCookieHeader, getPathOf } from "~/utils/http-helper"
-
-import { database } from "./database"
+import { database } from "../.server/database"
+import { isCookieLoggedIn } from "./login.server"
 
 export function checkToken (token: string): boolean {
 	
@@ -31,18 +29,4 @@ export async function requireApiToken (args: LoaderFunctionArgs) {
 	
 	throw exportResponse(API_RESPONSE_UNAUTHORIZED)
 	
-}
-
-export async function isCookieLoggedIn (request: Request): Promise<boolean> {
-	const token = (await AuthSessionData.getSession(getCookieHeader(request)))
-		.get("token")
-	if (token !== undefined && checkToken(token))
-		return true
-	return false
-}
-
-export async function requireUILogin (request: Request): Promise<void> {
-	if (await isCookieLoggedIn(request))
-		return
-	throw redirect("/login?redirect=" + encodeURIComponent(getPathOf(request)))
 }

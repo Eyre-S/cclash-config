@@ -1,31 +1,7 @@
 import { randomUUID } from "crypto"
-import CryptoJS from "crypto-js"
-
-import { database } from "../database"
-
-export interface TemplateIndexDef {
-	uuid: string,
-	name: string,
-	alias: string[]
-}
-
-export type TemplateIndexList = TemplateIndexDef[]
-
-export interface TemplateIndex {
-	
-	readonly uuid: string,
-	readonly name: string,
-	readonly alias: string[],
-	
-	getTemplate (): string
-	getTemplateHash (): string
-	writeTemplate (write: string): void
-	getComments (): string
-	getConfigs (): string
-	
-	deleteThis (): Promise<void>
-	
-}
+import { database } from "../.server/database"
+import { TemplateConfig, TemplateIndexDef, TemplateIndexList } from "./template"
+import { type TemplateIndex } from "./template"
 
 class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	
@@ -47,7 +23,7 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	
 	public static fromUUID (uuid: string): TemplateIndexFromDatabaseV1|null {
 		const sql = database.prepare("select name, is_primary from templates_identifiers where uuid = ?")
-		const data = sql.all(uuid) as { name: string, is_primary: boolean }[]
+		const data = sql.all(uuid) as { name: string, is_primary: number }[]
 		if (data.length === 0) return null
 		const alias = []
 		let name: string | undefined = undefined
@@ -121,13 +97,43 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 		return data.comment
 	}
 	
-	public getConfigs (): string {
+	public writeComments (write: string): void {
+		const sql = database.prepare("update templates_data set comment = ? where uuid = ?")
+		sql.run(write, this.uuid)
+	}
+	
+	public listConfigs (): string {
 		const sql = database.prepare("select config_name from templates_configs where uuid = ?")
 		const data = sql.get(this.uuid) as { config_name: string } | undefined
 		if (!data) {
 			throw new Error(`Template with UUID ${this.uuid} not found in database.`)
 		}
 		return data.config_name
+	}
+	
+	public getConfigs(): TemplateConfig[] {
+		const sql = database.prepare("select config_name, is_raw, targets from templates_configs where uuid = ?")
+		const data = sql.all(this.uuid) as { config_name: string, is_raw: number, targets: string|null }[]
+		const configs: TemplateConfig[] = []
+		for (const item of data) {
+			configs.push({
+				name: item.config_name,
+				is_raw: item.is_raw ? true : false,
+				targets: item.targets?.split(',') || []
+			})
+		}
+		return configs
+	}
+	
+	public getConfig (configName: string): TemplateConfig|null {
+		const sql = database.prepare("select config_name, is_raw, targets from templates_configs where uuid = ? and config_name = ?")
+		const data = sql.get(this.uuid, configName) as { config_name: string, is_raw: number, targets: string|null } | undefined
+		if (!data) return null;
+		return {
+			name: data.config_name,
+			is_raw: data.is_raw ? true : false,
+			targets: data.targets?.split(',') || []
+		}
 	}
 	
 	/**
@@ -161,7 +167,7 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	
 }
 
-export class TemplateIndex {
+export class TemplateIndexes {
 	
 	public static readIndex (): TemplateIndexList {
 		return TemplateIndexFromDatabaseV1.allUUIDs()
@@ -179,9 +185,9 @@ export class TemplateIndex {
 	
 	public static find (nameOrUUID: string): TemplateIndex|null {
 		if (nameOrUUID.startsWith('uuid:')) {
-			return TemplateIndex.findByUUID(nameOrUUID.substring('uuid:'.length))
+			return TemplateIndexes.findByUUID(nameOrUUID.substring('uuid:'.length))
 		} else {
-			return TemplateIndex.findByName(nameOrUUID)
+			return TemplateIndexes.findByName(nameOrUUID)
 		}
 	}
 	
@@ -208,7 +214,7 @@ export class TemplateIndex {
 			alias: alias
 		}
 		
-		const currentIndexes = TemplateIndex.readIndex()
+		const currentIndexes = TemplateIndexes.readIndex()
 		
 		// check duplicate or illegal name
 		if (indexDef.name.startsWith('uuid:')) {
@@ -263,7 +269,7 @@ export class TemplateCreateError extends Error {
 export function readTemplate (name: string): string|null {
 	
 	try {
-		const template = TemplateIndex.find(name)
+		const template = TemplateIndexes.find(name)
 		if (template === null) {
 			return null
 		}
@@ -277,7 +283,7 @@ export function readTemplate (name: string): string|null {
 export function readTemplateComment (name: string): string|null {
 	
 	try {
-		const template = TemplateIndex.find(name)
+		const template = TemplateIndexes.find(name)
 		if (template === null) {
 			return null
 		}
@@ -291,11 +297,11 @@ export function readTemplateComment (name: string): string|null {
 export function readTemplateConfigs (name: string): string|null {
 	
 	try {
-		const template = TemplateIndex.find(name)
+		const template = TemplateIndexes.find(name)
 		if (template === null) {
 			return null
 		}
-		return template.getConfigs()
+		return template.listConfigs()
 	} catch (e) {
 		return null
 	}

@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "react-router"
 
-import { requireUILogin } from "~/.server/auth"
+import { requireUILogin } from "~/data/authentication/login.server"
 import { classes } from "~/utils/jsx-helper"
 
 import layoutCss from "./_layout.module.stylus"

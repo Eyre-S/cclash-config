@@ -1,11 +1,11 @@
 import { ActionFunctionArgs } from "react-router"
 
-import { requireApiToken } from "~/.server/auth"
-import { TemplateIndex } from "~/.server/templates/template"
 import {
 	ApiResponseError, defineApiErrorResponse, defineApiResponse, defineApiUniversalErrorResponse,
 	exportResponse
 } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
+import { TemplateIndexes } from "~/data/template/loader.server"
 
 import { APIs_Get_Params } from "./"
 import {
@@ -28,7 +28,7 @@ export async function action (args: ActionFunctionArgs) {
 	}
 	
 	const templateName = args.params.template_name as string
-	const template = TemplateIndex.find(templateName)
+	const template = TemplateIndexes.find(templateName)
 	if (template === null) {
 		return exportResponse(defineTemplateNotFoundResponse(templateName, "delete"))
 	}

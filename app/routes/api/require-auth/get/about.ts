@@ -1,8 +1,9 @@
 import { LoaderFunctionArgs } from "react-router"
 
-import { requireApiToken } from "~/.server/auth"
-import { TemplateIndex, TemplateIndexDef } from "~/.server/templates/template"
 import { defineApiResponse, exportResponse } from "~/apis/api"
+import { requireApiToken } from "~/data/authentication/tokens.server"
+import { TemplateIndexes } from "~/data/template/loader.server"
+import { TemplateIndexDef } from "~/data/template/template"
 
 import {
 	defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateUpdatingResponse
@@ -15,7 +16,7 @@ export async function loader (args: LoaderFunctionArgs) {
 	await requireApiToken(args)
 	
 	const templateName = args.params.template_name as string
-	const template = TemplateIndex.find(templateName)
+	const template = TemplateIndexes.find(templateName)
 	if (template === null) {
 		return exportResponse(defineTemplateNotFoundResponse(templateName, "about"))
 	}
