@@ -1,5 +1,4 @@
 import { Editor } from "@monaco-editor/react"
-import CryptoJS from "crypto-js"
 import { editor, Selection } from "monaco-editor"
 import { useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
@@ -8,6 +7,7 @@ import {
 	useRevalidator
 } from "react-router"
 import { ClientOnly } from "remix-utils/client-only"
+import { sha1 } from "sha.js"
 
 import { TemplateIndexes } from "~/data/template/loader.server"
 import { TemplateIndex } from "~/data/template/template"
@@ -123,7 +123,7 @@ export default function () {
 		})
 	}
 	
-	const editingContentHash = it(() => CryptoJS.SHA1(editingContent.value).toString())
+	const editingContentHash = it(() => new sha1().update(editingContent.value).digest("hex"))
 	const isClearState = it(() => {
 		return editingInitialStatus.value == editingContentHash
 	})

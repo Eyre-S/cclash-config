@@ -1,7 +1,7 @@
 import fs from "fs"
 import Database from "better-sqlite3"
 
-import init_v1_sql from "./init_v1.sql?raw"
+// import init_v1_sql from "./init_v1.sql?raw"
 
 async function initDatabase (path: string) {
 	
@@ -12,7 +12,8 @@ async function initDatabase (path: string) {
 	const database = new Database(path)
 	if (!isDatabaseExists) {
 		console.log("Seems that the database is not initialized yet, initializing...")
-		database.exec(init_v1_sql)
+		// TODO: implement database init sql file read
+		// database.exec(init_v1_sql)
 	}
 	
 	console.log("Database connected!")

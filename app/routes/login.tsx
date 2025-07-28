@@ -3,7 +3,6 @@ import { useLoaderData, useNavigate } from "react-router"
 import { errors } from "da4s"
 import { useEffect } from "react"
 
-import { checkToken } from "~/.server/auth"
 import { ApiResponseOk } from "~/apis/api"
 import { AuthSessionData } from "~/apis/sessions"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"
@@ -19,6 +18,7 @@ import { $ } from "~/utils/reactive"
 import { LoginResults } from "./api/login"
 
 import css from "./login.module.stylus"
+import { checkToken } from "~/data/authentication/tokens.server"
 
 export const meta = defineMeta((args) => {
 	return [

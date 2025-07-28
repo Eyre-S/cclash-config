@@ -17,7 +17,6 @@
     "@types/crypto-js": "4.2.2",
     "better-sqlite3": "^12.2.0",
     "compression": "1.8.1",
-    "crypto-js": "4.2.0",
     "da4s": "0.1.0",
     "highlight.js": "11.11.1",
     "is-ip": "5.0.1",
@@ -30,8 +29,10 @@
     "react-transition-group": "4.4.5",
     "react-use": "^17.6.0",
     "remix-utils": "8.7.0",
+    "sha.js": "^2.4.12",
     "sqlite3": "^5.1.7",
     "uni-preprocessor": "0.3.0",
+    "uuid": "^11.1.0",
     "zod": "^4.0.10"
   },
   "devDependencies": {
@@ -42,6 +43,7 @@
     "@types/node": "24.1.0",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
+    "@types/sha.js": "^2.4.4",
     "cross-env": "10.0.0",
     "monaco-editor": "0.52.2",
     "stylus": "0.64.0",

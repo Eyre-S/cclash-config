@@ -1,7 +1,10 @@
-import { randomUUID } from "crypto"
+import { sha1 } from "sha.js"
+import { v4 as uuidV4 } from "uuid"
+
 import { database } from "../.server/database"
-import { TemplateConfig, TemplateIndexDef, TemplateIndexList } from "./template"
-import { type TemplateIndex } from "./template"
+import {
+	TemplateConfig, TemplateIndex, TemplateIndexDef, TemplateIndexList
+} from "./template"
 
 class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	
@@ -78,7 +81,7 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	}
 	
 	public getTemplateHash (): string {
-		return CryptoJS.SHA1(this.getTemplate()).toString()
+		return new sha1().update(this.getTemplate()).digest('hex')
 	}
 	
 	public writeTemplate (write: string) {
@@ -209,7 +212,7 @@ export class TemplateIndexes {
 		
 		// create new template index object
 		const indexDef: TemplateIndexDef = {
-			uuid: randomUUID(),
+			uuid: uuidV4(),
 			name: name,
 			alias: alias
 		}
