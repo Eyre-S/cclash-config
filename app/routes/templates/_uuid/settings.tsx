@@ -30,7 +30,7 @@ export async function loader ({ params }: LoaderFunctionArgs) {
 	
 	return {
 		item: item,
-		itemComments: item.getComments()
+		itemComments: await item.getComments()
 	}
 	
 }

@@ -1,4 +1,3 @@
-
 export interface TemplateIndexDef {
 	uuid: string,
 	name: string,
@@ -9,14 +8,16 @@ export type TemplateIndexList = TemplateIndexDef[]
 
 export interface TemplateIndex extends TemplateIndexDef {
 	
-	getTemplate (): string
-	getTemplateHash (): string
-	writeTemplate (write: string): void
-	getComments (): string
-	writeComments (write: string): void
-	listConfigs (): string
-	getConfigs (): TemplateConfig[]
-	getConfig (configName: string): TemplateConfig|null
+	getTemplate (): Promise<string>
+	getTemplateHash (): Promise<string>
+	writeTemplate (write: string): Promise<void>
+	
+	getComments (): Promise<string>
+	writeComments (write: string): Promise<void>
+	
+	listConfigs (): Promise<string>
+	getConfigs (): Promise<TemplateConfig[]>
+	getConfig (configName: string): Promise<TemplateConfig|null>
 	
 	deleteThis (): Promise<void>
 	

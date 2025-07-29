@@ -23,7 +23,7 @@ export async function loader (args: LoaderFunctionArgs) {
 	
 	return exportResponse(defineApiResponse({
 		...template,
-		sha1: template.getTemplateHash()
+		sha1: await template.getTemplateHash()
 	} satisfies TemplateAboutResponse))
 	
 }

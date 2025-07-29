@@ -14,7 +14,7 @@ export async function loader (args: LoaderFunctionArgs) {
 	await requireApiToken(args)
 	
 	const template_name = args.params.template_name as string
-	const template = readTemplate(template_name)
+	const template = await readTemplate(template_name)
 	
 	if (template == null) {
 		return exportResponse(defineTemplateNotFoundResponse(template_name, "get"))

@@ -6,6 +6,55 @@ import {
 	TemplateConfig, TemplateIndex, TemplateIndexDef, TemplateIndexList
 } from "./template"
 
+class DatabaseSQLs {
+	
+	public static readonly ALL_UUIDS = database.prepare("select distinct uuid from templates_identifiers")
+	
+	public static readonly GET_UUID_BY_NAME = database.prepare("select uuid from templates_identifiers where name = ?")
+	
+	private static readonly CREATE_NAME = database.prepare("insert into templates_identifiers (uuid, name, is_primary) values (:uuid, :name, 1);")
+	public static readonly CREATE_ALIAS = database.prepare("insert into templates_identifiers (uuid, name, is_primary) values (:uuid, :alias, 0);")
+	public static readonly GET_ALL_NAME_ALIAS = database.prepare("select name, is_primary from templates_identifiers where uuid = ?")
+	public static readonly UPDATE_NAME_ALIAS = database.prepare("update templates_identifiers set name = :new_name where name = :old_name")
+	public static readonly REMOVE_ALIAS = database.prepare("delete from templates_identifiers where name = :name and uuid = :uuid")
+	private static readonly REMOVE_ALL_NAME = database.prepare("delete from templates_identifiers where uuid = ?")
+	
+	private static readonly CREATE_DATA = database.prepare("insert into templates_data (uuid, content, comment) values (:uuid, '', '');")
+	public static readonly GET_CONTENT = database.prepare("select content from templates_data where uuid = ?")
+	public static readonly WRITE_CONTENT = database.prepare("update templates_data set content = ? where uuid = ?")
+	public static readonly GET_COMMENT = database.prepare("select comment from templates_data where uuid = ?")
+	public static readonly WRITE_COMMENT = database.prepare("update templates_data set comment = ? where uuid = ?")
+	private static readonly REMOVE_DATA = database.prepare("delete from templates_data where uuid = ?")
+	
+	public static readonly LIST_CONFIG_NAME = database.prepare("select config_name from templates_configs where uuid = ?")
+	public static readonly LIST_CONFIG = database.prepare("select config_name, is_raw, targets from templates_configs where uuid = ?")
+	public static readonly GET_CONFIG = database.prepare("select config_name, is_raw, targets from templates_configs where uuid = ? and config_name = ?")
+	public static readonly REMOVE_CONFIG = database.prepare("delete from templates_configs where uuid = ? and config_name = ?")
+	public static readonly REMOVE_ALL_CONFIG = database.prepare("delete from templates_configs where uuid = ?")
+	public static readonly WRITE_CONFIG_CONFIG = database.prepare("update templates_configs set is_raw = :is_raw, targets = :targets where uuid = :uuid and config_name = :config_name")
+	public static readonly CREATE_CONFIG = database.prepare("insert into templates_configs (uuid, config_name, is_raw, targets) values (:uuid, :config_name, :is_raw, :targets);")
+
+	public static readonly CREATE_IT = database.transaction((def: TemplateIndexDef) => {
+			DatabaseSQLs.CREATE_NAME.run({ uuid: def.uuid, name: def.name })
+			for (const alias of def.alias) {
+				DatabaseSQLs.CREATE_ALIAS.run({ uuid: def.uuid, alias })
+			}
+			DatabaseSQLs.CREATE_DATA.run({ uuid: def.uuid })
+	})
+	
+	public static readonly REMOVE_IT = database.transaction((uuid: string) => {
+		const config_changes = DatabaseSQLs.REMOVE_ALL_CONFIG.run(uuid).changes
+		const data_changes = DatabaseSQLs.REMOVE_DATA.run(uuid).changes
+		const name_changes = DatabaseSQLs.REMOVE_ALL_NAME.run(uuid).changes
+		return {
+			config_changes,
+			data_changes,
+			name_changes
+		}
+	})
+	
+}
+
 class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	
 	readonly uuid: string
@@ -19,14 +68,12 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	}
 	
 	public static allUUIDs (): string[] {
-		const sql = database.prepare("select distinct uuid from templates_identifiers;")
-		const data = sql.all() as { uuid: string }[]
+		const data = DatabaseSQLs.ALL_UUIDS.all() as { uuid: string }[]
 		return data.map((i) => i.uuid as string)
 	}
 	
 	public static fromUUID (uuid: string): TemplateIndexFromDatabaseV1|null {
-		const sql = database.prepare("select name, is_primary from templates_identifiers where uuid = ?")
-		const data = sql.all(uuid) as { name: string, is_primary: number }[]
+		const data = DatabaseSQLs.GET_ALL_NAME_ALIAS.all(uuid) as { name: string, is_primary: number }[]
 		if (data.length === 0) return null
 		const alias = []
 		let name: string | undefined = undefined
@@ -44,34 +91,18 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	}
 	
 	public static fromName (name: string): TemplateIndexFromDatabaseV1|null {
-		const sql = database.prepare("select uuid from templates_identifiers where name = ?")
-		const data = sql.get(name) as { uuid: string } | undefined
+		const data = DatabaseSQLs.GET_UUID_BY_NAME.get(name) as { uuid: string } | undefined
 		if (!data) return null
 		return TemplateIndexFromDatabaseV1.fromUUID(data.uuid as string)
 	}
 	
 	public static create (def: TemplateIndexDef): TemplateIndexFromDatabaseV1 {
-		
-		const CREATE_PRIMARY = database.prepare("insert into templates_identifiers (uuid, name, is_primary) values (:uuid, :name, 1);")
-		const CREATE_ALIAS = database.prepare("insert into templates_identifiers (uuid, name, is_primary) values (:uuid, :alias, 0);")
-		const INIT_DATA = database.prepare("insert into templates_data (uuid, content, comment) values (:uuid, '', '');")
-		const createItem = database.transaction((def: TemplateIndexDef) => {
-			CREATE_PRIMARY.run({ uuid: def.uuid, name: def.name })
-			for (const alias of def.alias) {
-				CREATE_ALIAS.run({ uuid: def.uuid, alias })
-			}
-			INIT_DATA.run({ uuid: def.uuid })
-		})
-		
-		createItem(def)
-		
+		DatabaseSQLs.CREATE_IT(def)
 		return new TemplateIndexFromDatabaseV1(def.uuid, def.name, def.alias)
-		
 	}
 	
-	public getTemplate (): string {
-		const sql = database.prepare("select content from templates_data where uuid = ?")
-		const data = sql.get(this.uuid) as { content: string|null } | undefined
+	public async getTemplate (): Promise<string> {
+		const data = DatabaseSQLs.GET_CONTENT.get(this.uuid) as { content: string|null } | undefined
 		if (!data) {
 			throw new Error(`Template with UUID ${this.uuid} not found in database.`)
 		} else if (!data.content) {
@@ -80,18 +111,16 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 		return data.content
 	}
 	
-	public getTemplateHash (): string {
-		return new sha1().update(this.getTemplate()).digest('hex')
+	public async getTemplateHash (): Promise<string> {
+		return new sha1().update(await this.getTemplate()).digest('hex')
 	}
 	
-	public writeTemplate (write: string) {
-		const sql = database.prepare("update templates_data set content = ? where uuid = ?")
-		sql.run(write, this.uuid)
+	public async writeTemplate (write: string) {
+		DatabaseSQLs.WRITE_CONTENT.run({ content: write, uuid: this.uuid })
 	}
 	
-	public getComments (): string {
-		const sql = database.prepare("select comment from templates_data where uuid = ?")
-		const data = sql.get(this.uuid) as { comment: string|null } | undefined
+	public async getComments (): Promise<string> {
+		const data = DatabaseSQLs.GET_COMMENT.get(this.uuid) as { comment: string|null } | undefined
 		if (!data) {
 			throw new Error(`Template with UUID ${this.uuid} not found in database.`)
 		} else if (!data.comment) {
@@ -100,23 +129,20 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 		return data.comment
 	}
 	
-	public writeComments (write: string): void {
-		const sql = database.prepare("update templates_data set comment = ? where uuid = ?")
-		sql.run(write, this.uuid)
+	public async writeComments (write: string): Promise<void> {
+		DatabaseSQLs.WRITE_COMMENT.run(write, this.uuid)
 	}
 	
-	public listConfigs (): string {
-		const sql = database.prepare("select config_name from templates_configs where uuid = ?")
-		const data = sql.get(this.uuid) as { config_name: string } | undefined
+	public async listConfigs (): Promise<string> {
+		const data = DatabaseSQLs.LIST_CONFIG_NAME.get(this.uuid) as { config_name: string } | undefined
 		if (!data) {
 			throw new Error(`Template with UUID ${this.uuid} not found in database.`)
 		}
 		return data.config_name
 	}
 	
-	public getConfigs(): TemplateConfig[] {
-		const sql = database.prepare("select config_name, is_raw, targets from templates_configs where uuid = ?")
-		const data = sql.all(this.uuid) as { config_name: string, is_raw: number, targets: string|null }[]
+	public async getConfigs(): Promise<TemplateConfig[]> {
+		const data = DatabaseSQLs.LIST_CONFIG.all(this.uuid) as { config_name: string, is_raw: number, targets: string|null }[]
 		const configs: TemplateConfig[] = []
 		for (const item of data) {
 			configs.push({
@@ -128,9 +154,8 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 		return configs
 	}
 	
-	public getConfig (configName: string): TemplateConfig|null {
-		const sql = database.prepare("select config_name, is_raw, targets from templates_configs where uuid = ? and config_name = ?")
-		const data = sql.get(this.uuid, configName) as { config_name: string, is_raw: number, targets: string|null } | undefined
+	public async getConfig (configName: string): Promise<TemplateConfig | null> {
+		const data = DatabaseSQLs.GET_CONFIG.get(this.uuid, configName) as { config_name: string, is_raw: number, targets: string|null } | undefined
 		if (!data) return null;
 		return {
 			name: data.config_name,
@@ -150,20 +175,7 @@ class TemplateIndexFromDatabaseV1 implements TemplateIndex {
 	 */
 	public async deleteThis (): Promise<void> {
 		console.log(`Deleting template ${this.uuid} (${this.name})...`)
-		const DELETE_CONFIGS = database.prepare("delete from templates_configs where uuid = ?;")
-		const DELETE_DATA = database.prepare("delete from templates_data where uuid = ?;")
-		const DELETE_IDENTIFIERS = database.prepare("delete from templates_identifiers where uuid = ?;")
-		const DELETE_ALL = database.transaction((uuid: string) => {
-			const config_changes = DELETE_CONFIGS.run(uuid).changes
-			const data_changes = DELETE_DATA.run(uuid).changes
-			const name_changes = DELETE_IDENTIFIERS.run(uuid).changes
-			return {
-				config_changes,
-				data_changes,
-				name_changes
-			}
-		})
-		const result = DELETE_ALL(this.uuid)
+		const result = DatabaseSQLs.REMOVE_IT(this.uuid)
 		console.log(`Deleted ${this.uuid}! ${result.config_changes} config, ${result.data_changes} data, ${result.name_changes} name record deleted.`)
 		return;
 	}
@@ -269,7 +281,7 @@ export class TemplateCreateError extends Error {
 	}
 }
 
-export function readTemplate (name: string): string|null {
+export async function readTemplate (name: string): Promise<string | null> {
 	
 	try {
 		const template = TemplateIndexes.find(name)
@@ -283,7 +295,7 @@ export function readTemplate (name: string): string|null {
 	
 }
 
-export function readTemplateComment (name: string): string|null {
+export async function readTemplateComment (name: string): Promise<string | null> {
 	
 	try {
 		const template = TemplateIndexes.find(name)
@@ -297,7 +309,7 @@ export function readTemplateComment (name: string): string|null {
 	
 }
 
-export function readTemplateConfigs (name: string): string|null {
+export async function readTemplateConfigs (name: string): Promise<string | null> {
 	
 	try {
 		const template = TemplateIndexes.find(name)

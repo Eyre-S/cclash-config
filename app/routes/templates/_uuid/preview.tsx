@@ -33,7 +33,7 @@ export async function loader ({ params }: LoaderFunctionArgs) {
 	return {
 		uuid,
 		item: item satisfies TemplateIndex,
-		configs: item.getConfigs() satisfies TemplateConfig[]
+		configs: await item.getConfigs() satisfies TemplateConfig[]
 	}
 	
 }

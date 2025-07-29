@@ -42,7 +42,7 @@ export async function action (args: ActionFunctionArgs) {
 		return exportResponse(defineApiResponse({
 			ok: true,
 			uuid: template.uuid,
-			sha1: template.getTemplateHash()
+			sha1: await template.getTemplateHash()
 		} satisfies TemplateSetResponse))
 	} catch (e) {
 		return exportResponse(defineApiUniversalErrorResponse(e, 'api_template_set'))

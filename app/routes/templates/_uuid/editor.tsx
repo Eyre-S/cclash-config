@@ -29,8 +29,8 @@ export async function loader ({ params }: LoaderFunctionArgs) {
 	
 	return {
 		item: item,
-		content: item.getTemplate(),
-		contentSha1: item.getTemplateHash()
+		content: await item.getTemplate(),
+		contentSha1: await item.getTemplateHash()
 	}
 	
 }
