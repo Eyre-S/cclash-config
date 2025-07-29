@@ -25,6 +25,7 @@ function byToken (token: string) {
 		get: APIs_get({ token })
 	}
 }
+export type APIs_Authed = ReturnType<typeof byToken>
 export const APIs_auths = {
 	byToken,
 	byCookies: byToken("_cookie_")

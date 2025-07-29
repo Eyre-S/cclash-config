@@ -1,5 +1,7 @@
 import { ApiResponseError, defineApiErrorResponse } from "~/apis/api"
 
+import { API_Auths_Params } from "../"
+
 export interface TemplateNotFoundErrorResponse {
 	requesting_template_name: string
 }
@@ -24,4 +26,9 @@ export function defineTemplateNotFoundResponse (templateName: string, scopeName:
 			requesting_template_name: templateName
 		}
 	)
+}
+
+export interface APIs_Get_Params {
+	auths: API_Auths_Params,
+	template_name: string
 }

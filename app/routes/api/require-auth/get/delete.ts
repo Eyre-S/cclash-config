@@ -7,10 +7,9 @@ import {
 import { requireApiToken } from "~/data/authentication/tokens.server"
 import { TemplateIndexes } from "~/data/template/loader.server"
 
-import { APIs_Get_Params } from "./"
 import {
-	defineTemplateNotFoundResponse, TemplateBaseInformation, TemplateExtendedInformation,
-	TemplateNotFoundErrorResponse, TemplateUpdatingResponse
+	APIs_Get_Params, defineTemplateNotFoundResponse, TemplateBaseInformation,
+	TemplateExtendedInformation, TemplateNotFoundErrorResponse, TemplateUpdatingResponse
 } from "./_public"
 
 export interface TemplateDeleteResponse extends TemplateBaseInformation, TemplateUpdatingResponse, TemplateExtendedInformation {
@@ -74,11 +73,10 @@ export function API_delete (context: APIs_Get_Params) { return async function (c
 			} else {
 				cbs.onUnknownApiError(resultError)
 			}
-		}
+		} else cbs.onUnknownError(resultJson)
 	} catch (e) {
 		if (e instanceof SyntaxError) {
 			cbs.onInvalidApiResponse(e)
-		}
-		cbs.onUnknownError(e)
+		} else cbs.onUnknownError(e)
 	} finally { if (cbs.onFinally) cbs.onFinally() }
 }}
