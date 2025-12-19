@@ -3,9 +3,9 @@ import { CSSProperties, JSX } from "react"
 import { is, it } from "../fp"
 import { classes } from "../jsx-helper"
 
-import styles from "./icons.module.stylus"
+import styles from "./icons.module.styl"
 
-import "./icons.stylus"
+import "./icons.styl"
 
 interface UniversalIconProps {
 	

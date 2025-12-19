@@ -3,7 +3,7 @@ import { Link } from "react-router"
 
 import { classes } from "~/utils/jsx-helper"
 
-import css from "./index.module.stylus"
+import css from "./index.module.styl"
 import { defineAppTitle, defineMeta } from "~/universal/app-meta"
 
 export const meta = defineMeta((args) => [

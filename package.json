@@ -13,9 +13,9 @@
     "@monaco-editor/react": "4.7.0",
     "@react-router/node": "7.7.1",
     "@react-router/serve": "7.7.1",
-    "@reactuses/core": "^6.0.5",
+    "@reactuses/core": "^6.1.6",
     "@types/crypto-js": "4.2.2",
-    "better-sqlite3": "^12.2.0",
+    "better-sqlite3": "^12.5.0",
     "compression": "1.8.1",
     "da4s": "0.1.0",
     "highlight.js": "11.11.1",
@@ -33,7 +33,7 @@
     "sqlite3": "^5.1.7",
     "uni-preprocessor": "0.3.0",
     "uuid": "^11.1.0",
-    "zod": "^4.0.10"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@react-router/dev": "7.7.1",
@@ -48,7 +48,7 @@
     "monaco-editor": "0.52.2",
     "stylus": "0.64.0",
     "typescript": "5.8.3",
-    "vite": "7.0.6",
+    "vite": "7.1.11",
     "vite-plugin-stylus-alias-next": "1.2.2-beta.1",
     "vite-tsconfig-paths": "5.1.4"
   },

@@ -20,7 +20,7 @@ import { $ } from "~/utils/reactive"
 
 import { TemplateItemLayoutContext } from "./_layout"
 
-import css from "./preview.module.stylus"
+import css from "./preview.module.styl"
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	

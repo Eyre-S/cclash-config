@@ -1,6 +1,6 @@
 import { classes } from "~/utils/jsx-helper"
 
-import css from "./index.module.stylus"
+import css from "./index.module.styl"
 
 export default function TemplatesIndex () {
 	return <>

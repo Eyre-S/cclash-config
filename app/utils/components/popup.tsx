@@ -5,7 +5,7 @@ import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
 import { InputButton } from "./Inputs"
 
-import css from "./popup.module.stylus"
+import css from "./popup.module.styl"
 
 export type PopupButtonsDefining = (closePopups: ()=>void) => ReactNode
 export interface PopupNotificationOnCheckedButtonDefinition { callback: () => any, text: ReactNode }

@@ -10,7 +10,7 @@ import { $ } from "~/utils/reactive"
 
 import { TemplatesLayoutContext } from "../_layout"
 
-import css from "./_layout.module.stylus"
+import css from "./_layout.module.styl"
 import { requireUILogin } from "~/data/authentication/login.server"
 import { TemplateIndexes } from "~/data/template/loader.server"
 import { TemplateIndex } from "~/data/template/template"

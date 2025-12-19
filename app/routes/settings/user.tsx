@@ -6,7 +6,7 @@ import { classes } from "~/utils/jsx-helper"
 
 import { SettingsLayoutContext } from "./_layout"
 
-import layoutCss from "./_layout.module.stylus"
+import layoutCss from "./_layout.module.styl"
 
 export default function ClientSettingsPage () {
 	

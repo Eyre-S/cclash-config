@@ -17,7 +17,7 @@ import { $ } from "~/utils/reactive"
 
 import { TemplateItemLayoutContext } from "./_layout"
 
-import css from "./settings.module.stylus"
+import css from "./settings.module.styl"
 
 export async function loader ({ params }: LoaderFunctionArgs) {
 	

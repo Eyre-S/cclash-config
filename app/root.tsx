@@ -10,9 +10,9 @@ import { is, iss } from "./utils/fp"
 import { classes } from "./utils/jsx-helper"
 import { $, Reactive } from "./utils/reactive"
 
-import css from "./root.module.stylus"
+import css from "./root.module.styl"
 
-import "./root.stylus"
+import "./root.styl"
 import "react-toastify/dist/ReactToastify.css"
 import { server_config } from "./data/config/config.server"
 

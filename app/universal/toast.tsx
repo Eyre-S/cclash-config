@@ -6,10 +6,10 @@ import { inCase, is, isIt, iss, it, select } from "~/utils/fp"
 import { classes } from "~/utils/jsx-helper"
 import { $ } from "~/utils/reactive"
 
-import css from "./toast.module.stylus"
+import css from "./toast.module.styl"
 
-import "~/css/global-overrides/toastify-toast.stylus"
-import "./toast.stylus"
+import "~/css/global-overrides/toastify-toast.styl"
+import "./toast.styl"
 
 export interface ToastType {
 	css_class: () => string

@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 
 import { classes } from "~/utils/jsx-helper"
 
-import css from "./setting-item.module.stylus"
+import css from "./setting-item.module.styl"
 
 export function SettingItem (props: { description: ReactNode, inputs: ReactNode }): ReactNode {
 	

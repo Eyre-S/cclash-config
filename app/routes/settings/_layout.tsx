@@ -10,7 +10,7 @@ import { classes } from "~/utils/jsx-helper"
 import { $ } from "~/utils/reactive"
 
 import moduleCss from "~/css/modules/module-css"
-import css from "./_layout.module.stylus"
+import css from "./_layout.module.styl"
 
 export const meta = defineMeta((args) => {
 	return [

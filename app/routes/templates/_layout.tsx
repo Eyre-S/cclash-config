@@ -20,7 +20,7 @@ import { is, iss } from "~/utils/fp"
 import { classes } from "~/utils/jsx-helper"
 import { $ } from "~/utils/reactive"
 
-import css from "./_layout.module.stylus"
+import css from "./_layout.module.styl"
 
 export const meta = defineMeta((args) => {
 	return [ defineAppTitle(args.matches, 'Templates') ]

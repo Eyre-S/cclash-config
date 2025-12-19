@@ -11,7 +11,7 @@ import { $, toggle$ } from "../reactive"
 import { Collapsible } from "./collapsible"
 import { I } from "./icons"
 
-import css from "./Inputs.module.stylus"
+import css from "./Inputs.module.styl"
 
 export type ButtonReceiveEvents = React.MouseEvent<HTMLButtonElement>|React.TouchEvent<HTMLButtonElement>
 

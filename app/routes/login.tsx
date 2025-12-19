@@ -17,7 +17,7 @@ import { $ } from "~/utils/reactive"
 
 import { LoginResults } from "./api/login"
 
-import css from "./login.module.stylus"
+import css from "./login.module.styl"
 import { checkToken } from "~/data/authentication/tokens.server"
 
 export const meta = defineMeta((args) => {

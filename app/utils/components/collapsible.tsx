@@ -4,7 +4,7 @@ import { define } from "../fp"
 import { classes } from "../jsx-helper"
 import { $ } from "../reactive"
 
-import css from "./collapsible.module.stylus"
+import css from "./collapsible.module.styl"
 
 export function Collapsible ({
 	show,

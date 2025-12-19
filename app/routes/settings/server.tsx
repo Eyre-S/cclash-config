@@ -3,7 +3,7 @@ import { LoaderFunctionArgs } from "react-router"
 import { requireUILogin } from "~/data/authentication/login.server"
 import { classes } from "~/utils/jsx-helper"
 
-import layoutCss from "./_layout.module.stylus"
+import layoutCss from "./_layout.module.styl"
 
 export async function loader (args: LoaderFunctionArgs) {
 	
