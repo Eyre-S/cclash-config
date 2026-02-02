@@ -619,6 +619,13 @@
   dependencies:
     "@mjackson/node-fetch-server" "^0.2.0"
 
+"@react-router/node@7.9.4":
+  version "7.9.4"
+  resolved "https://registry.yarnpkg.com/@react-router/node/-/node-7.9.4.tgz#6c1a566c8e808b52cc96ad053767984e01419994"
+  integrity sha512-sdeDNRaqAB71BR2hPlhcQbPbrXh8uGJUjLVc+NpRiPsQbv6B8UvIucN4IX9YGVJkw3UxVQBn2vPSwxACAck32Q==
+  dependencies:
+    "@mjackson/node-fetch-server" "^0.2.0"
+
 "@react-router/serve@7.7.1":
   version "7.7.1"
   resolved "https://registry.yarnpkg.com/@react-router/serve/-/serve-7.7.1.tgz#e1b742acf5985c0d8b9a06bbfbecdca5a4c69433"
