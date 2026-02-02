@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "4.7.0",
-    "@react-router/node": "7.7.1",
+    "@react-router/node": "7.9.4",
     "@react-router/serve": "7.7.1",
     "@reactuses/core": "^6.0.5",
     "@types/crypto-js": "4.2.2",
